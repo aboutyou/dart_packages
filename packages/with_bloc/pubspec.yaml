@@ -1,0 +1,21 @@
+name: with_bloc
+description: 
+version: 1.0.0
+author:
+homepage: https://github.com/aboutyou/with_bloc
+
+environment:
+  sdk: ">=2.3.0 <3.0.0"
+  flutter: ">=1.7.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  equatable: ^0.5.0
+    
+dev_dependencies:
+  test: any
+
+  flutter_test:
+    sdk: flutter
