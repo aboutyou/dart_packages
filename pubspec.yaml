@@ -1,0 +1,19 @@
+name: state_queue
+description: 
+version: 1.0.0
+author:
+homepage: https://github.com/aboutyou/state_queue
+
+environment:
+  sdk: ">=2.3.0 <3.0.0"
+  flutter: ">=1.7.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+    
+dev_dependencies:
+  test: any
+
+  flutter_test:
+    sdk: flutter
