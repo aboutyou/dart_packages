@@ -29,7 +29,7 @@ Future<void> main() async {
 
         await firstBloc.runQueuedTasksToCompletion();
 
-        final firstState = firstBloc.state;
+        final firstState = firstBloc.value;
 
         expect(firstState.count, 0);
 
@@ -73,7 +73,7 @@ Future<void> main() async {
 
         await secondBloc.runQueuedTasksToCompletion();
 
-        final secondState = secondBloc.state;
+        final secondState = secondBloc.value;
 
         expect(firstBloc != secondBloc, true);
 
