@@ -98,13 +98,6 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     throw Exception('"value" must not be set directly. Use `run`.');
   }
 
-  /// Gets the current state
-  ///
-  /// Synonym for `value`
-  T get state {
-    return value;
-  }
-
   /// Schedules a state yielding [updater] function to be run.
   ///
   /// The passed function will run after all previously scheduled functions ran to completion.
