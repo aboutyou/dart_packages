@@ -63,9 +63,9 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
 
   @override
   void dispose() {
-    super.dispose();
-
     bloc.dispose();
+
+    super.dispose();
   }
 
   @override
