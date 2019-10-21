@@ -7,13 +7,13 @@ typedef StateUpdater<T> = Stream<T> Function(T state);
 @immutable
 abstract class _QueueEntry<T> {}
 
-class _UpdaterEntry<T> extends _QueueEntry<T> {
+class _UpdaterEntry<T> implements _QueueEntry<T> {
   _UpdaterEntry(this.updater);
 
   final StateUpdater<T> updater;
 }
 
-class _CompletionNotifierEntry<T> extends _QueueEntry<T> {
+class _CompletionNotifierEntry<T> implements _QueueEntry<T> {
   _CompletionNotifierEntry(this.completer);
 
   final Completer<void> completer;
@@ -180,6 +180,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     _taskQueue.sink.add(_UpdaterEntry(updater));
   }
 
+  @mustCallSuper
   void dispose() {
     super.dispose();
 
