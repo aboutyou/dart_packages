@@ -45,6 +45,8 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
   @visibleForTesting
   BlocType bloc;
 
+  BlocType _oldBloc;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -57,7 +59,8 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     super.didUpdateWidget(oldWidget);
 
     if (!listId.equals(oldWidget.inputs, widget.inputs)) {
-      bloc.dispose();
+      /// Save the previous bloc so we can properly dispose it
+      _oldBloc = bloc;
 
       /// Recreate the bloc
       bloc = widget.createBloc(context);
@@ -76,8 +79,17 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     return ValueListenableBuilder<StateType>(
       valueListenable: bloc,
       child: widget.child,
-      builder: (context, value, child) =>
-          widget.builder(context, bloc, value, child),
+      builder: (context, value, child) {
+        /// We need to dispose the old bloc
+        if (_oldBloc != null) {
+          /// The old bloc needs to be disposed after [ValueListenableBuilder] had a change to update itself
+          /// so it can properly unsubscribe
+          _oldBloc.dispose();
+          _oldBloc = null;
+        }
+
+        return widget.builder(context, bloc, value, child);
+      },
     );
   }
 }
