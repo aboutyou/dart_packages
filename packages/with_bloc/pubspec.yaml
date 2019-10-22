@@ -1,6 +1,6 @@
 name: with_bloc
 description: A widget to create and manage BLoCs.
-version: 1.0.0
+version: 1.0.1
 authors:
 - Timm Preetz <timm.preetz@aboutyou.com>
 - Henri Beck <henri.beck@aboutyou.com>
