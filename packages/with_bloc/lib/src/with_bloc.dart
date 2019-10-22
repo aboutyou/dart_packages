@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -45,13 +43,11 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
   @visibleForTesting
   BlocType bloc;
 
-  BlocType _oldBloc;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    bloc ??= widget.createBloc(context);
+    bloc ??= _initBloc();
   }
 
   @override
@@ -59,37 +55,44 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     super.didUpdateWidget(oldWidget);
 
     if (!listId.equals(oldWidget.inputs, widget.inputs)) {
-      /// Save the previous bloc so we can properly dispose it
-      _oldBloc = bloc;
+      _disposeBloc();
 
       /// Recreate the bloc
-      bloc = widget.createBloc(context);
+      bloc = _initBloc();
     }
+  }
+
+  void _handleUpdate() {
+    /// Trigger an update so the [build] method is called again
+    setState(() {});
+  }
+
+  /// Creates a new bloc and adds a new listener
+  BlocType _initBloc() {
+    return widget.createBloc(context)..addListener(_handleUpdate);
+  }
+
+  /// Removes the listener and disposes the current bloc
+  BlocType _disposeBloc() {
+    return bloc
+      ..removeListener(_handleUpdate)
+      ..dispose();
   }
 
   @override
   void dispose() {
-    bloc.dispose();
+    _disposeBloc();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<StateType>(
-      valueListenable: bloc,
-      child: widget.child,
-      builder: (context, value, child) {
-        /// We need to dispose the old bloc
-        if (_oldBloc != null) {
-          /// The old bloc needs to be disposed after [ValueListenableBuilder] had a change to update itself
-          /// so it can properly unsubscribe
-          _oldBloc.dispose();
-          _oldBloc = null;
-        }
-
-        return widget.builder(context, bloc, value, child);
-      },
+    return widget.builder(
+      context,
+      bloc,
+      bloc.value,
+      widget.child,
     );
   }
 }
