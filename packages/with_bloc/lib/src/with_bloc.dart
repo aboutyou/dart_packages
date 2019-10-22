@@ -55,9 +55,11 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     super.didUpdateWidget(oldWidget);
 
     if (!listId.equals(oldWidget.inputs, widget.inputs)) {
-      setState(() {
-        bloc = widget.createBloc(context);
-      });
+      /// Dispose the old bloc
+      bloc.dispose();
+
+      /// Recreate the bloc
+      bloc = widget.createBloc(context);
     }
   }
 
