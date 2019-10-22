@@ -4,7 +4,8 @@ version: 1.0.0
 authors:
 - Timm Preetz <timm.preetz@aboutyou.com>
 - Henri Beck <henri.beck@aboutyou.com>
-homepage: https://github.com/aboutyou/state_queue
+homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/state_queue
+repository: https://github.com/aboutyou/dart_packages
 
 environment:
   sdk: ">=2.3.0 <3.0.0"
