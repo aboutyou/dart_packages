@@ -1,7 +1,9 @@
 name: with_bloc
-description: 
+description: A widget to create and manage BLoCs.
 version: 1.0.0
-author:
+authors:
+- Timm Preetz <timm.preetz@aboutyou.com>
+- Henri Beck <henri.beck@aboutyou.com>
 homepage: https://github.com/aboutyou/with_bloc
 
 environment:
@@ -13,6 +15,10 @@ dependencies:
     sdk: flutter
 
   equatable: ^0.5.0
+
+  collection: ^1.14.0
+
+  meta: ^1.0.0
     
 dev_dependencies:
   test: any
