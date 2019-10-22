@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +57,6 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     super.didUpdateWidget(oldWidget);
 
     if (!listId.equals(oldWidget.inputs, widget.inputs)) {
-      /// Dispose the old bloc
       bloc.dispose();
 
       /// Recreate the bloc
