@@ -2,8 +2,8 @@ name: state_queue
 description: A BLoC implementation for sequentially executed async state updates.
 version: 1.0.0
 authors:
-- Timm Preetz <timm.preetz@aboutyou.com>
-- Henri Beck <henri.beck@aboutyou.com>
+  - Timm Preetz <timm.preetz@aboutyou.com>
+  - Henri Beck <henri.beck@aboutyou.com>
 homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/state_queue
 repository: https://github.com/aboutyou/dart_packages
 
@@ -16,7 +16,7 @@ dependencies:
     sdk: flutter
 
   meta: ^1.0.0
-    
+
 dev_dependencies:
   test: any
 

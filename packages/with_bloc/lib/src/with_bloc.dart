@@ -1,7 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
-
-const listId = ListEquality<dynamic>();
+import 'package:with_bloc/src/are_lists_equal.dart';
 
 /// A helper widget for easily creating [StateQueue] in the [build] method.
 ///
@@ -41,8 +39,11 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 
   /// A [BlocType]-independent widget which is passed back to the [builder].
   ///
-  /// This argument is optional and can be null if the entire widget subtree
-  /// the [builder] builds depends on the value of the [BlocType].
+  /// If a part of your subtree doesn't depend on the [BlocType] or [StateType],
+  /// it can be passed the [child] to this widget.
+  /// You will then get this [child] back in the [builder] method as the fourth argument.
+  /// Doing this will optimize the building of widgets, because whenever the [BlocType] changes,
+  /// it will not be recreated.
   final Widget child;
 
   /// The parameters the BLoC depends upon.
@@ -72,7 +73,7 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
   void didUpdateWidget(WithBloc<BlocType, StateType> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (!listId.equals(oldWidget.inputs, widget.inputs)) {
+    if (!areListsEqual(oldWidget.inputs, widget.inputs)) {
       _disposeBloc();
 
       /// Recreate the BLoC
