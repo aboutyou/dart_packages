@@ -50,7 +50,7 @@ class LoginBloc extends StateQueue<LoginState> {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    WithBloc<LoginBloc, LoginState>(
+    return WithBloc<LoginBloc, LoginState>(
       createBloc: (context) => LoginBloc(),
       builder: (context, bloc, state, _) {
         if (state is LoggedInState) {
@@ -122,25 +122,25 @@ class __LoginScreenState extends State<_LoginScreen> {
         ),
         MaterialButton(
           child: Text('Login'),
-          onPressed: !_loginInProgress
-              ? () async {
-                  setState(() {
-                    _loginInProgress = true;
-                  });
-
-                  await widget.onLoginTap(
-                    usernameTextController.text,
-                    passwordTextController.text,
-                  );
-
-                  setState(() {
-                    _loginInProgress = false;
-                  });
-                }
-              : null,
+          onPressed: !_loginInProgress ? _startLogin : null,
         ),
         if (widget.errorMessage != null) Text(widget.errorMessage),
       ],
     );
+  }
+
+  void _startLogin() async {
+    setState(() {
+      _loginInProgress = true;
+    });
+
+    await widget.onLoginTap(
+      usernameTextController.text,
+      passwordTextController.text,
+    );
+
+    setState(() {
+      _loginInProgress = false;
+    });
   }
 }
