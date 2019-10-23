@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:with_bloc/src/are_list_equal.dart';
+import 'package:with_bloc/src/are_lists_equal.dart';
 
 /// A helper widget for easily creating [StateQueue] in the [build] method.
 ///
