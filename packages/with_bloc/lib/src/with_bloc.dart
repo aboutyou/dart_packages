@@ -1,7 +1,5 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
-
-const listId = ListEquality<dynamic>();
+import 'package:with_bloc/src/are_list_equal.dart';
 
 /// A helper widget for easily creating [StateQueue] in the [build] method.
 ///
@@ -72,7 +70,7 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
   void didUpdateWidget(WithBloc<BlocType, StateType> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (!listId.equals(oldWidget.inputs, widget.inputs)) {
+    if (!areListsEqual(oldWidget.inputs, widget.inputs)) {
       _disposeBloc();
 
       /// Recreate the BLoC
