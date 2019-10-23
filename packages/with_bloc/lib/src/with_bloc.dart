@@ -23,7 +23,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   /// A function which creates the [BlocType] instance
   ///
   /// This function might be called multiple times in the lifetime of this widget.
-  /// Whenever the [inputs] change, a new bloc will be created by calling this function.
+  /// Whenever the [inputs] change, a new BLoC will be created by calling this function.
   final BlocType Function(BuildContext context) createBloc;
 
   /// A [Function] which builds a widget depending on the [BlocType] and [StateType].
@@ -43,16 +43,11 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   ///
   /// This argument is optional and can be null if the entire widget subtree
   /// the [builder] builds depends on the value of the [BlocType].
-  ///
-  /// Can be `null`.
-  ///
-  /// See also:
-  ///  - [ValueListenableBuilder]
   final Widget child;
 
   /// The parameters the BLoC depends upon.
   ///
-  /// If these change, the BLoC will be recreated.
+  /// If these change, the BLoC will be recreated and the old BloC will be disposed.
   final List<dynamic> inputs;
 
   @override
@@ -80,7 +75,7 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     if (!listId.equals(oldWidget.inputs, widget.inputs)) {
       _disposeBloc();
 
-      /// Recreate the bloc
+      /// Recreate the BLoC
       bloc = _initBloc();
     }
   }
@@ -90,12 +85,12 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     setState(() {});
   }
 
-  /// Creates a new bloc and adds a new listener
+  /// Creates a new BLoC and adds a new listener
   BlocType _initBloc() {
     return widget.createBloc(context)..addListener(_handleUpdate);
   }
 
-  /// Removes the listener and disposes the current bloc
+  /// Removes the listener and disposes the current BLoC
   BlocType _disposeBloc() {
     return bloc
       ..removeListener(_handleUpdate)
