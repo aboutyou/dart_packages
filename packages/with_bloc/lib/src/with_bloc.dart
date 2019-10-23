@@ -39,7 +39,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 
   /// A [BlocType]-independent widget which is passed back to the [builder].
   ///
-  /// This argument is optional and can be null if the entire widget subtree
+  /// This argument is optional and can be `null` if the entire widget subtree
   /// the [builder] builds depends on the value of the [BlocType].
   final Widget child;
 
