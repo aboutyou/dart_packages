@@ -1,6 +1,7 @@
 import 'package:test/test.dart';
 import 'package:with_bloc/src/are_lists_equal.dart';
 
+/// Class whose instances are always equal to each other.
 class _Equatable {
   bool operator ==(Object obj) {
     return obj is _Equatable;
