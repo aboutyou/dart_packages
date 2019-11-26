@@ -7,14 +7,14 @@ import 'package:test/test.dart';
 class _TestBloc extends StateQueue<int> {
   _TestBloc() : super(0);
 
-  void setState(int n) {
-    run((state) async* {
+  Future<void> setState(int n) async {
+    await run((state) async* {
       yield n;
     });
   }
 
-  void divideStateBy(int n) {
-    run((state) async* {
+  Future<void> divideStateBy(int n) async {
+    await run((state) async* {
       yield state ~/ n;
     });
   }
@@ -52,4 +52,35 @@ void main() {
     );
     expect(log.contains('IntegerDivisionByZeroException'), true);
   });
+
+  test(
+    'PendingOperations: should register operations for run method',
+    () async {
+      final bloc = _TestBloc();
+      final future = bloc.setState(5);
+
+      expect(bloc.pendingOperations.pendingCalls, 1);
+
+      await future;
+
+      /// Will be still `1` as the [Timer.run] didn't run yet and so for has not marked the previous operation as done
+      expect(bloc.pendingOperations.pendingCalls, 1);
+
+      /// Wait here to get the [Timer.run] callback be run
+      await Future.delayed(Duration.zero);
+
+      expect(bloc.pendingOperations.pendingCalls, 0);
+    },
+  );
+
+  test(
+    'After awaiting the run method, the last state should be accessible',
+    () async {
+      final bloc = _TestBloc();
+
+      await bloc.setState(5);
+
+      expect(bloc.value, 5);
+    },
+  );
 }

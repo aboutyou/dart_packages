@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
+import 'package:pending_operations/pending_operations.dart';
 
 typedef StateUpdater<T> = Stream<T> Function(T state);
 
@@ -11,6 +12,8 @@ class _UpdaterEntry<T> implements _QueueEntry<T> {
   _UpdaterEntry(this.updater);
 
   final StateUpdater<T> updater;
+
+  final completer = Completer<void>();
 }
 
 class _CompletionNotifierEntry<T> implements _QueueEntry<T> {
@@ -78,6 +81,8 @@ abstract class StateQueue<T> extends ValueNotifier<T>
               'StateQueue: Error occured in `run` stream:\nimplementation: $this\n$e\n$stack',
             );
           }
+        } finally {
+          event.completer.complete();
         }
       } else if (event is _CompletionNotifierEntry<T>) {
         event.completer.complete();
@@ -93,6 +98,10 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   static void Function(dynamic error, StackTrace strackTrace) errorHandler;
 
   final _taskQueue = StreamController<_QueueEntry<T>>();
+
+  final _pendingOperations = PendingOperations();
+
+  PendingOperationsReader get pendingOperations => _pendingOperations;
 
   set value(T value) {
     throw Exception('"value" must not be set directly. Use `run`.');
@@ -169,15 +178,22 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// (neither directly nor indirectly), as that makes testing hard as the completion
   /// of the bloc can not be awaited properly.
   @protected
-  void run(StateUpdater<T> updater) {
-    _taskQueue.sink.add(_UpdaterEntry(updater));
+  Future<void> run(StateUpdater<T> updater) async {
+    final entry = _UpdaterEntry(updater);
+    final done = _pendingOperations.registerPendingOperation('UpdaterEntry');
+
+    _taskQueue.sink.add(entry);
+
+    await entry.completer.future;
+
+    done();
   }
 
   @mustCallSuper
   void dispose() {
-    super.dispose();
-
     _taskQueue.close();
+
+    super.dispose();
   }
 
   /// Returns a `Future` which completes once all currently queued tasks have completed

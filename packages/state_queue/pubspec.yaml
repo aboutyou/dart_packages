@@ -17,6 +17,9 @@ dependencies:
 
   meta: ^1.0.0
 
+  pending_operations:
+    path: ../pending_operations
+
 dev_dependencies:
   test: any
 
