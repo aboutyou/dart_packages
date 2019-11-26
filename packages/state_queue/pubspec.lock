@@ -238,9 +238,9 @@ packages:
   pending_operations:
     dependency: "direct main"
     description:
-      name: pending_operations
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../pending_operations"
+      relative: true
+    source: path
     version: "1.0.0"
   petitparser:
     dependency: transitive
