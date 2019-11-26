@@ -9,7 +9,7 @@ class PendingOperations implements PendingOperationsReader {
 
   int _pendingCalls = 0;
 
-  Future<void> _knownCallsHandled = Future<void>.value();
+  List<Future<void>> _knownCallsHandled = [];
 
   /// Registers a new pending operation and returns a new function that can be
   /// used to signal that the pending operation has completed.
@@ -21,7 +21,7 @@ class PendingOperations implements PendingOperationsReader {
 
     final completer = Completer<void>();
 
-    _knownCallsHandled = Future.wait([_knownCallsHandled, completer.future]);
+    _knownCallsHandled = [..._knownCallsHandled, completer.future];
 
     // Guard that the `done` callback runs only once
     var done = false;
@@ -46,7 +46,7 @@ class PendingOperations implements PendingOperationsReader {
   }
 
   Future<void> awaitEndOfKnownCalls() {
-    return _knownCallsHandled;
+    return Future.wait([..._knownCallsHandled]);
   }
 
   int get pendingCalls => _pendingCalls;
