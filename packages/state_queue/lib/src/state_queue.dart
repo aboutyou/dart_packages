@@ -178,15 +178,13 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// (neither directly nor indirectly), as that makes testing hard as the completion
   /// of the bloc can not be awaited properly.
   @protected
-  Future<void> run(StateUpdater<T> updater) async {
+  void run(StateUpdater<T> updater) {
     final entry = _UpdaterEntry(updater);
     final done = _pendingOperations.registerPendingOperation('UpdaterEntry');
 
     _taskQueue.sink.add(entry);
 
-    await entry.completer.future;
-
-    done();
+    entry.completer.future.then((_) => done());
   }
 
   @mustCallSuper
