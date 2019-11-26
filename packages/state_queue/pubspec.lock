@@ -238,10 +238,10 @@ packages:
   pending_operations:
     dependency: "direct main"
     description:
-      path: "../pending_operations"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: pending_operations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   petitparser:
     dependency: transitive
     description:
