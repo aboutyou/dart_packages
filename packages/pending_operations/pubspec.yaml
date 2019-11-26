@@ -1,0 +1,20 @@
+name: pending_operations
+description: A class for tracking operations and waiting until all of them have completed
+version: 1.0.0
+authors:
+  - Timm Preetz <timm.preetz@aboutyou.com>
+  - Henri Beck <henri.beck@aboutyou.com>
+homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/state_queue
+repository: https://github.com/aboutyou/dart_packages
+
+environment:
+  sdk: ">=2.3.0 <3.0.0"
+  flutter: ">=1.7.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
