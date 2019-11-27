@@ -98,7 +98,8 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     throw Exception('"value" must not be set directly. Use `run`.');
   }
 
-  /// Only a helper to get proper compilation in flutter web
+  /// This setter has only been added to work around a code generation issue we saw with `dartdevc` (for Flutter web development)
+  /// Should be removed in the future.
   void _setValue(T value) {
     super.value = value;
   }
