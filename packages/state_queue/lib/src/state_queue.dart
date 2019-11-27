@@ -85,7 +85,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     }).forEach((nextState) {
       // don't push any more states after instance is disposed
       if (!_taskQueue.isClosed && super.value != nextState) {
-        super.value = nextState;
+        _setValue(nextState);
       }
     });
   }
@@ -96,6 +96,11 @@ abstract class StateQueue<T> extends ValueNotifier<T>
 
   set value(T value) {
     throw Exception('"value" must not be set directly. Use `run`.');
+  }
+
+  /// Only a helper to get proper compilation in flutter web
+  void _setValue(T value) {
+    super.value = value;
   }
 
   /// Schedules a state yielding [updater] function to be run.
