@@ -4,15 +4,13 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     container:
       image: cirrusci/flutter:v1.9.1-hotfix.6
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Install dependencies
-      run: flutter pub get
-    - name: Run tests
-      run: ./test_all.sh
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: ./install_all.sh
+      - name: Run tests
+        run: ./test_all.sh
