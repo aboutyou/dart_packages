@@ -1,6 +1,6 @@
 name: pending_operations
 description: A class for tracking operations and waiting until all of them have completed
-version: 1.0.0
+version: 1.0.1
 authors:
   - Timm Preetz <timm.preetz@aboutyou.com>
   - Henri Beck <henri.beck@aboutyou.com>
