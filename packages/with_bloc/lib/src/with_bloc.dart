@@ -63,10 +63,10 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
   BlocType bloc;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
 
-    bloc ??= _initBloc();
+    bloc = _initBloc();
   }
 
   @override
