@@ -7,9 +7,11 @@ set -eux
 
 whoami
 
-sudo chown -R cirrus /github
+#sudo chown -R cirrus /github
 
-sudo chmod -R 777 /github
+#sudo chmod -R 777 /github
+
+sudo -i -u root
 
 cd packages/state_queue
 flutter packages get
