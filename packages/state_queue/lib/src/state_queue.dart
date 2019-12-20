@@ -9,11 +9,14 @@ typedef StateUpdater<T> = Stream<T> Function(T state);
 abstract class _QueueEntry<T> {}
 
 class _UpdaterEntry<T> implements _QueueEntry<T> {
-  _UpdaterEntry(this.updater);
+  _UpdaterEntry(
+    this.updater, {
+    this.onDone,
+  });
 
   final StateUpdater<T> updater;
 
-  final completer = Completer<void>();
+  final void Function() onDone;
 }
 
 class _CompletionNotifierEntry<T> implements _QueueEntry<T> {
@@ -82,7 +85,9 @@ abstract class StateQueue<T> extends ValueNotifier<T>
             );
           }
         } finally {
-          event.completer.complete();
+          if (event.onDone != null) {
+            event.onDone();
+          }
         }
       } else if (event is _CompletionNotifierEntry<T>) {
         event.completer.complete();
@@ -185,12 +190,12 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// of the bloc can not be awaited properly.
   @protected
   void run(StateUpdater<T> updater) {
-    final entry = _UpdaterEntry(updater);
-    final done = _pendingOperations.registerPendingOperation('UpdaterEntry');
+    final entry = _UpdaterEntry(
+      updater,
+      onDone: _pendingOperations.registerPendingOperation('UpdaterEntry'),
+    );
 
     _taskQueue.sink.add(entry);
-
-    entry.completer.future.then((_) => done());
   }
 
   @mustCallSuper
