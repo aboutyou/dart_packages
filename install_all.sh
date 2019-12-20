@@ -1,5 +1,8 @@
 set -eu
 
+# iff GITHUB_ACTIONS=true
+su root
+
 cd packages/state_queue
 flutter packages get
 cd ../..
