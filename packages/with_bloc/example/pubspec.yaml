@@ -1,0 +1,29 @@
+name: with_bloc_example
+description: An example
+version: 1.0.0
+authors:
+  - Timm Preetz <timm.preetz@aboutyou.com>
+  - Henri Beck <henri.beck@aboutyou.com>
+homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/with_bloc
+repository: https://github.com/aboutyou/dart_packages
+
+environment:
+  sdk: ">=2.3.0 <3.0.0"
+  flutter: ">=1.7.0 <2.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  meta: ^1.0.0
+
+dev_dependencies:
+  test: any
+
+  state_queue:
+    path: ../../state_queue
+  with_bloc:
+    path: ./..
+
+  flutter_test:
+    sdk: flutter
