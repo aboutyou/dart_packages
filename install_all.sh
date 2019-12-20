@@ -9,9 +9,9 @@ whoami
 
 pwd
 
-sudo chown -R cirrus /home/runner
+sudo chown -R cirrus /__w
 
-sudo chmod -R 777 /home/runner
+sudo chmod -R 777 /__w
 
 # sudo -i -u root
 
