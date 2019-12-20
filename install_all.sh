@@ -7,11 +7,13 @@ set -eux
 
 whoami
 
-#sudo chown -R cirrus /github
+pwd
 
-#sudo chmod -R 777 /github
+sudo chown -R cirrus /home/runner
 
-sudo -i -u root
+sudo chmod -R 777 /home/runner
+
+# sudo -i -u root
 
 cd packages/state_queue
 flutter packages get
