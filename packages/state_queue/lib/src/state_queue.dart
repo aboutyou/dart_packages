@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
+import 'package:pending_operations/pending_operations.dart';
 
 typedef StateUpdater<T> = Stream<T> Function(T state);
 
@@ -8,9 +9,14 @@ typedef StateUpdater<T> = Stream<T> Function(T state);
 abstract class _QueueEntry<T> {}
 
 class _UpdaterEntry<T> implements _QueueEntry<T> {
-  _UpdaterEntry(this.updater);
+  _UpdaterEntry(
+    this.updater, {
+    this.onDone,
+  });
 
   final StateUpdater<T> updater;
+
+  final void Function() onDone;
 }
 
 class _CompletionNotifierEntry<T> implements _QueueEntry<T> {
@@ -78,6 +84,10 @@ abstract class StateQueue<T> extends ValueNotifier<T>
               'StateQueue: Error occured in `run` stream:\nimplementation: $this\n$e\n$stack',
             );
           }
+        } finally {
+          if (event.onDone != null) {
+            event.onDone();
+          }
         }
       } else if (event is _CompletionNotifierEntry<T>) {
         event.completer.complete();
@@ -93,6 +103,10 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   static void Function(dynamic error, StackTrace strackTrace) errorHandler;
 
   final _taskQueue = StreamController<_QueueEntry<T>>();
+
+  final _pendingOperations = PendingOperations();
+
+  PendingOperationsReader get pendingOperations => _pendingOperations;
 
   set value(T value) {
     throw Exception('"value" must not be set directly. Use `run`.');
@@ -176,14 +190,19 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// of the bloc can not be awaited properly.
   @protected
   void run(StateUpdater<T> updater) {
-    _taskQueue.sink.add(_UpdaterEntry(updater));
+    final entry = _UpdaterEntry(
+      updater,
+      onDone: _pendingOperations.registerPendingOperation('UpdaterEntry'),
+    );
+
+    _taskQueue.sink.add(entry);
   }
 
   @mustCallSuper
   void dispose() {
-    super.dispose();
-
     _taskQueue.close();
+
+    super.dispose();
   }
 
   /// Returns a `Future` which completes once all currently queued tasks have completed

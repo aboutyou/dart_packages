@@ -1,3 +1,7 @@
-## [0.0.1] - TODO: Add release date.
+## [1.0.1]
 
-* TODO: Describe initial release.
+- Small improvement of futures handling
+
+## [1.0.0] - Initial version
+
+- Provides a `PendingOperations` class to track any ongoing operations.
