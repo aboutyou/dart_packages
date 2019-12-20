@@ -10,8 +10,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
-      # - name: Setup permissions
-      #   run: sh -c "sudo chown -R cirrus /github"
+      - name: Setup permissions
+        run:
+          - sudo chown -R cirrus /__w
+          - sudo chmod -R 777 /__w
       - name: Install dependencies
         run: ./install_all.sh
       - name: Run tests

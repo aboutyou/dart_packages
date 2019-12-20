@@ -9,9 +9,7 @@ whoami
 
 pwd
 
-sudo chown -R cirrus /__w
 
-sudo chmod -R 777 /__w
 
 # sudo -i -u root
 
