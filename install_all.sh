@@ -1,5 +1,7 @@
 set -eu
 
+export PUB_CACHE=$(pwd)/.pub_cache
+
 cd packages/state_queue
 flutter packages get
 cd ../..
