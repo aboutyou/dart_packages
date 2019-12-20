@@ -1,9 +1,11 @@
 #!/bin/sh
 
-set -eu
+set -eux
 
 # iff GITHUB_ACTIONS=true
 su - root
+
+whoami
 
 cd packages/state_queue
 flutter packages get
