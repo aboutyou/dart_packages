@@ -1,18 +1,7 @@
 #!/bin/sh
 
 set -eux
-
-# iff GITHUB_ACTIONS=true
-#su - root
-
-whoami
-
-pwd
-
-
-
-# sudo -i -u root
-
+    
 cd packages/state_queue
 flutter packages get
 cd ../..
