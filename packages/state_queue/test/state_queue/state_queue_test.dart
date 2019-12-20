@@ -62,13 +62,12 @@ void main() {
 
       expect(bloc.pendingOperations.pendingCalls, 1);
 
-      bloc.runQueuedTasksToCompletion();
+      await bloc.runQueuedTasksToCompletion();
 
-      /// Will be still `1` as the [Timer.run] didn't run yet and so for has not marked the previous operation as done
+      /// Will be still `1` as the [Timer.run] inside the `PendingOperations` didn't run yet and so far has not marked the previous operation as done
       expect(bloc.pendingOperations.pendingCalls, 1);
 
       /// Wait here to get the [Timer.run] callback be run
-      await Future.delayed(Duration.zero);
       await Future.delayed(Duration.zero);
 
       expect(bloc.pendingOperations.pendingCalls, 0);

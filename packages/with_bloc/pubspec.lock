@@ -238,10 +238,10 @@ packages:
   pending_operations:
     dependency: transitive
     description:
-      path: "../pending_operations"
-      relative: true
-    source: path
-    version: "1.0.0"
+      name: pending_operations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   petitparser:
     dependency: transitive
     description:
@@ -337,7 +337,7 @@ packages:
       path: "../state_queue"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.1.0"
   stream_channel:
     dependency: transitive
     description:
