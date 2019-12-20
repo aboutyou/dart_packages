@@ -3,9 +3,13 @@
 set -eux
 
 # iff GITHUB_ACTIONS=true
-su - root
+#su - root
 
 whoami
+
+sudo chown -R cirrus /github
+
+sudo chmod -R 777 /github
 
 cd packages/state_queue
 flutter packages get
