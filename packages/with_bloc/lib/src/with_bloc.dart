@@ -22,6 +22,13 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   ///
   /// This function might be called multiple times in the lifetime of this widget.
   /// Whenever the [inputs] change, a new BLoC will be created by calling this function.
+  ///
+  /// For creating the initial bloc, this function will be called in the `initState`.
+  /// That means that you can listen to any `Provider`s or `MediaQuery`.
+  ///
+  /// If you need to `listen` to changes, consider moving the `Provider` call out of the method
+  /// and then using the `value` itself in the [createBloc].
+  /// Don't forget to also reference the `value` in the [inputs].
   final BlocType Function(BuildContext context) createBloc;
 
   /// A [Function] which builds a widget depending on the [BlocType] and [StateType].
