@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:pending_operations/pending_operations.dart';
@@ -100,6 +101,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     });
   }
 
+  // ignore: avoid_annotating_with_dynamic
   static void Function(dynamic error, StackTrace strackTrace) errorHandler;
 
   final _taskQueue = StreamController<_QueueEntry<T>>();
@@ -112,6 +114,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     throw Exception('"value" must not be set directly. Use `run`.');
   }
 
+  // ignore: use_setters_to_change_properties
   /// This setter has only been added to work around a code generation issue we saw with `dartdevc` (for Flutter web development)
   /// Should be removed in the future.
   void _setValue(T value) {

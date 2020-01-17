@@ -13,7 +13,7 @@ class AsyncIncrementBloc extends StateQueue<AsyncIncrementState> {
 
   void increment() {
     run((state) async* {
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future<void>.delayed(Duration(milliseconds: 100));
 
       yield AsyncIncrementState(state.count + 1);
     });

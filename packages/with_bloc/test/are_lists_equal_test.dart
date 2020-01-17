@@ -13,28 +13,28 @@ class _Equatable {
 void main() {
   test('Should properly handle empty lists', () {
     expect(
-      areListsEqual([], []),
+      areListsEqual(<dynamic>[], <dynamic>[]),
       true,
     );
   });
 
   test('Lists with different amount of items', () {
     expect(
-      areListsEqual([], [1]),
+      areListsEqual(<dynamic>[], <dynamic>[1]),
       false,
     );
   });
 
   test('Lists with same amount of items and equal items', () {
     expect(
-      areListsEqual([1], [1]),
+      areListsEqual(<dynamic>[1], <dynamic>[1]),
       true,
     );
   });
 
   test('Lists with same amount of items and not equal items', () {
     expect(
-      areListsEqual([2], [1]),
+      areListsEqual(<dynamic>[2], <dynamic>[1]),
       false,
     );
   });
@@ -42,7 +42,10 @@ void main() {
   test('Lists with complex data structures 1', () {
     expect(
       /// These should not be equal because the [List] is not equal via `==`
-      areListsEqual([[]], [[]]),
+      areListsEqual(
+        <dynamic>[<dynamic>[]],
+        <dynamic>[<dynamic>[]],
+      ),
       false,
     );
   });
@@ -50,7 +53,7 @@ void main() {
   test('Lists with complex data structures 2', () {
     expect(
       /// These should not be equal because the [Object] is not equal via `==`
-      areListsEqual([Object()], [Object()]),
+      areListsEqual(<dynamic>[Object()], <dynamic>[Object()]),
       false,
     );
   });
@@ -58,7 +61,10 @@ void main() {
   test('Lists with const lists', () {
     expect(
       /// These should be equal because the use `const`
-      areListsEqual([const []], [const []]),
+      areListsEqual(
+        <dynamic>[const <dynamic>[]],
+        <dynamic>[const <dynamic>[]],
+      ),
       true,
     );
   });
@@ -66,14 +72,14 @@ void main() {
   test('Lists with complex data structures', () {
     expect(
       /// These should be equal because the items implement a custom `==`
-      areListsEqual([_Equatable()], [_Equatable()]),
+      areListsEqual(<dynamic>[_Equatable()], <dynamic>[_Equatable()]),
       true,
     );
   });
 
   test('Lists with same items but different order', () {
     expect(
-      areListsEqual([1, 2], [2, 1]),
+      areListsEqual(<dynamic>[1, 2], <dynamic>[2, 1]),
       false,
     );
   });
