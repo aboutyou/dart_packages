@@ -134,13 +134,3 @@ analyzer:
 
   errors:
     argument_type_not_assignable: info
-
-  exclude:
-    - lib/**/*.g.dart
-    - lib/**/*.pb.dart
-    - lib/**/*.pbenum.dart
-    - lib/**/*.pbgrpc.dart
-    - lib/**/*.pbjson.dart
-    - lib/**/*.pbserver.dart
-    - packages/**
-    - lib/ay_icons_icons.dart
