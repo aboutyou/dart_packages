@@ -34,7 +34,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 
   /// A [Function] which builds a widget depending on the [BlocType] and [StateType].
   ///
-  /// The [bloc] will be the current BLoC and [value] is the current [StateType].
+  /// The `bloc` will be the current BLoC and `value` is the current [StateType].
   /// When the BLoC emits a new value, this function will be called again to reflect the changes in the UI.
   ///
   /// The [child] will be passed in as the fourth argument and might be `null` if not supplied.
