@@ -13,6 +13,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     @required this.builder,
     this.inputs = const [],
     this.child,
+    this.onInputsChange,
   })  : assert(createBloc != null),
         assert(builder != null),
         assert(inputs != null),
@@ -23,7 +24,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   /// This function might be called multiple times in the lifetime of this widget.
   /// Whenever the [inputs] change, a new BLoC will be created by calling this function.
   ///
-  /// For creating the initial bloc, this function will be called in the `initState`.
+  /// For creating the initial BLoC, this function will be called in the `initState`.
   /// That means that you can not listen to any `Provider`s or `MediaQuery`.
   ///
   /// If you need to `listen` to changes, consider moving the `Provider` call out of the method
@@ -33,8 +34,8 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 
   /// A [Function] which builds a widget depending on the [BlocType] and [StateType].
   ///
-  /// The [bloc] will be the current bloc and [value] is the current [StateType].
-  /// When the bloc emits a new value, this function will be called again to reflect the changes in the UI.
+  /// The [bloc] will be the current BLoC and [value] is the current [StateType].
+  /// When the BLoC emits a new value, this function will be called again to reflect the changes in the UI.
   ///
   /// The [child] will be passed in as the fourth argument and might be `null` if not supplied.
   final Widget Function(
@@ -55,8 +56,45 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 
   /// The parameters the BLoC depends upon.
   ///
+  /// If [onInputsChange] is provided, the [onInputsChange] callback will be called when these inputs change.
+  ///
+  /// Otherwise we will create a new BLoC when the [inputs] change and dispose the old BLoC.
   /// If these change, the BLoC will be recreated and the old BloC will be disposed.
-  final List<dynamic> inputs;
+  final List inputs;
+
+  /// This callback will be called when ever the [inputs] change.
+  /// This will receive the current [BlocType], the previous [inputs] and the new [inputs].
+  ///
+  /// Can be `null`.
+  ///
+  /// Use this callback to update (call some method) instead of the default behaviour of recreating the BLoC.
+  ///
+  /// The return value should be a [bool], this will decide if we recreate the BLoC based on the inputs change.
+  /// Return `true` for recreating the BLoC and `false` for not recreating it.
+  ///
+  /// This allows you to handle different input changes differently, e.g.:
+  /// {@tool sample}
+  ///
+  /// ```dart
+  /// WithBloc(
+  ///   createBloc: () => Bloc(),
+  ///   inputs: [locale, isVip],
+  ///   onInputsChange: (bloc, {previousInputs, newInputs}) {
+  ///     if (previousInputs.first != newInputs.first) {
+  ///       return true;
+  ///     }
+  ///
+  ///     bloc.updateVip(isVip);
+  ///     return false
+  ///   }
+  /// ),
+  /// ```
+  /// {@end-tool}
+  final bool Function(
+    BlocType bloc, {
+    List previousInputs,
+    List newInputs,
+  }) onInputsChange;
 
   @override
   WithBlocState<BlocType, StateType> createState() =>
@@ -81,10 +119,26 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     super.didUpdateWidget(oldWidget);
 
     if (!areListsEqual(oldWidget.inputs, widget.inputs)) {
-      _disposeBloc();
+      /// Whether or not we should recreate the bloc because of the inputs change
+      var recreateBloc = true;
 
-      /// Recreate the BLoC
-      bloc = _initBloc();
+      /// If a [widget.onInputsChange] callback has been provided, call it will the inputs
+      ///
+      /// The return value will decide over whether we will recreate the Bloc
+      if (widget.onInputsChange != null) {
+        recreateBloc = widget.onInputsChange(
+          bloc,
+          previousInputs: oldWidget.inputs,
+          newInputs: widget.inputs,
+        );
+      }
+
+      if (recreateBloc) {
+        _disposeBloc();
+
+        /// Recreate the BLoC
+        bloc = _initBloc();
+      }
     }
   }
 
