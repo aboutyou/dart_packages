@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:with_bloc/src/are_lists_equal.dart';
 
-/// A helper widget for easily creating [StateQueue] in the [build] method.
+/// A helper widget for easily creating `StateQueue` in the `build` method.
 ///
 /// This widget takes care of creating the [BlocType] and disposing it when necessary.
 /// It also handles recreating the [BlocType] whenever any [inputs] change.
@@ -11,7 +11,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     Key key,
     @required this.createBloc,
     @required this.builder,
-    this.inputs = const [],
+    this.inputs = const <dynamic>[],
     this.child,
     this.onInputsChange,
   })  : assert(createBloc != null),
