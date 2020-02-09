@@ -7,13 +7,13 @@ import 'package:test/test.dart';
 class _TestBloc extends StateQueue<int> {
   _TestBloc() : super(0);
 
-  void setState(int n) async {
+  void setState(int n) {
     run((state) async* {
       yield n;
     });
   }
 
-  void divideStateBy(int n) async {
+  void divideStateBy(int n) {
     run((state) async* {
       yield state ~/ n;
     });
@@ -56,9 +56,7 @@ void main() {
   test(
     'PendingOperations: should register operations for run method',
     () async {
-      final bloc = _TestBloc();
-
-      bloc.setState(5);
+      final bloc = _TestBloc()..setState(5);
 
       expect(bloc.pendingOperations.pendingCalls, 1);
 
@@ -68,7 +66,7 @@ void main() {
       expect(bloc.pendingOperations.pendingCalls, 1);
 
       /// Wait here to get the [Timer.run] callback be run
-      await Future.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
 
       expect(bloc.pendingOperations.pendingCalls, 0);
     },
