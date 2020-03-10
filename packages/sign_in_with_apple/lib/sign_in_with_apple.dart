@@ -15,8 +15,8 @@ class SignInWithApple {
   /// When no credentials are returned (e.g. also by the user cancelling), this is treated as
   /// all other errors (just like the native API), and will throw an Exception
   ///
-  /// Successful result will be either of type [AuthorizationAppleID] or [AuthorizationPassword]
-  static Future<Authorization> requestCredentials() async {
+  /// Successful result will be either of type [AuthorizationCredentialAppleID] or [AuthorizationCredentialPassword]
+  static Future<AuthorizationCredential> requestCredentials() async {
     return _parseCredentialsResponse(
       await _channel
           .invokeMethod<Map<dynamic, dynamic>>('performAuthorizationRequest'),
@@ -58,10 +58,10 @@ CredentialState _parseCredentialState(String credentialState) {
 }
 
 @immutable
-abstract class Authorization {}
+abstract class AuthorizationCredential {}
 
-class AuthorizationAppleID implements Authorization {
-  AuthorizationAppleID({
+class AuthorizationCredentialAppleID implements AuthorizationCredential {
+  AuthorizationCredentialAppleID({
     @required this.userIdentifier,
     @required this.givenName,
     @required this.familyName,
@@ -85,8 +85,8 @@ class AuthorizationAppleID implements Authorization {
   }
 }
 
-class AuthorizationPassword implements Authorization {
-  AuthorizationPassword({
+class AuthorizationCredentialPassword implements AuthorizationCredential {
+  AuthorizationCredentialPassword({
     @required this.username,
     @required this.password,
   })  : assert(username != null),
@@ -98,14 +98,15 @@ class AuthorizationPassword implements Authorization {
 
   @override
   String toString() {
-    return 'AuthorizationPassword($username, [REDACTED PASSWORD])';
+    return 'AuthorizationCredential($username, [REDACTED PASSWORD])';
   }
 }
 
-Authorization _parseCredentialsResponse(Map<dynamic, dynamic> response) {
+AuthorizationCredential _parseCredentialsResponse(
+    Map<dynamic, dynamic> response) {
   switch (response['type']) {
     case 'appleid':
-      return AuthorizationAppleID(
+      return AuthorizationCredentialAppleID(
         userIdentifier: response['userIdentifier'],
         givenName: response['givenName'],
         familyName: response['familyName'],
@@ -113,7 +114,7 @@ Authorization _parseCredentialsResponse(Map<dynamic, dynamic> response) {
       );
 
     case 'password':
-      return AuthorizationPassword(
+      return AuthorizationCredentialPassword(
         username: response['username'],
         password: response['password'],
       );
