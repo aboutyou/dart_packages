@@ -3,7 +3,7 @@ import UIKit
 
 public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "sign_in_with_apple", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: "de.aboutyou.mobile.app.sign_in_with_apple", binaryMessenger: registrar.messenger())
     let instance = SwiftSignInWithApplePlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }

@@ -11,7 +11,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 /** SignInWithApplePlugin */
 public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "sign_in_with_apple")
+    val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "de.aboutyou.mobile.app.sign_in_with_apple")
     channel.setMethodCallHandler(SignInWithApplePlugin());
   }
 
@@ -27,7 +27,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
-      val channel = MethodChannel(registrar.messenger(), "sign_in_with_apple")
+      val channel = MethodChannel(registrar.messenger(), "de.aboutyou.mobile.app.sign_in_with_apple")
       channel.setMethodCallHandler(SignInWithApplePlugin())
     }
   }
