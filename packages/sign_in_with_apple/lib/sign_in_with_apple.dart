@@ -8,17 +8,11 @@ class SignInWithApple {
   static const MethodChannel _channel =
       const MethodChannel('de.aboutyou.mobile.app.sign_in_with_apple');
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-
-    return version;
+  static Future<String> requestCredentials() async {
+    return await _channel.invokeMethod<String>('performAuthorizationRequest');
   }
 
-  static Future<void> requestCredentials() async {
-    print("Start SiwA");
-
-    await _channel.invokeMethod('signInWithApple');
-
-    print("SiwA DONE");
+  static Future<String> getCredentialState() async {
+    return await _channel.invokeMethod<String>('getCredentialState');
   }
 }
