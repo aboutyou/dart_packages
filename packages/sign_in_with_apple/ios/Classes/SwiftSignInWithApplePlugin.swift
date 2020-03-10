@@ -3,6 +3,8 @@ import UIKit
 import AuthenticationServices
 
 public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
+  var _lastAYSignInWithAppleAuthorizationControllerDelegate: Any? = nil // will be `AYSignInWithAppleAuthorizationControllerDelegate` in practice, but we can't scope the variable to iOS13+
+
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "de.aboutyou.mobile.app.sign_in_with_apple", binaryMessenger: registrar.messenger())
     let instance = SwiftSignInWithApplePlugin()
@@ -25,6 +27,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
                        
                 let authorizationController = ASAuthorizationController(authorizationRequests: [passwordRequest, request])
                 let delegate = AYSignInWithAppleAuthorizationControllerDelegate(result)
+                _lastAYSignInWithAppleAuthorizationControllerDelegate = delegate // store to keep alive
                 authorizationController.delegate = delegate
                 authorizationController.performRequests()
             
@@ -129,16 +132,12 @@ class AYSignInWithAppleAuthorizationControllerDelegate : NSObject, ASAuthorizati
         }
     }
     
-    public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        // Handle error.
-        print("error");
-        NSLog("error")
-        
+    public func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {       
         resultCallback(
             FlutterError(
                 code: "ERR",
-                message: "AYSignInWithAppleAuthorizationControllerDelegate didCompleteWithError",
-                details: error
+                message: "AYSignInWithAppleAuthorizationControllerDelegate didCompleteWithError: \(error.localizedDescription)",
+                details: nil // passing error would crash with `Error Domain=com.apple.AuthenticationServices.AuthorizationError Code=1000 "(null)" of type NSError`
             )
         )
     }

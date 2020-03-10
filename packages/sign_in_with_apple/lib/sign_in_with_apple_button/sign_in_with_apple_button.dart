@@ -41,8 +41,10 @@ class SignInWithAppleButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: 16.0,
           ),
-          onPressed: () {
-            SignInWithApple.requestCredentials();
+          onPressed: () async {
+            final result = await SignInWithApple.requestCredentials();
+
+            print(result);
           },
           color: Colors.black,
         ),
