@@ -11,6 +11,7 @@ class SignInWithAppleButton extends StatelessWidget {
       height: 44,
       child: SizedBox.expand(
         child: CupertinoButton(
+          borderRadius: BorderRadius.all(Radius.circular(3.0)),
           child: Row(
             children: <Widget>[
               Container(
@@ -19,19 +20,22 @@ class SignInWithAppleButton extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '',
-                    style: TextStyle(fontSize: 19),
+                    style: TextStyle(fontSize: 23),
                   ),
                 ),
               ),
-              Expanded(
+              Container(
                 child: Text(
                   'Sign in with Apple',
                   style: TextStyle(fontSize: 19),
                   textAlign: TextAlign.center,
                 ),
               ),
+              Container(
+                width: 28,
+              )
             ],
-            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
           padding: EdgeInsets.symmetric(
             horizontal: 16.0,
