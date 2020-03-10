@@ -7,3 +7,7 @@ cd ../..
 cd packages/with_bloc
 flutter test
 cd ../..
+
+cd packages/sign_in_with_apple
+flutter test
+cd ../..
