@@ -13,4 +13,12 @@ class SignInWithApple {
 
     return version;
   }
+
+  static Future<void> requestCredentials() async {
+    print("Start SiwA");
+
+    await _channel.invokeMethod('signInWithApple');
+
+    print("SiwA DONE");
+  }
 }

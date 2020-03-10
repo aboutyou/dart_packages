@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 /// According to
 /// https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple/overview/buttons/
@@ -40,7 +41,9 @@ class SignInWithAppleButton extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: 16.0,
           ),
-          onPressed: () {},
+          onPressed: () {
+            SignInWithApple.requestCredentials();
+          },
           color: Colors.black,
         ),
       ),
