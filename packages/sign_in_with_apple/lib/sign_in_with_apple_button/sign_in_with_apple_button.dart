@@ -43,7 +43,7 @@ class SignInWithAppleButton extends StatelessWidget {
           ),
           onPressed: () async {
             try {
-              print(await SignInWithApple.getCredentialState());
+              // print(await SignInWithApple.getCredentialState('yolo'));
               print(await SignInWithApple.requestCredentials());
             } catch (e) {
               // TODO: Why weren't these logged in the parent without try/catch?

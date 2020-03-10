@@ -14,7 +14,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         if #available(iOS 13.0, *) {
             switch call.method {
-                case "performAuthorizationRequest":
+                case "performAuthorizationRequest":                    
                     let appleIDProvider = ASAuthorizationAppleIDProvider()
                     let request = appleIDProvider.createRequest()
                     request.requestedScopes = [.fullName, .email]
@@ -111,16 +111,24 @@ class AYSignInWithAppleAuthorizationControllerDelegate : NSObject, ASAuthorizati
             let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName
             let email = appleIDCredential.email
+
+            let result: [String:String?] = [
+              "type": "appleid",
+              "userIdentifier": userIdentifier,
+              "givenName": fullName?.givenName,
+              "familyName": fullName?.familyName,
+              "email": email
+            ]
             
-            resultCallback("Apple ID credentials \(userIdentifier) \(fullName?.givenName ?? "") \(fullName?.familyName ?? "") \(email ?? "")");
+            resultCallback(result);
         
         case let passwordCredential as ASPasswordCredential:
-        
-            // Sign in using an existing iCloud Keychain credential.
-            let username = passwordCredential.user
-            let password = passwordCredential.password
-            
-            resultCallback("web credentials \(username) \(password)");
+            let result: [String:String] = [
+              "type": "password",
+              "username": passwordCredential.user,
+              "password": passwordCredential.password
+            ]
+            resultCallback(result);
             
         default:
             resultCallback("No credentials received \(authorization) \(authorization.credential)");
