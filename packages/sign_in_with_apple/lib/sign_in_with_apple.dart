@@ -16,3 +16,9 @@ class SignInWithApple {
     return await _channel.invokeMethod<String>('getCredentialState');
   }
 }
+
+enum CredentialState {
+  authorized,
+  revoked,
+  notFound,
+}

@@ -42,9 +42,13 @@ class SignInWithAppleButton extends StatelessWidget {
             horizontal: 16.0,
           ),
           onPressed: () async {
-            final result = await SignInWithApple.requestCredentials();
-
-            print(result);
+            try {
+              print(await SignInWithApple.getCredentialState());
+              print(await SignInWithApple.requestCredentials());
+            } catch (e) {
+              // TODO: Why weren't these logged in the parent without try/catch?
+              print(e);
+            }
           },
           color: Colors.black,
         ),
