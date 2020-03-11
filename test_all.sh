@@ -9,7 +9,5 @@ flutter test
 cd ../..
 
 cd packages/sign_in_with_apple
-ls
-find .
 flutter test
 cd ../..
