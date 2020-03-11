@@ -3,7 +3,7 @@ import Flutter
 import UIKit
 
 public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
-    var _lastAYSignInWithAppleAuthorizationControllerDelegate: Any? // will be `AYSignInWithAppleAuthorizationControllerDelegate` in practice, but we can't scope the variable to iOS13+
+    var _lastAYSignInWithAppleAuthorizationController: Any? // will be `AYSignInWithAppleAuthorizationController` in practice, but we can't scope the variable to iOS13+
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "de.aboutyou.mobile.app.sign_in_with_apple", binaryMessenger: registrar.messenger())
@@ -15,18 +15,12 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
         if #available(iOS 13.0, *) {
             switch call.method {
             case "performAuthorizationRequest":
-                let appleIDProvider = ASAuthorizationAppleIDProvider()
-                let request = appleIDProvider.createRequest()
-                request.requestedScopes = [.fullName, .email]
+                let signInController = AYSignInWithAppleAuthorizationController(result)
 
-                let passwordProvider = ASAuthorizationPasswordProvider()
-                let passwordRequest = passwordProvider.createRequest()
+                // store to keep alive
+                _lastAYSignInWithAppleAuthorizationController = signInController
 
-                let authorizationController = ASAuthorizationController(authorizationRequests: [passwordRequest, request])
-                let delegate = AYSignInWithAppleAuthorizationControllerDelegate(result)
-                _lastAYSignInWithAppleAuthorizationControllerDelegate = delegate // store to keep alive
-                authorizationController.delegate = delegate
-                authorizationController.performRequests()
+                signInController.performRequests()
 
             case "getCredentialState":
                 // Makes sure arguments exists and is a Map
@@ -61,7 +55,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
                             FlutterError(
                                 code: "ERR",
                                 message: "Failed to get credentials state: \(error)",
-                                details: nil // don't pass error here
+                                details: nil
                             )
                         )
 
@@ -79,7 +73,13 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
                         result("notFound")
 
                     default:
-                        break
+                        result(
+                            FlutterError(
+                                code: "ERR",
+                                message: "Unexpected credential state: \(credentialState)",
+                                details: nil
+                            )
+                        )
                     }
                 }
 
@@ -101,11 +101,38 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
 }
 
 @available(iOS 13.0, *)
-class AYSignInWithAppleAuthorizationControllerDelegate: NSObject, ASAuthorizationControllerDelegate {
+class AYSignInWithAppleAuthorizationController: NSObject, ASAuthorizationControllerDelegate {
+    enum CurrentAction {
+        case attemptWithPasswords
+        case attemptWithoutPasswords
+    }
+
     var resultCallback: FlutterResult
+
+    var currentAction: CurrentAction = .attemptWithPasswords
 
     init(_ callback: @escaping FlutterResult) {
         resultCallback = callback
+    }
+
+    public func performRequests() {
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        let request = appleIDProvider.createRequest()
+        request.requestedScopes = [.fullName, .email]
+
+        var requests: [ASAuthorizationRequest] = [request]
+
+        if currentAction == .attemptWithPasswords {
+            let passwordProvider = ASAuthorizationPasswordProvider()
+            let passwordRequest = passwordProvider.createRequest()
+
+            requests.append(passwordRequest)
+        }
+
+        let authorizationController = ASAuthorizationController(authorizationRequests: requests)
+
+        authorizationController.delegate = self
+        authorizationController.performRequests()
     }
 
     public func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
@@ -148,10 +175,23 @@ class AYSignInWithAppleAuthorizationControllerDelegate: NSObject, ASAuthorizatio
     }
 
     public func authorizationController(controller _: ASAuthorizationController, didCompleteWithError error: Error) {
+        if currentAction == .attemptWithPasswords {
+            // Authentication request including passwords failed, probably because the user has not any applicable
+            // passwords stored in keychain
+            // Internally this case fails with `Error Domain=AKAuthenticationError Code=-7001`, which is explained by Apple as
+            // `This is an expected error when both password and appleid requests are passed and there are no valid password credentials`
+            //
+            // I haven't found a way to check for that specific error code, so we just assume that that is the reason when a request with password fails,
+            // and then try again without a password
+            currentAction = .attemptWithoutPasswords
+
+            return performRequests()
+        }
+
         resultCallback(
             FlutterError(
                 code: "ERR",
-                message: "AYSignInWithAppleAuthorizationControllerDelegate didCompleteWithError: \(error.localizedDescription)",
+                message: "AYSignInWithAppleAuthorizationController didCompleteWithError: \(error.localizedDescription) \((error as NSError).domain) \((error as NSError).code)",
                 details: nil
             )
         )
