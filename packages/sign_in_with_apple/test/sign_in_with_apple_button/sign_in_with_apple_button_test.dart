@@ -15,6 +15,7 @@ Future<void> main() async {
   await fontLoader.load();
 
   setUp(() {
+    // ignore: avoid_as
     final binding = TestWidgetsFlutterBinding.ensureInitialized()
         as TestWidgetsFlutterBinding;
 
@@ -22,7 +23,7 @@ Future<void> main() async {
     binding.window.physicalSizeTestValue = Size(300, 100) * 3;
   });
 
-  testWidgets('Default style', (WidgetTester tester) async {
+  testWidgets('Default style', (tester) async {
     await tester.pumpWidget(
       TestSetup(
         child: SignInWithAppleButton(onPressed: () {}),
@@ -35,7 +36,7 @@ Future<void> main() async {
     );
   });
 
-  testWidgets('Left aligned icon', (WidgetTester tester) async {
+  testWidgets('Left aligned icon', (tester) async {
     await tester.pumpWidget(
       TestSetup(
         child: SignInWithAppleButton(
@@ -51,7 +52,7 @@ Future<void> main() async {
     );
   });
 
-  testWidgets('Pill-shaped', (WidgetTester tester) async {
+  testWidgets('Pill-shaped', (tester) async {
     await tester.pumpWidget(
       TestSetup(
         child: SignInWithAppleButton(
@@ -69,7 +70,7 @@ Future<void> main() async {
     );
   });
 
-  testWidgets('Default style (white)', (WidgetTester tester) async {
+  testWidgets('Default style (white)', (tester) async {
     await tester.pumpWidget(
       TestSetup(
         child: SignInWithAppleButton(
@@ -92,11 +93,13 @@ class TestSetup extends StatelessWidget {
     Key key,
     @required this.child,
     this.backgroundColor = Colors.white,
-  }) : super(key: key);
+  })  : assert(child != null),
+        super(key: key);
 
   final Widget child;
 
   final Color backgroundColor;
+
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(

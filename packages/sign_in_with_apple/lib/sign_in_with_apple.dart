@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
@@ -8,7 +7,7 @@ export './sign_in_with_apple_button/sign_in_with_apple_button.dart';
 
 class SignInWithApple {
   static const MethodChannel _channel =
-      const MethodChannel('de.aboutyou.mobile.app.sign_in_with_apple');
+      MethodChannel('de.aboutyou.mobile.app.sign_in_with_apple');
 
   /// Request credentials from the system, preferring existing keychain credentials
   /// over "Sign in with Apple"
@@ -54,7 +53,7 @@ CredentialState _parseCredentialState(String credentialState) {
       return CredentialState.notFound;
 
     default:
-      throw Exception("Unsupported credential state $credentialState");
+      throw Exception('Unsupported credential state $credentialState');
   }
 }
 
@@ -117,23 +116,25 @@ class AuthorizationCredentialPassword implements AuthorizationCredential {
   }
 }
 
+// ignore_for_file: avoid_as
 AuthorizationCredential _parseCredentialsResponse(
-    Map<dynamic, dynamic> response) {
-  switch (response['type']) {
+  Map<dynamic, dynamic> response,
+) {
+  switch (response['type'] as String) {
     case 'appleid':
       return AuthorizationCredentialAppleID(
-        userIdentifier: response['userIdentifier'],
-        givenName: response['givenName'],
-        familyName: response['familyName'],
-        email: response['email'],
-        identityToken: response['identityToken'],
-        authorizationCode: response['authorizationCode'],
+        userIdentifier: response['userIdentifier'] as String,
+        givenName: response['givenName'] as String,
+        familyName: response['familyName'] as String,
+        email: response['email'] as String,
+        identityToken: response['identityToken'] as String,
+        authorizationCode: response['authorizationCode'] as String,
       );
 
     case 'password':
       return AuthorizationCredentialPassword(
-        username: response['username'],
-        password: response['password'],
+        username: response['username'] as String,
+        password: response['password'] as String,
       );
 
     default:

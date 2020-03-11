@@ -3,12 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 // import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('sign_in_with_apple');
+  const channel = MethodChannel('sign_in_with_apple');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+    channel.setMockMethodCallHandler((methodCall) async {
       return '42';
     });
   });
