@@ -14,6 +14,10 @@ Future<void> main() async {
   final fontLoader = FontLoader('SF')..addFont(fontData);
   await fontLoader.load();
 
+  if (!Platform.isMacOS) {
+    return;
+  }
+
   setUp(() {
     // ignore: avoid_as
     final binding = TestWidgetsFlutterBinding.ensureInitialized()
