@@ -111,8 +111,6 @@ class AYSignInWithAppleAuthorizationControllerDelegate: NSObject, ASAuthorizatio
     public func authorizationController(controller _: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
         switch authorization.credential {
         case let appleIDCredential as ASAuthorizationAppleIDCredential:
-
-            // Create an account in your system.
             let userIdentifier = appleIDCredential.user
             let fullName = appleIDCredential.fullName
             let email = appleIDCredential.email
@@ -123,6 +121,8 @@ class AYSignInWithAppleAuthorizationControllerDelegate: NSObject, ASAuthorizatio
                 "givenName": fullName?.givenName,
                 "familyName": fullName?.familyName,
                 "email": email,
+                "identityToken": appleIDCredential.identityToken != nil ? String(decoding: appleIDCredential.identityToken!, as: UTF8.self) : nil,
+                "authorizationCode": appleIDCredential.authorizationCode != nil ? String(decoding: appleIDCredential.authorizationCode!, as: UTF8.self) : nil,
             ]
 
             resultCallback(result)
@@ -137,7 +137,13 @@ class AYSignInWithAppleAuthorizationControllerDelegate: NSObject, ASAuthorizatio
 
         default:
             // Not getting any credentials would result in an error (didCompleteWithError)
-            resultCallback("No credentials received \(authorization) \(authorization.credential)")
+            resultCallback(
+                FlutterError(
+                    code: "ERR",
+                    message: "Unexpected credentials: \(authorization.credential)",
+                    details: nil
+                )
+            )
         }
     }
 
@@ -146,7 +152,7 @@ class AYSignInWithAppleAuthorizationControllerDelegate: NSObject, ASAuthorizatio
             FlutterError(
                 code: "ERR",
                 message: "AYSignInWithAppleAuthorizationControllerDelegate didCompleteWithError: \(error.localizedDescription)",
-                details: nil // passing error would crash with `Error Domain=com.apple.AuthenticationServices.AuthorizationError Code=1000 "(null)" of type NSError`
+                details: nil
             )
         )
     }

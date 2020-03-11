@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
@@ -66,22 +67,36 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
     @required this.givenName,
     @required this.familyName,
     @required this.email,
-  }) : assert(userIdentifier != null);
+    @required this.identityToken,
+    @required this.authorizationCode,
+  })  : assert(userIdentifier != null),
+        assert(identityToken != null),
+        assert(authorizationCode != null);
 
   final String userIdentifier;
 
-  /// Can be `null`
+  /// Can be `null`, will only be returned on the first authorization
   final String givenName;
 
-  /// Can be `null`
+  /// Can be `null`, will only be returned on the first authorization
   final String familyName;
 
-  /// Can be `null`
+  /// Can be `null`, will only be returned on the first authorization
   final String email;
+
+  /// Can be `null` on the native side, but is expected on the Flutter side,
+  /// as the authorization would be useless without the tokens to validate them
+  /// on your own server
+  final String identityToken;
+
+  /// Can be `null` on the native side, but is expected on the Flutter side,
+  /// as the authorization would be useless without the tokens to validate them
+  /// on your own server
+  final String authorizationCode;
 
   @override
   String toString() {
-    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email)';
+    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, identityToken set? ${identityToken != null}, authorizationCode set? ${authorizationCode != null})';
   }
 }
 
@@ -111,6 +126,8 @@ AuthorizationCredential _parseCredentialsResponse(
         givenName: response['givenName'],
         familyName: response['familyName'],
         email: response['email'],
+        identityToken: response['identityToken'],
+        authorizationCode: response['authorizationCode'],
       );
 
     case 'password':
