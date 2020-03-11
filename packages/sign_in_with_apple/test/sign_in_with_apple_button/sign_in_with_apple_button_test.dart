@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple_button/sign_in_with_apple_button.dart';
 
 Future<void> main() async {
-  final fontData = File('assets/fonts/SF.ttf')
+  final fontData = File('../assets/fonts/SF.ttf')
       .readAsBytes()
       .then((bytes) => ByteData.view(Uint8List.fromList(bytes).buffer));
   final fontLoader = FontLoader('SF')..addFont(fontData);
