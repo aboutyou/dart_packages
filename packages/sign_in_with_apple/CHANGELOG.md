@@ -1,3 +1,3 @@
-## 0.0.1
+## 1.0.0
 
-* TODO: Describe initial release.
+* Initial release of Sign in with Apple plugin that can request authentication via Apple ID and stored keychain passwords
