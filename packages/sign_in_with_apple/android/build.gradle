@@ -1,4 +1,4 @@
-group 'com.example.sign_in_with_apple'
+group 'de.aboutyou.mobile.app.sign_in_with_apple'
 version '1.0-SNAPSHOT'
 
 buildscript {

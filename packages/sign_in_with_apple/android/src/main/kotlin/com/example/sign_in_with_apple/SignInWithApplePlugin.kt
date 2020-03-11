@@ -1,4 +1,4 @@
-package com.example.sign_in_with_apple
+package de.aboutyou.mobile.app.sign_in_with_apple
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin
