@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 
 import '../../sign_in_with_apple.dart';
@@ -24,15 +26,19 @@ class IsSignInWithAppleAvailable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: _isAvailable,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data) {
-          return child;
-        }
+    if (Platform.isIOS) {
+      return FutureBuilder<bool>(
+        future: _isAvailable,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data) {
+            return child;
+          }
 
-        return fallback;
-      },
-    );
+          return fallback;
+        },
+      );
+    }
+
+    return fallback;
   }
 }
