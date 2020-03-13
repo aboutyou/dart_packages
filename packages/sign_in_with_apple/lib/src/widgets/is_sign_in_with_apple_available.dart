@@ -23,6 +23,10 @@ class IsSignInWithAppleAvailable extends StatelessWidget {
         assert(fallback != null),
         super(key: key);
 
+  /// A static variable which will trigger a method call when the app launches
+  ///
+  /// In most cases, this should lead to no UI jumping / flashing, as it should already have completed when you get to a Sign-In page
+  /// Allowing this widget to render the proper UI immediately
   static final _isAvailable = SignInWithApple.isAvailable();
 
   /// A [Widget] which will only be rendered in case Sign in with Apple is available
