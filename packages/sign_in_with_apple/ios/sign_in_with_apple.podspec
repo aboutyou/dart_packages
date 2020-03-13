@@ -5,7 +5,7 @@
 Pod::Spec.new do |s|
   s.name             = 'sign_in_with_apple'
   s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
+  s.summary          = 'Flutter plugin for handling Sign in with Apple'
   s.description      = <<-DESC
 Flutter bridge to initiate Sign in with Apple (currently iOS only). Includes support for keychain entries as well as sign in with an Apple ID.
                        DESC
