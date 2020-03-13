@@ -48,4 +48,8 @@ class SignInWithApple {
       ),
     );
   }
+
+  static Future<bool> isAvailable() {
+    return channel.invokeMethod<bool>('isAvailable');
+  }
 }

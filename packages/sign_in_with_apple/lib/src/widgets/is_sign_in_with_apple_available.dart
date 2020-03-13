@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import '../../sign_in_with_apple.dart';
+
 /// A widget for conditionally rendering UI based on whether or not Sign in with Apple is available
 class IsSignInWithAppleAvailable extends StatelessWidget {
   const IsSignInWithAppleAvailable({
@@ -10,7 +12,7 @@ class IsSignInWithAppleAvailable extends StatelessWidget {
         assert(fallback != null),
         super(key: key);
 
-  static final _isAvailable = Future.value(true);
+  static final _isAvailable = SignInWithApple.isAvailable();
 
   /// A [Widget] which will only be rendered in case Sign in with Apple is available
   final Widget child;
