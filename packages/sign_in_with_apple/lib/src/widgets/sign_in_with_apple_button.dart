@@ -1,41 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-/// A widget for conditionally rendering UI based on whether or not Sign in with Apple is available
-class IsSignInWithAppleAvailable extends StatelessWidget {
-  const IsSignInWithAppleAvailable({
-    Key key,
-    @required this.child,
-    this.fallback = const SizedBox.shrink(),
-  })  : assert(child != null),
-        assert(fallback != null),
-        super(key: key);
-
-  static final isAvailable = Future.value(true);
-
-  /// A [Widget] which will only be rendered in case Sign in with Apple is available
-  final Widget child;
-
-  /// A [Widget] which will be rendered in case Sign in with Apple is not available
-  ///
-  /// If this is not provided, this will default to a [SizedBox.shrink]
-  final Widget fallback;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: isAvailable,
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data) {
-          return child;
-        }
-
-        return fallback;
-      },
-    );
-  }
-}
-
 /// Style according to
 /// https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple/overview/buttons/
 class SignInWithAppleButton extends StatelessWidget {
