@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
 
 import './authorization_credential.dart';
@@ -15,7 +16,8 @@ export './sign_in_with_apple_button/sign_in_with_apple_button.dart'
     show SignInWithAppleButton, SignInWithAppleButtonStyle, IconAlignment;
 
 class SignInWithApple {
-  static const MethodChannel _channel =
+  @visibleForTesting
+  static const channel =
       MethodChannel('de.aboutyou.mobile.app.sign_in_with_apple');
 
   /// Request credentials from the system, preferring existing keychain credentials
@@ -27,7 +29,7 @@ class SignInWithApple {
   /// Successful result will be either of type [AuthorizationCredentialAppleID] or [AuthorizationCredentialPassword]
   static Future<AuthorizationCredential> requestCredentials() async {
     return parseCredentialsResponse(
-      await _channel
+      await channel
           .invokeMethod<Map<dynamic, dynamic>>('performAuthorizationRequest'),
     );
   }
@@ -36,7 +38,7 @@ class SignInWithApple {
     String userIdentifier,
   ) async {
     return parseCredentialState(
-      await _channel.invokeMethod<String>(
+      await channel.invokeMethod<String>(
         'getCredentialState',
         <String, String>{'userIdentifier': userIdentifier},
       ),

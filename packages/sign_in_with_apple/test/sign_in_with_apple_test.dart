@@ -1,18 +1,15 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 void main() {
-  const channel = MethodChannel('de.aboutyou.mobile.app.sign_in_with_apple');
-
   TestWidgetsFlutterBinding.ensureInitialized();
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    SignInWithApple.channel.setMockMethodCallHandler(null);
   });
 
   test('performAuthorizationRequest -> Apple ID', () async {
-    channel.setMockMethodCallHandler((methodCall) async {
+    SignInWithApple.channel.setMockMethodCallHandler((methodCall) async {
       if (methodCall.method == 'performAuthorizationRequest') {
         return <dynamic, dynamic>{
           'type': 'appleid',
@@ -35,7 +32,7 @@ void main() {
   });
 
   test('performAuthorizationRequest -> Username/Password', () async {
-    channel.setMockMethodCallHandler((methodCall) async {
+    SignInWithApple.channel.setMockMethodCallHandler((methodCall) async {
       if (methodCall.method == 'performAuthorizationRequest') {
         return <dynamic, dynamic>{
           'type': 'password',
