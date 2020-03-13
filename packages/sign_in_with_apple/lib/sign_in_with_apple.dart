@@ -12,8 +12,12 @@ export './authorization_credential.dart'
         AuthorizationCredentialAppleID,
         AuthorizationCredentialPassword;
 export './credential_state.dart' show CredentialState;
-export './sign_in_with_apple_button/sign_in_with_apple_button.dart'
-    show SignInWithAppleButton, SignInWithAppleButtonStyle, IconAlignment;
+export './src/widgets/sign_in_with_apple_button.dart'
+    show
+        SignInWithAppleButton,
+        SignInWithAppleButtonStyle,
+        IconAlignment,
+        IsSignInWithAppleAvailable;
 
 class SignInWithApple {
   @visibleForTesting
