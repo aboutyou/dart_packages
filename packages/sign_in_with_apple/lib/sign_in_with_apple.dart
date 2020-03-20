@@ -18,6 +18,7 @@ export './src/widgets/is_sign_in_with_apple_available.dart'
 export './src/widgets/sign_in_with_apple_button.dart'
     show SignInWithAppleButton, SignInWithAppleButtonStyle, IconAlignment;
 
+// ignore: avoid_classes_with_only_static_members
 class SignInWithApple {
   @visibleForTesting
   static const channel =
