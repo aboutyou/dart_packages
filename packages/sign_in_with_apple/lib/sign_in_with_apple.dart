@@ -56,7 +56,7 @@ class SignInWithApple {
   /// Cached Future, so we only ever call this once on the native side
   static Future<bool> _isAvailableFuture;
 
-  static FutureOr<bool> isAvailable() {
+  static Future<bool> isAvailable() {
     if (_isAvailable != null) {
       return SynchronousFuture<bool>(_isAvailable);
     }
