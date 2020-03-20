@@ -69,7 +69,8 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   ///
   /// Use this callback to update (call some method) instead of the default behaviour of recreating the BLoC.
   ///
-  /// The return value should be a [bool], this will decide if we recreate the BLoC based on the inputs change.
+  /// The returned [bool] signals whether the bloc has been updated successfully with the new inputs,
+  /// or whether a new instance should be created from scratch.
   /// Return `true` for recreating the BLoC and `false` for not recreating it.
   ///
   /// This allows you to handle different input changes differently, e.g.:
