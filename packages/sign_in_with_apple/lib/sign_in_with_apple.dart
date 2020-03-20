@@ -57,6 +57,12 @@ class SignInWithApple {
   /// Cached Future, so we only ever call this once on the native side
   static Future<bool> _isAvailableFuture;
 
+  /// A static variable which will trigger a method call when the app launches
+  ///
+  /// This should allow most calls to [isAvailable] to return a [SynchronousFuture],
+  /// which should result in a better UX (no jumping UI).
+  static final _isAvavailableTrigger = isAvailable();
+
   static Future<bool> isAvailable() {
     if (_isAvailable != null) {
       return SynchronousFuture<bool>(_isAvailable);
