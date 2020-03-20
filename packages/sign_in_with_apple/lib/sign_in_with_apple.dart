@@ -61,6 +61,8 @@ class SignInWithApple {
   ///
   /// This should allow most calls to [isAvailable] to return a [SynchronousFuture],
   /// which should result in a better UX (no jumping UI).
+  ///
+  /// ignore: unused_field
   static final _isAvavailableTrigger = isAvailable();
 
   static Future<bool> isAvailable() {
