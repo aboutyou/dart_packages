@@ -60,7 +60,6 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   /// If [onInputsChange] is provided, the [onInputsChange] callback will be called when these inputs change.
   ///
   /// Otherwise we will create a new BLoC when the [inputs] change and dispose the old BLoC.
-  /// If these change, the BLoC will be recreated and the old BloC will be disposed.
   final List inputs;
 
   /// This callback will be called when ever the [inputs] change.
