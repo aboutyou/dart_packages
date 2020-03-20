@@ -67,7 +67,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   ///
   /// Can be `null`.
   ///
-  /// Use this callback to update (call some method) instead of the default behaviour of recreating the BLoC.
+  /// Use this callback to update the BLoC (e.g. call some method) instead of the default behavior of creating a new BLoC instance.
   ///
   /// The returned [bool] signals whether the bloc has been updated successfully with the new inputs,
   /// or whether a new instance should be created from scratch.
