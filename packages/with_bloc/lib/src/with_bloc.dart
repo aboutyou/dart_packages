@@ -22,7 +22,8 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   /// A function which creates the [BlocType] instance
   ///
   /// This function might be called multiple times in the lifetime of this widget.
-  /// Whenever the [inputs] change, a new BLoC will be created by calling this function.
+  /// Whenever the [inputs] change, a new BLoC will be created by calling this function,
+  /// unless an [onInputsChange] callback was provided, in which case the latter is used to update the existing bloc.
   ///
   /// For creating the initial BLoC, this function will be called in the `initState`.
   /// That means that you can not listen to any `Provider`s or `MediaQuery`.
