@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
 
@@ -47,7 +48,24 @@ class SignInWithApple {
     );
   }
 
-  static Future<bool> isAvailable() {
-    return _isAvailable ??= channel.invokeMethod<bool>('isAvailable');
+  /// Cached value whether or not sign-in with apple is available
+  ///
+  /// We cache, so we can return a [SynchronousFuture] in case this value has already been loaded
+  static bool _isAvailable;
+
+  /// Cached Future, so we only ever call this once on the native side
+  static Future<bool> _isAvailableFuture;
+
+  static FutureOr<bool> isAvailable() {
+    if (_isAvailable != null) {
+      return SynchronousFuture<bool>(_isAvailable);
+    }
+
+    return _isAvailableFuture ??=
+        channel.invokeMethod<bool>('isAvailable').then((isAvailable) {
+      _isAvailable = isAvailable;
+
+      return isAvailable;
+    });
   }
 }
