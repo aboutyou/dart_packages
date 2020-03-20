@@ -30,7 +30,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   ///
   /// If you need to `listen` to changes, consider moving the `Provider` call out of the method
   /// and then using the `value` itself in the [createBloc].
-  /// Don't forget to also reference the `value` in the [inputs].
+  /// Don't forget to also reference the `value` in the [inputs] so the bloc would be rebuilt if it changes.
   final BlocType Function(BuildContext context) createBloc;
 
   /// A [Function] which builds a widget depending on the [BlocType] and [StateType].
