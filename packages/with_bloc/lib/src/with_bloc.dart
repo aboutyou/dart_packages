@@ -69,9 +69,10 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   ///
   /// Use this callback to update the BLoC (e.g. call some method) instead of the default behavior of creating a new BLoC instance.
   ///
-  /// The returned [bool] signals whether the bloc has been updated successfully with the new inputs,
+  /// The returned [bool] signals whether the BLoC has been updated successfully with the new inputs,
   /// or whether a new instance should be created from scratch.
-  /// Return `true` for recreating the BLoC and `false` for not recreating it.
+  /// Return `true` for not recreating the BLoC, so you have handled the change of inputs.
+  /// For recreating the BLoC, return `false`.
   ///
   /// This allows you to handle different input changes differently, e.g.:
   /// {@tool sample}
@@ -127,7 +128,8 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
       ///
       /// The return value will decide over whether we will recreate the Bloc
       if (widget.onInputsChange != null) {
-        recreateBloc = widget.onInputsChange(
+        /// For recreating the bloc, this function should return `false` so we invert this here
+        recreateBloc = !widget.onInputsChange(
           bloc,
           previousInputs: oldWidget.inputs,
           newInputs: widget.inputs,
