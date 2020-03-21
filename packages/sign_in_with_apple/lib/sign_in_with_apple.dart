@@ -49,32 +49,7 @@ class SignInWithApple {
     );
   }
 
-  /// Cached value whether or not sign-in with apple is available
-  ///
-  /// We cache, so we can return a [SynchronousFuture] in case this value has already been loaded
-  static bool _isAvailable;
-
-  /// Cached Future, so we only ever call this once on the native side
-  static Future<bool> _isAvailableFuture;
-
-  /// A static variable which will trigger a method call when the app launches
-  ///
-  /// This should allow most calls to [isAvailable] to return a [SynchronousFuture],
-  /// which should result in a better UX (no jumping UI).
-  ///
-  /// ignore: unused_field
-  static final _isAvavailableTrigger = isAvailable();
-
   static Future<bool> isAvailable() {
-    if (_isAvailable != null) {
-      return SynchronousFuture<bool>(_isAvailable);
-    }
-
-    return _isAvailableFuture ??=
-        channel.invokeMethod<bool>('isAvailable').then((isAvailable) {
-      _isAvailable = isAvailable;
-
-      return isAvailable;
-    });
+    return channel.invokeMethod<bool>('isAvailable');
   }
 }
