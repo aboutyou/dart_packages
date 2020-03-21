@@ -13,6 +13,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     @required this.builder,
     this.inputs = const <dynamic>[],
     this.child,
+    this.onInputsChange,
   })  : assert(createBloc != null),
         assert(builder != null),
         assert(inputs != null),
@@ -21,13 +22,21 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   /// A function which creates the [BlocType] instance
   ///
   /// This function might be called multiple times in the lifetime of this widget.
-  /// Whenever the [inputs] change, a new BLoC will be created by calling this function.
+  /// Whenever the [inputs] change, a new BLoC will be created by calling this function,
+  /// unless an [onInputsChange] callback was provided, in which case the latter is used to update the existing bloc.
+  ///
+  /// For creating the initial BLoC, this function will be called in the `initState`.
+  /// That means that you can not listen to any `Provider`s or `MediaQuery`.
+  ///
+  /// If you need to `listen` to changes, consider moving the `Provider` call out of the method
+  /// and then using the `value` itself in the [createBloc].
+  /// Don't forget to also reference the `value` in the [inputs] so the bloc would be rebuilt if it changes.
   final BlocType Function(BuildContext context) createBloc;
 
   /// A [Function] which builds a widget depending on the [BlocType] and [StateType].
   ///
-  /// The `bloc` will be the current `bloc` and `value` is the current [StateType].
-  /// When the bloc emits a new `value`, this function will be called again to reflect the changes in the UI.
+  /// The `bloc` will be the current BLoC and `value` is the current [StateType].
+  /// When the BLoC emits a new value, this function will be called again to reflect the changes in the UI.
   ///
   /// The [child] will be passed in as the fourth argument and might be `null` if not supplied.
   final Widget Function(
@@ -48,8 +57,46 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 
   /// The parameters the BLoC depends upon.
   ///
-  /// If these change, the BLoC will be recreated and the old BloC will be disposed.
-  final List<dynamic> inputs;
+  /// If [onInputsChange] is provided, the [onInputsChange] callback will be called when these inputs change.
+  ///
+  /// Otherwise we will create a new BLoC when the [inputs] change and dispose the old BLoC.
+  final List inputs;
+
+  /// This callback will be called when ever the [inputs] change.
+  /// This will receive the current [BlocType], the previous [inputs] and the new [inputs].
+  ///
+  /// Can be `null`.
+  ///
+  /// Use this callback to update the BLoC (e.g. call some method) instead of the default behavior of creating a new BLoC instance.
+  ///
+  /// The returned [bool] signals whether the BLoC has been updated successfully with the new inputs,
+  /// or whether a new instance should be created from scratch.
+  /// Return `true` for not recreating the BLoC, so you have handled the change of inputs.
+  /// For recreating the BLoC, return `false`.
+  ///
+  /// This allows you to handle different input changes differently, e.g.:
+  /// {@tool sample}
+  ///
+  /// ```dart
+  /// WithBloc(
+  ///   createBloc: () => Bloc(),
+  ///   inputs: [locale, isVip],
+  ///   onInputsChange: (bloc, {previousInputs, newInputs}) {
+  ///     if (previousInputs.first != newInputs.first) {
+  ///       return true;
+  ///     }
+  ///
+  ///     bloc.updateVip(isVip);
+  ///     return false
+  ///   }
+  /// ),
+  /// ```
+  /// {@end-tool}
+  final bool Function(
+    BlocType bloc, {
+    List previousInputs,
+    List newInputs,
+  }) onInputsChange;
 
   @override
   WithBlocState<BlocType, StateType> createState() =>
@@ -63,10 +110,10 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
   BlocType bloc;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
 
-    bloc ??= _initBloc();
+    bloc = _initBloc();
   }
 
   @override
@@ -74,10 +121,27 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     super.didUpdateWidget(oldWidget);
 
     if (!areListsEqual(oldWidget.inputs, widget.inputs)) {
-      _disposeBloc();
+      /// Whether or not we should recreate the bloc because of the inputs change
+      var recreateBloc = true;
 
-      /// Recreate the BLoC
-      bloc = _initBloc();
+      /// If a [widget.onInputsChange] callback has been provided, call it will the inputs
+      ///
+      /// The return value will decide over whether we will recreate the Bloc
+      if (widget.onInputsChange != null) {
+        /// For recreating the bloc, this function should return `false` so we invert this here
+        recreateBloc = !widget.onInputsChange(
+          bloc,
+          previousInputs: oldWidget.inputs,
+          newInputs: widget.inputs,
+        );
+      }
+
+      if (recreateBloc) {
+        _disposeBloc();
+
+        /// Create a new BLoC instance
+        bloc = _initBloc();
+      }
     }
   }
 
