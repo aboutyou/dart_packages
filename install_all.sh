@@ -13,3 +13,7 @@ cd ../..
 cd packages/pending_operations
 flutter packages get
 cd ../..
+
+cd packages/sign_in_with_apple
+flutter packages get
+cd ../..
