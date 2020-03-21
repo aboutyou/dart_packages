@@ -137,7 +137,7 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
       if (recreateBloc) {
         _disposeBloc();
 
-        /// Recreate the BLoC
+        /// Create a new BLoC instance
         bloc = _initBloc();
       }
     }
