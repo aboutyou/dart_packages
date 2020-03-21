@@ -27,10 +27,8 @@ class IsSignInWithAppleAvailable extends StatelessWidget {
   /// Cached value whether or not sign-in with apple is available
   ///
   /// We cache, so we can return a [SynchronousFuture] in case this value has already been loaded
-  static bool _isAvailableValue;
-
-  /// Cached Future, so we only ever call this once on the native side
-  static Future<bool> _isAvailableFuture;
+  @visibleForTesting
+  static bool isAvailableValue;
 
   /// A static variable which will trigger a method call when the app launches
   ///
@@ -41,13 +39,12 @@ class IsSignInWithAppleAvailable extends StatelessWidget {
   static final _isAvavailableTrigger = _isAvailable();
 
   static Future<bool> _isAvailable() {
-    if (_isAvailableValue != null) {
-      return SynchronousFuture<bool>(_isAvailableValue);
+    if (isAvailableValue != null) {
+      return SynchronousFuture<bool>(isAvailableValue);
     }
 
-    return _isAvailableFuture ??=
-        SignInWithApple.isAvailable().then((isAvailable) {
-      _isAvailableValue = isAvailable;
+    return SignInWithApple.isAvailable().then((isAvailable) {
+      isAvailableValue ??= isAvailable;
 
       return isAvailable;
     });
