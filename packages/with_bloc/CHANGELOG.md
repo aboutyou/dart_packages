@@ -1,3 +1,8 @@
+## 2.0.0
+
+- Create the initial bloc inside `initState`
+- Add `onInputsChange` callback to handle changes to inputs better
+
 ## 1.0.2
 
 - Fix package meta-data

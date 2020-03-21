@@ -1,6 +1,6 @@
 name: with_bloc
 description: A widget to create and manage BLoCs implemented on top of ValueNotifier, such as StateQueue.
-version: 1.0.2
+version: 2.0.0
 authors:
   - Timm Preetz <timm.preetz@aboutyou.com>
   - Henri Beck <henri.beck@aboutyou.com>
