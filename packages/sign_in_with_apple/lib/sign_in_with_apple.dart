@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
 
@@ -12,9 +13,12 @@ export './authorization_credential.dart'
         AuthorizationCredentialAppleID,
         AuthorizationCredentialPassword;
 export './credential_state.dart' show CredentialState;
-export './sign_in_with_apple_button/sign_in_with_apple_button.dart'
+export './src/widgets/is_sign_in_with_apple_available.dart'
+    show IsSignInWithAppleAvailable;
+export './src/widgets/sign_in_with_apple_button.dart'
     show SignInWithAppleButton, SignInWithAppleButtonStyle, IconAlignment;
 
+// ignore: avoid_classes_with_only_static_members
 class SignInWithApple {
   @visibleForTesting
   static const channel =
@@ -43,5 +47,9 @@ class SignInWithApple {
         <String, String>{'userIdentifier': userIdentifier},
       ),
     );
+  }
+
+  static Future<bool> isAvailable() {
+    return channel.invokeMethod<bool>('isAvailable');
   }
 }

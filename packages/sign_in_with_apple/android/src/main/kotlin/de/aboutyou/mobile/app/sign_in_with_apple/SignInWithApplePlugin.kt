@@ -33,10 +33,11 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    if (call.method == "getPlatformVersion") {
-      result.success("Android ${android.os.Build.VERSION.RELEASE}")
-    } else {
-      result.notImplemented()
+    when (call.method) {
+      "isAvailable" -> result.success(false)
+      else -> {
+        result.notImplemented()
+      }
     }
   }
 

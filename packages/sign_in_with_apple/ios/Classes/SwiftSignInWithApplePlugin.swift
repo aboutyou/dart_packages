@@ -12,6 +12,16 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
     }
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        if call.method == "isAvailable" {
+            if #available(iOS 13.0, *) {
+                result(true)
+            } else {
+                result(false)
+            }
+            
+            return
+        }
+        
         if #available(iOS 13.0, *) {
             switch call.method {
             case "performAuthorizationRequest":

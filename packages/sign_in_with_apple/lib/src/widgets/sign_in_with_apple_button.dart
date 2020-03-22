@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// Style according to
 /// https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple/overview/buttons/

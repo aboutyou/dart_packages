@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple_button/sign_in_with_apple_button.dart';
+import 'package:sign_in_with_apple/src/widgets/sign_in_with_apple_button.dart';
 
 Future<void> main() async {
   final fontData = File('../assets/fonts/SF.ttf')
