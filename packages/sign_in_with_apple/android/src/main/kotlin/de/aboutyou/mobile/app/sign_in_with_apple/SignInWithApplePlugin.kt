@@ -12,7 +12,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "de.aboutyou.mobile.app.sign_in_with_apple")
-    channel.setMethodCallHandler(SignInWithApplePlugin());
+    channel.setMethodCallHandler(this);
   }
 
   // This static function is optional and equivalent to onAttachedToEngine. It supports the old
