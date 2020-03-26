@@ -10,9 +10,16 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 
 /** SignInWithApplePlugin */
 public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
+  private var channel: MethodChannel? = null
+
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "de.aboutyou.mobile.app.sign_in_with_apple")
-    channel.setMethodCallHandler(this);
+    channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "de.aboutyou.mobile.app.sign_in_with_apple")
+    channel?.setMethodCallHandler(this);
+  }
+
+  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    channel?.setMethodCallHandler(null)
+    channel = null
   }
 
   // This static function is optional and equivalent to onAttachedToEngine. It supports the old
