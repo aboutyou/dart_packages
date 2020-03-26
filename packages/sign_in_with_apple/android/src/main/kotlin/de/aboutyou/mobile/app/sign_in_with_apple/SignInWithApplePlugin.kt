@@ -13,7 +13,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   private var channel: MethodChannel? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "de.aboutyou.mobile.app.sign_in_with_apple")
+    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "de.aboutyou.mobile.app.sign_in_with_apple")
     channel?.setMethodCallHandler(this);
   }
 
