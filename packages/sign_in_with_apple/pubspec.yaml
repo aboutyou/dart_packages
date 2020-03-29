@@ -6,7 +6,6 @@ repository: https://github.com/aboutyou/dart_packages
 
 environment:
   sdk: ">=2.3.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.8 <2.0.0"
 
 dependencies:
   meta: ^1.0.0
