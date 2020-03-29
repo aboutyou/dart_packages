@@ -21,11 +21,11 @@ dev_dependencies:
 flutter:
   plugin:
     androidPackage: de.aboutyou.mobile.app.sign_in_with_apple
-    pluginClass: SignInWithApplePlugin
+    pluginClass: SignInWithApplePlugin # this syntax is still needed for iOS
     # android:
     #   package: de.aboutyou.mobile.app.sign_in_with_apple
     #   pluginClass: SignInWithApplePlugin
     # ios:
     #   pluginClass: SignInWithApplePlugin
-    # macos:
-    #   pluginClass: SignInWithApplePlugin
+    macos:
+      pluginClass: SignInWithApplePlugin
