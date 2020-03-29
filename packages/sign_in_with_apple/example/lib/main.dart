@@ -2,7 +2,18 @@ import 'package:flutter/material.dart';
 
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-void main() => runApp(MyApp());
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart'
+    show debugDefaultTargetPlatformOverride;
+
+void main() {
+  // Workaround for macOS support (https://github.com/flutter/flutter/issues/39881)
+  if (!Platform.isAndroid && !Platform.isIOS) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  }
+
+  runApp(MyApp());
+}
 
 class MyApp extends StatefulWidget {
   @override
@@ -15,9 +26,11 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('SiwA example app'),
+          title: const Text('Example app: Sign in with Apple'),
         ),
-        body: Center(
+        body: Container(
+          padding: EdgeInsets.all(10),
+          child: Center(
           child: SignInWithAppleButton(
             onPressed: () async {
               final credentials = await SignInWithApple.requestCredentials();
@@ -33,6 +46,7 @@ class _MyAppState extends State<MyApp> {
             },
           ),
         ),
+      ),
       ),
     );
   }
