@@ -47,7 +47,4 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
       }
     }
   }
-
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-  }
 }
