@@ -76,15 +76,10 @@ abstract class StateQueue<T> extends ValueNotifier<T>
           await for (final nextState in event.updater(this.value)) {
             yield nextState;
           }
+
           // ignore: avoid_catches_without_on_clauses
-        } catch (e, stack) {
-          if (StateQueue.errorHandler != null) {
-            StateQueue.errorHandler(e, stack);
-          } else {
-            print(
-              'StateQueue: Error occured in `run` stream:\nimplementation: $this\n$e\n$stack',
-            );
-          }
+        } catch (error, stack) {
+          Zone.current.handleUncaughtError(error, stack);
         } finally {
           if (event.onDone != null) {
             event.onDone();
@@ -100,9 +95,6 @@ abstract class StateQueue<T> extends ValueNotifier<T>
       }
     });
   }
-
-  // ignore: avoid_annotating_with_dynamic
-  static void Function(dynamic error, StackTrace strackTrace) errorHandler;
 
   final _taskQueue = StreamController<_QueueEntry<T>>();
 
