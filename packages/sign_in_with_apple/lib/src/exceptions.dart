@@ -1,6 +1,12 @@
 import 'package:flutter/services.dart';
 import 'package:meta/meta.dart';
 
+/// A more specific [PlatformException] which describes any potential native errors that occur within the Sign in with Apple plugin.
+///
+/// Implementations:
+/// - [SignInWithAppleNotSupportedException]
+/// - [SignInWithAppleAuthorizationError]
+/// - [SignInWithAppleAuthorizationError]
 @immutable
 abstract class SignInWithAppleException implements Exception {
   factory SignInWithAppleException.fromPlatformException(
@@ -11,6 +17,39 @@ abstract class SignInWithAppleException implements Exception {
         return SignInWithAppleNotSupportedException(
           message: exception.message,
         );
+
+      /// Exceptions which indicate an [SignInWithAppleAuthorizationError]
+      case 'authorization-error/unknown':
+        return SignInWithAppleAuthorizationError(
+          code: AuthorizationErrorCode.unknown,
+          message: exception.message,
+        );
+      case 'authorization-error/canceled':
+        return SignInWithAppleAuthorizationError(
+          code: AuthorizationErrorCode.canceled,
+          message: exception.message,
+        );
+      case 'authorization-error/invalidResponse':
+        return SignInWithAppleAuthorizationError(
+          code: AuthorizationErrorCode.invalidResponse,
+          message: exception.message,
+        );
+      case 'authorization-error/notHandled':
+        return SignInWithAppleAuthorizationError(
+          code: AuthorizationErrorCode.notHandled,
+          message: exception.message,
+        );
+      case 'authorization-error/failed':
+        return SignInWithAppleAuthorizationError(
+          code: AuthorizationErrorCode.failed,
+          message: exception.message,
+        );
+
+      case 'credentials-error':
+        return SignInWithAppleCredentialsException(
+          message: exception.message,
+        );
+
       default:
         return UnknownSignInWithAppleException(
           platformException: exception,
@@ -87,4 +126,16 @@ class SignInWithAppleAuthorizationError implements SignInWithAppleException {
 
   @override
   String toString() => 'SignInWithAppleAuthorizationError($code, $message)';
+}
+
+class SignInWithAppleCredentialsException implements SignInWithAppleException {
+  const SignInWithAppleCredentialsException({
+    @required this.message,
+  }) : assert(message != null);
+
+  /// The localized error message from the native code.
+  final String message;
+
+  @override
+  String toString() => 'SignInWithAppleCredentialsException($message)';
 }

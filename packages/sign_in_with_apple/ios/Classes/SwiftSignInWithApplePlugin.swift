@@ -140,6 +140,8 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
     }
     
     /// Parses a list of json requests into the proper [ASAuthorizationRequest] type.
+    ///
+    /// The parsing itself tries to be as lenient as possible to recover gracefully from parsing errors.
     public static func parseRequests(rawRequests: [Any]) -> [ASAuthorizationRequest] {
         var requests: [ASAuthorizationRequest] = []
         
@@ -248,7 +250,7 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
         didCompleteWithError error: Error
     ) {
         if let error = error as? ASAuthorizationError {
-            var errorCode = "unknown-authorization-error"
+            var errorCode = "authorization-error/unknown"
             
             switch error.code {
             case .unknown:
@@ -262,7 +264,7 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
             case .failed:
                 errorCode = "authorization-error/failed"
             @unknown default:
-                errorCode = "unknown-authorization-error"
+                print("[SignInWithApplePlugin]: Unknown authorization error code: \(error.code)");
             }
             
             callback(
@@ -273,7 +275,7 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
                 )
             )
         } else {
-            print("Unknown authorization error \(error)")
+            print("[SignInWithApplePlugin]: Unknown authorization error \(error)")
             
             callback(
                 FlutterError(
