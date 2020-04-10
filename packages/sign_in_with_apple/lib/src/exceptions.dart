@@ -49,3 +49,37 @@ class SignInWithAppleNotSupportedException implements SignInWithAppleException {
   String toString() =>
       'SignInWithAppleNotSupportedException(message: $message)';
 }
+
+/// Maps to https://developer.apple.com/documentation/authenticationservices/asauthorizationerror/code
+enum AuthorizationErrorCode {
+  /// The user canceled the authorization attempt.
+  canceled,
+
+  /// The authorization attempt failed.
+  failed,
+
+  /// The authorization request received an invalid response.
+  invalidResponse,
+
+  /// The authorization request wasn’t handled.
+  notHandled,
+
+  /// The authorization attempt failed for an unknown reason.
+  unknown,
+}
+
+/// Maps to https://developer.apple.com/documentation/authenticationservices/asauthorizationerror
+class SignInWithAppleAuthorizationError implements SignInWithAppleException {
+  const SignInWithAppleAuthorizationError({
+    @required this.code,
+    @required this.message,
+  })  : assert(code != null),
+        assert(message != null);
+
+  final AuthorizationErrorCode code;
+
+  final String message;
+
+  @override
+  String toString() => 'SignInWithAppleAuthorizationError($code, $message)';
+}
