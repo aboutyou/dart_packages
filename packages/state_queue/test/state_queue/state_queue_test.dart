@@ -23,7 +23,7 @@ class _TestBloc extends StateQueue<int> {
 void main() {
   test('Continues with next `run` after error', () async {
     final completer = Completer<int>();
-    var log = '';
+    Object error;
 
     unawaited(
       // running this in a zone in order to be able to surpress the error logging to the console
@@ -31,6 +31,8 @@ void main() {
         () async {
           final bloc = _TestBloc()
             ..setState(100)
+
+            /// The `divideStateBy` will throw an error and make no changes to the state
             ..divideStateBy(0)
             ..divideStateBy(2);
 
@@ -39,8 +41,10 @@ void main() {
           completer.complete(bloc.value);
         },
         zoneSpecification: ZoneSpecification(
-          print: (_, __, ___, text) {
-            log += text;
+          handleUncaughtError: (_, __, ___, localError, stackTrace) {
+            assert(error == null);
+
+            error = localError;
           },
         ),
       ),
@@ -48,9 +52,14 @@ void main() {
 
     expect(
       await completer.future,
+
+      /// This should be `50` because `100 / 2`
       50,
     );
-    expect(log.contains('IntegerDivisionByZeroException'), true);
+    expect(
+      error,
+      isA<IntegerDivisionByZeroException>(),
+    );
   });
 
   test(
