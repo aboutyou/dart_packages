@@ -23,7 +23,7 @@ class _TestBloc extends StateQueue<int> {
 void main() {
   test('Continues with next `run` after error', () async {
     final completer = Completer<int>();
-    Object error;
+    dynamic error;
 
     unawaited(
       // running this in a zone in order to be able to surpress the error logging to the console
@@ -40,13 +40,12 @@ void main() {
 
           completer.complete(bloc.value);
         },
-        zoneSpecification: ZoneSpecification(
-          handleUncaughtError: (_, __, ___, localError, stackTrace) {
-            assert(error == null);
+        // ignore: avoid_annotating_with_dynamic, avoid_types_on_closure_parameters
+        onError: (dynamic localError, StackTrace stackTrace) {
+          assert(error == null);
 
-            error = localError;
-          },
-        ),
+          error = localError;
+        },
       ),
     );
 
