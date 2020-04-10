@@ -42,20 +42,13 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'type': 'appleid',
-      'scopes': scopes
-          .map((scope) {
-            switch (scope) {
-              case AppleIDAuthorizationScopes.email:
-                return 'email';
-              case AppleIDAuthorizationScopes.fullName:
-                return 'fullName';
-            }
-
-            assert(false);
-            return null;
-          })
-          .where((value) => value != null)
-          .toList(),
+      'scopes': [
+        for (final scope in scopes)
+          if (scope == AppleIDAuthorizationScopes.email)
+            'email'
+          else if (scope == AppleIDAuthorizationScopes.fullName)
+            'fullName',
+      ],
     };
   }
 }
