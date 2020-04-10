@@ -33,13 +33,22 @@ class SignInWithApple {
   static const channel =
       MethodChannel('de.aboutyou.mobile.app.sign_in_with_apple');
 
-  /// Request credentials from the system, preferring existing keychain credentials
-  /// over "Sign in with Apple"
+  /// Request credentials from the system.
   ///
-  /// When no credentials are returned (e.g. also by the user cancelling), this is treated as
-  /// all other errors (just like the native API), and will throw an Exception
+  /// Through the [requests], you can specify which [AuthorizationCredential] should be requested.
+  /// We currently support the following two:
+  /// - [AuthorizationCredentialAppleID] which requests authentication with the users Apple ID.
+  /// - [AuthorizationCredentialPassword] which asks for some credentials in the users Keychain.
   ///
-  /// Successful result will be either of type [AuthorizationCredentialAppleID] or [AuthorizationCredentialPassword]
+  /// In case the authorization is successful, we will return an [AuthorizationCredential].
+  /// These can currently be two different type of credentials:
+  /// - [AuthorizationCredentialAppleID]
+  /// - [AuthorizationCredentialPassword]
+  /// The returned credentials do depend on the [requests] that you specified.
+  ///
+  /// In case of an error on the native side, we will throw an [SignInWithAppleException].
+  /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationError],
+  /// which has more information about the failure.
   static Future<AuthorizationCredential> requestCredentials({
     @required List<AuthorizationRequest> requests,
   }) async {
@@ -57,6 +66,12 @@ class SignInWithApple {
     }
   }
 
+  /// Request the credentials state for the user.
+  ///
+  /// This methods either completes with a [CredentialState] or throws an [SignInWithAppleException].
+  /// In case there was an error while getting the credentials state, this throws a [SignInWithAppleCredentialsException].
+  ///
+  /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidprovider/3175423-getcredentialstate
   static Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
