@@ -6,8 +6,9 @@ abstract class AuthorizationCredential {}
 abstract class AuthorizationCredentialAppleID
     implements AuthorizationCredential {}
 
-class AuthorizationCredentialLoginAppleID implements AuthorizationCredential {
-  AuthorizationCredentialLoginAppleID({
+class AuthorizationCredentialSignInWithAppleID
+    implements AuthorizationCredential {
+  AuthorizationCredentialSignInWithAppleID({
     @required this.userIdentifier,
     @required this.identityToken,
     @required this.authorizationCode,
@@ -33,8 +34,12 @@ class AuthorizationCredentialLoginAppleID implements AuthorizationCredential {
   }
 }
 
-class AuthorizationCredentialSignUpAppleID implements AuthorizationCredential {
-  AuthorizationCredentialSignUpAppleID({
+/// Information about the user in case it's his first login attempt.
+///
+///
+class AuthorizationCredentialSignUpWithAppleID
+    implements AuthorizationCredential {
+  AuthorizationCredentialSignUpWithAppleID({
     @required this.userIdentifier,
     @required this.givenName,
     @required this.familyName,
@@ -50,8 +55,10 @@ class AuthorizationCredentialSignUpAppleID implements AuthorizationCredential {
 
   final String userIdentifier;
 
+  /// Can be `null`
   final String givenName;
 
+  /// Can be `null`
   final String familyName;
 
   final String email;
@@ -95,9 +102,7 @@ AuthorizationCredential parseCredentialsResponse(
 ) {
   switch (response['type'] as String) {
     case 'appleid':
-      if (response['givenName'] != null &&
-          response['familyName'] != null &&
-          response['email'] != null) {
+      if (response['email'] != null) {
         return AuthorizationCredentialSignUpAppleID(
           userIdentifier: response['userIdentifier'] as String,
           givenName: response['givenName'] as String,
