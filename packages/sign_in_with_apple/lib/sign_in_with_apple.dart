@@ -4,15 +4,23 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
 
-import './authorization_credential.dart';
-import './credential_state.dart';
+import './src/authorization_credential.dart';
+import './src/authorization_request.dart';
+import './src/credential_state.dart';
 
-export './authorization_credential.dart'
+export './src/authorization_credential.dart'
     show
         AuthorizationCredential,
         AuthorizationCredentialAppleID,
         AuthorizationCredentialPassword;
-export './credential_state.dart' show CredentialState;
+
+export './src/authorization_request.dart'
+    show
+        AuthorizationRequest,
+        PasswordAuthorizationRequest,
+        AppleIDAuthorizationScopes,
+        AppleIDAuthorizationRequest;
+export './src/credential_state.dart' show CredentialState;
 export './src/widgets/is_sign_in_with_apple_available.dart'
     show IsSignInWithAppleAvailable;
 export './src/widgets/sign_in_with_apple_button.dart'
@@ -31,11 +39,21 @@ class SignInWithApple {
   /// all other errors (just like the native API), and will throw an Exception
   ///
   /// Successful result will be either of type [AuthorizationCredentialAppleID] or [AuthorizationCredentialPassword]
-  static Future<AuthorizationCredential> requestCredentials() async {
-    return parseCredentialsResponse(
-      await channel
-          .invokeMethod<Map<dynamic, dynamic>>('performAuthorizationRequest'),
-    );
+  static Future<AuthorizationCredential> requestCredentials({
+    @required List<AuthorizationRequest> requests,
+  }) async {
+    assert(requests != null);
+
+    try {
+      return parseCredentialsResponse(
+        await channel.invokeMethod<Map<dynamic, dynamic>>(
+          'performAuthorizationRequest',
+          requests.map((request) => request.toJson()).toList(),
+        ),
+      );
+    } on PlatformException catch (error) {
+      return null;
+    }
   }
 
   static Future<CredentialState> getCredentialState(
