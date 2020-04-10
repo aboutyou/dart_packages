@@ -179,12 +179,17 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// will be kept (meaning there is no rollback).
   /// So if you emit intermediate state (like loading) be sure to use `try/catch/finally`
   /// to not leave the bloc hanging in a pending state for eternity.
+  /// The error will be captured and be reported to the current [Zone] for error handling.
+  /// You can intercept these errors by wrapping your [runApp] in a [runZoned]
+  /// and providing a callback to the `onError` parameter.
   ///
   /// A note for testing: A function passed as [updater] should not call [run] itself
   /// (neither directly nor indirectly), as that makes testing hard as the completion
   /// of the bloc can not be awaited properly.
   @protected
   void run(StateUpdater<T> updater) {
+    assert(!_taskQueue.isClosed);
+
     final entry = _UpdaterEntry(
       updater,
       onDone: _pendingOperations.registerPendingOperation('UpdaterEntry'),
