@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
+import 'package:sign_in_with_apple/src/exceptions.dart';
 
 import './src/authorization_credential.dart';
 import './src/authorization_request.dart';
@@ -51,20 +52,26 @@ class SignInWithApple {
           requests.map((request) => request.toJson()).toList(),
         ),
       );
-    } on PlatformException catch (error) {
-      return null;
+    } on PlatformException catch (exception) {
+      throw SignInWithAppleException.fromPlatformException(exception);
     }
   }
 
   static Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
-    return parseCredentialState(
-      await channel.invokeMethod<String>(
-        'getCredentialState',
-        <String, String>{'userIdentifier': userIdentifier},
-      ),
-    );
+    assert(userIdentifier != null);
+
+    try {
+      return parseCredentialState(
+        await channel.invokeMethod<String>(
+          'getCredentialState',
+          <String, String>{'userIdentifier': userIdentifier},
+        ),
+      );
+    } on PlatformException catch (exception) {
+      throw SignInWithAppleException.fromPlatformException(exception);
+    }
   }
 
   static Future<bool> isAvailable() {

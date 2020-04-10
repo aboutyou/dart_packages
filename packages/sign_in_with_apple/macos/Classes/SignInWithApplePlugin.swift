@@ -100,7 +100,7 @@ public class SignInWithApplePlugin: NSObject, FlutterPlugin {
         } else {
             result(
                 FlutterError(
-                    code: "ERR",
+                    code: "not-supported",
                     message: "Unsupported macOS version",
                     details: nil
                 )
