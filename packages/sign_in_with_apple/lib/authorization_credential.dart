@@ -3,12 +3,12 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class AuthorizationCredential {}
 
-class AuthorizationCredentialAppleID implements AuthorizationCredential {
-  AuthorizationCredentialAppleID({
+abstract class AuthorizationCredentialAppleID
+    implements AuthorizationCredential {}
+
+class AuthorizationCredentialLoginAppleID implements AuthorizationCredential {
+  AuthorizationCredentialLoginAppleID({
     @required this.userIdentifier,
-    @required this.givenName,
-    @required this.familyName,
-    @required this.email,
     @required this.identityToken,
     @required this.authorizationCode,
   })  : assert(userIdentifier != null),
@@ -17,13 +17,43 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
 
   final String userIdentifier;
 
-  /// Can be `null`, will only be returned on the first authorization
+  /// Can be `null` on the native side, but is expected on the Flutter side,
+  /// as the authorization would be useless without the tokens to validate them
+  /// on your own server
+  final String identityToken;
+
+  /// Can be `null` on the native side, but is expected on the Flutter side,
+  /// as the authorization would be useless without the tokens to validate them
+  /// on your own server
+  final String authorizationCode;
+
+  @override
+  String toString() {
+    return 'AuthorizationCredentialLoginAppleID($userIdentifier, identityToken set? ${identityToken != null}, authorizationCode set? ${authorizationCode != null})';
+  }
+}
+
+class AuthorizationCredentialSignUpAppleID implements AuthorizationCredential {
+  AuthorizationCredentialSignUpAppleID({
+    @required this.userIdentifier,
+    @required this.givenName,
+    @required this.familyName,
+    @required this.email,
+    @required this.identityToken,
+    @required this.authorizationCode,
+  })  : assert(userIdentifier != null),
+        assert(identityToken != null),
+        assert(authorizationCode != null),
+        assert(givenName != null),
+        assert(familyName != null),
+        assert(email != null);
+
+  final String userIdentifier;
+
   final String givenName;
 
-  /// Can be `null`, will only be returned on the first authorization
   final String familyName;
 
-  /// Can be `null`, will only be returned on the first authorization
   final String email;
 
   /// Can be `null` on the native side, but is expected on the Flutter side,
@@ -38,7 +68,7 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
 
   @override
   String toString() {
-    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, identityToken set? ${identityToken != null}, authorizationCode set? ${authorizationCode != null})';
+    return 'AuthorizationCredentialSignUpAppleID($userIdentifier, $givenName, $familyName, $email, identityToken set? ${identityToken != null}, authorizationCode set? ${authorizationCode != null})';
   }
 }
 
@@ -65,11 +95,21 @@ AuthorizationCredential parseCredentialsResponse(
 ) {
   switch (response['type'] as String) {
     case 'appleid':
-      return AuthorizationCredentialAppleID(
+      if (response['givenName'] != null &&
+          response['familyName'] != null &&
+          response['email'] != null) {
+        return AuthorizationCredentialSignUpAppleID(
+          userIdentifier: response['userIdentifier'] as String,
+          givenName: response['givenName'] as String,
+          familyName: response['familyName'] as String,
+          email: response['email'] as String,
+          identityToken: response['identityToken'] as String,
+          authorizationCode: response['authorizationCode'] as String,
+        );
+      }
+
+      return AuthorizationCredentialLoginAppleID(
         userIdentifier: response['userIdentifier'] as String,
-        givenName: response['givenName'] as String,
-        familyName: response['familyName'] as String,
-        email: response['email'] as String,
         identityToken: response['identityToken'] as String,
         authorizationCode: response['authorizationCode'] as String,
       );
