@@ -3,9 +3,19 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class AuthorizationCredential {}
 
+/// An [AuthorizationCredential] that is based on the users Apple ID.
+///
+/// There two more specialized classes of this:
+/// - [AuthorizationCredentialSignUpWithAppleID] will be available if the user has not yet signed in with his Apple ID for your App.
+/// - [AuthorizationCredentialSignInWithAppleID] will be available on subsequent sign ins.
 abstract class AuthorizationCredentialAppleID
     implements AuthorizationCredential {}
 
+/// An [AuthorizationCredentialAppleID] which indicates that the user has already signed up in your app
+/// and is now trying to sign in again.
+///
+/// This class only provides limitted amount of information about the user,
+/// only enough to uniquely identify the user in your system.
 class AuthorizationCredentialSignInWithAppleID
     implements AuthorizationCredential {
   AuthorizationCredentialSignInWithAppleID({
@@ -34,9 +44,10 @@ class AuthorizationCredentialSignInWithAppleID
   }
 }
 
-/// Information about the user in case it's his first login attempt.
+/// An [AuthorizationCredentialAppleID] which indicates that the user has not yet signed up in your app with his Apple ID.
+/// This will only be available for the first time the user tries to sign in.
 ///
-///
+/// On subsequent sign ins, the [AuthorizationCredentialSignInWithAppleID] will be available.
 class AuthorizationCredentialSignUpWithAppleID
     implements AuthorizationCredential {
   AuthorizationCredentialSignUpWithAppleID({
@@ -79,6 +90,7 @@ class AuthorizationCredentialSignUpWithAppleID
   }
 }
 
+/// A [AuthorizationCredential] which will be returned in case the user has a saved a username/password combination in his keychain.
 class AuthorizationCredentialPassword implements AuthorizationCredential {
   AuthorizationCredentialPassword({
     @required this.username,
@@ -103,7 +115,7 @@ AuthorizationCredential parseCredentialsResponse(
   switch (response['type'] as String) {
     case 'appleid':
       if (response['email'] != null) {
-        return AuthorizationCredentialSignUpAppleID(
+        return AuthorizationCredentialSignUpWithAppleID(
           userIdentifier: response['userIdentifier'] as String,
           givenName: response['givenName'] as String,
           familyName: response['familyName'] as String,
@@ -113,7 +125,7 @@ AuthorizationCredential parseCredentialsResponse(
         );
       }
 
-      return AuthorizationCredentialLoginAppleID(
+      return AuthorizationCredentialSignInWithAppleID(
         userIdentifier: response['userIdentifier'] as String,
         identityToken: response['identityToken'] as String,
         authorizationCode: response['authorizationCode'] as String,
