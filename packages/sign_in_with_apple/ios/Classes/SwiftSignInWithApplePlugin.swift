@@ -3,7 +3,7 @@ import Flutter
 import UIKit
 
 public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
-    // will be `AYSignInWithAppleAuthorizationController` in practice, but we can't scope the variable to iOS13+
+    // will be `SignInWithAppleAuthorizationController` in practice, but we can't scope the variable to iOS13+
     var _lastSignInWithAppleAuthorizationController: Any?
 
     public static func register(with registrar: FlutterPluginRegistrar) {
