@@ -34,6 +34,8 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   // depending on the user's project. onAttachedToEngine or registerWith must both be defined
   // in the same class.
   companion object {
+    var lastAuthorizationRequestResult: Result? = null
+
     @JvmStatic
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "com.aboutyou.dart_packages.sign_in_with_apple")
@@ -44,6 +46,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
       "isAvailable" -> result.success(true)
+      "performAuthorizationRequest" -> SignInWithApplePlugin.lastAuthorizationRequestResult = result
       else -> {
         result.notImplemented()
       }
@@ -54,18 +57,8 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
 /**
 Activity which is used when the web-based authentication flow links back to the app
 
-Implementing clients must add the follow to their `AnroidManifest.xml`
 
-```xml
-        <activity
-            android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
-            android:exported="true"
-        />
-```
-
-
-
- DO NOT rename this or it's package name, as it's used from external links!
+ DO NOT rename this or it's package name as it's configured in the consumer's android manifest
  */
 public class SignInWithAppleCallback: Activity {
   constructor() : super()
@@ -78,6 +71,9 @@ public class SignInWithAppleCallback: Activity {
     print(intent?.action)
     print(intent?.data)
 
-    // finish()
+    SignInWithApplePlugin.lastAuthorizationRequestResult!!.success(intent?.data?.toString())
+    SignInWithApplePlugin.lastAuthorizationRequestResult = null
+
+    finish()
   }
 }

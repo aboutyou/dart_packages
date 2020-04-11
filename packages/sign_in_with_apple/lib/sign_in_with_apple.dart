@@ -80,7 +80,7 @@ class SignInWithApple {
     assert(Platform.isAndroid);
 
     await custom_tabs.launch(
-      // Builds URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
+      // URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
       Uri(
         scheme: 'https',
         host: 'appleid.apple.com',
@@ -96,9 +96,19 @@ class SignInWithApple {
           'response_mode': 'form_post',
         },
       ).toString(),
+
       option: custom_tabs.CustomTabsOption(),
     );
 
-    throw Exception('');
+    final result = await channel.invokeMethod<String>(
+      'performAuthorizationRequest',
+    );
+
+    print(result);
+
+    return AuthorizationCredentialAppleID(
+      userIdentifier: 'TODO',
+      authorizationCode: result,
+    );
   }
 }
