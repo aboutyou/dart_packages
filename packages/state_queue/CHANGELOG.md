@@ -1,4 +1,4 @@
-## 1.2.0
+## 2.0.0
 
 - Remove global `errorHandler` and use `Zone` error handling
 
