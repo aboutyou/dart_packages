@@ -307,7 +307,7 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
     ) {
         if let error = error as? ASAuthorizationError {
             callback(
-                SignInWithAppleError.authorizationError(error.code, error.localizedDescription)
+                SignInWithAppleError.authorizationError(error.code, error.localizedDescription).toFlutterError()
             )
         } else {
             print("[SignInWithApplePlugin]: Unknown authorization error \(error)")
