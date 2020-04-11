@@ -30,14 +30,26 @@ class SignInWithApple {
   /// When no credentials are returned (e.g. also by the user cancelling), this is treated as
   /// all other errors (just like the native API), and will throw an Exception
   ///
-  /// Successful result will be either of type [AuthorizationCredentialAppleID] or [AuthorizationCredentialPassword]
-  static Future<AuthorizationCredential> requestCredentials() async {
+  /// On Apple platforms (iOS, macOS) a successful result will be either of type [AuthorizationCredentialAppleID] or [AuthorizationCredentialPassword].
+  /// On other platforms only [AuthorizationCredentialAppleID] will be returned in the success case
+  static Future<AuthorizationCredential> requestCredentials({
+    /// Optional parameters for web-based authentication flows on non-Apple platforms
+    WebAuthenticationOptions webAuthenticationOptions,
+  }) async {
+    if (webAuthenticationOptions == null &&
+        (!Platform.iOS && !Platform.macOS)) {
+      throw Exception(
+          'webAuthenticationOptions parameter must be provided on non-Apple platforms');
+    }
+
     return parseCredentialsResponse(
-      await channel
-          .invokeMethod<Map<dynamic, dynamic>>('performAuthorizationRequest'),
+      await channel.invokeMethod<Map<dynamic, dynamic>>(
+        'performAuthorizationRequest',
+      ),
     );
   }
 
+  /// Only supported on Apple platforms
   static Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
