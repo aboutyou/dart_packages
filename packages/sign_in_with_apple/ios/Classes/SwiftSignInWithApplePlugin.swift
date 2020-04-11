@@ -2,6 +2,87 @@ import AuthenticationServices
 import Flutter
 import UIKit
 
+public enum SignInWithAppleError {
+    case notSupported(String)
+    
+    case missingArguments(FlutterMethodCall)
+    
+    case missingArgument(FlutterMethodCall, String)
+    
+    @available(iOS 13.0, *)
+    case credentialsError(String)
+    @available(iOS 13.0, *)
+    case unexpectedCredentialsState(ASAuthorizationAppleIDProvider.CredentialState)
+    @available(iOS 13.0, *)
+    case unknownCredentials(ASAuthorizationCredential)
+    @available(iOS 13.0, *)
+    case authorizationError(ASAuthorizationError.Code, String)
+    
+    func toFlutterError() -> FlutterError {
+        switch self {
+        case .notSupported(let message):
+            return FlutterError(
+                code: "not-supported",
+                message: message,
+                details: nil
+            )
+        case .credentialsError(let message):
+            return FlutterError(
+                code: "credentials-error",
+                message: message,
+                details: nil
+            )
+        case .unexpectedCredentialsState(let credentialState):
+            return FlutterError(
+                code: "unexpected-credentials-state",
+                message: "Unexpected credential state: \(credentialState)",
+                details: nil
+            )
+        case .unknownCredentials(let credential):
+            return FlutterError(
+                code: "unknown-credentials",
+                message: "Unexpected credentials: \(credential)",
+                details: nil
+            )
+        case .authorizationError(let code, let message):
+            var errorCode = "authorization-error/unknown"
+            
+            switch code {
+            case .unknown:
+                errorCode = "authorization-error/unknown"
+            case .canceled:
+                errorCode = "authorization-error/canceled"
+            case .invalidResponse:
+                errorCode = "authorization-error/invalidResponse"
+            case .notHandled:
+                errorCode = "authorization-error/notHandled"
+            case .failed:
+                errorCode = "authorization-error/failed"
+            @unknown default:
+                print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");
+            }
+            
+            return FlutterError(
+                code: errorCode,
+                message: message,
+                details: nil
+            )
+        case .missingArguments(let call):
+            return FlutterError(
+                code: "missing-args",
+                message: "Missing arguments",
+                details: call.arguments
+            )
+        case .missingArgument(let call, let key):
+            return FlutterError(
+                code: "missing-arg",
+                message: "Argument '\(key)' is missing",
+                details: call.arguments
+            )
+        }
+    }
+}
+
 public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
     // will be `SignInWithAppleAuthorizationController` in practice, but we can't scope the variable to iOS13+
     var _lastSignInWithAppleAuthorizationController: Any?
@@ -32,11 +113,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
                 // Makes sure arguments exists and is a List
                 guard let args = call.arguments as? [Any] else {
                     result(
-                        FlutterError(
-                            code: "MISSING_ARGS",
-                            message: "Missing arguments list",
-                            details: nil // call
-                        )
+                        SignInWithAppleError.missingArguments(call).toFlutterError()
                     )
 
                     return
@@ -56,11 +133,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
                 // Makes sure arguments exists and is a Map
                 guard let args = call.arguments as? [String: Any] else {
                     result(
-                        FlutterError(
-                            code: "MISSING_ARGS",
-                            message: "Missing arguments map",
-                            details: nil
-                        )
+                        SignInWithAppleError.missingArguments(call).toFlutterError()
                     )
 
                     return
@@ -68,11 +141,10 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
 
                 guard let userIdentifier = args["userIdentifier"] as? String else {
                     result(
-                        FlutterError(
-                            code: "MISSING_ARG",
-                            message: "Argument 'userIdentifier' is missing",
-                            details: nil
-                        )
+                        SignInWithAppleError.missingArgument(
+                            call,
+                            "userIdentifier"
+                        ).toFlutterError()
                     )
 
                     return
@@ -82,11 +154,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
                 appleIDProvider.getCredentialState(forUserID: userIdentifier) { credentialState, error in
                     if let error = error {
                         result(
-                            FlutterError(
-                                code: "credentials-error",
-                                message: error.localizedDescription,
-                                details: nil
-                            )
+                            SignInWithAppleError.credentialsError(error.localizedDescription).toFlutterError()
                         )
 
                         return
@@ -104,11 +172,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
 
                     default:
                         result(
-                            FlutterError(
-                                code: "unexpected-credentials-state",
-                                message: "Unexpected credential state: \(credentialState)",
-                                details: nil
-                            )
+                            SignInWithAppleError.unexpectedCredentialsState(credentialState).toFlutterError()
                         )
                     }
                 }
@@ -118,11 +182,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
             }
         } else {
             result(
-                FlutterError(
-                    code: "not-supported",
-                    message: "Unsupported iOS version",
-                    details: nil
-                )
+                SignInWithAppleError.notSupported("Unsupported iOS version").toFlutterError()
             )
         }
     }
@@ -236,11 +296,7 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
         default:
             // Not getting any credentials would result in an error (didCompleteWithError)
             callback(
-                FlutterError(
-                    code: "unknown-credentials",
-                    message: "Unexpected credentials: \(authorization.credential)",
-                    details: nil
-                )
+                SignInWithAppleError.unknownCredentials(authorization.credential).toFlutterError()
             )
         }
     }
@@ -250,39 +306,17 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
         didCompleteWithError error: Error
     ) {
         if let error = error as? ASAuthorizationError {
-            var errorCode = "authorization-error/unknown"
-            
-            switch error.code {
-            case .unknown:
-                errorCode = "authorization-error/unknown"
-            case .canceled:
-                errorCode = "authorization-error/canceled"
-            case .invalidResponse:
-                errorCode = "authorization-error/invalidResponse"
-            case .notHandled:
-                errorCode = "authorization-error/notHandled"
-            case .failed:
-                errorCode = "authorization-error/failed"
-            @unknown default:
-                print("[SignInWithApplePlugin]: Unknown authorization error code: \(error.code)");
-            }
-            
             callback(
-                FlutterError(
-                    code: errorCode,
-                    message: error.localizedDescription,
-                    details: nil
-                )
+                SignInWithAppleError.authorizationError(error.code, error.localizedDescription)
             )
         } else {
             print("[SignInWithApplePlugin]: Unknown authorization error \(error)")
             
             callback(
-                FlutterError(
-                    code: "non-authorization-error",
-                    message: error.localizedDescription,
-                    details: nil
-                )
+                SignInWithAppleError.authorizationError(
+                    ASAuthorizationError.Code.unknown,
+                    error.localizedDescription
+                ).toFlutterError()
             )
         }
     }
