@@ -1,5 +1,7 @@
 package de.aboutyou.mobile.app.sign_in_with_apple
 
+import android.app.Activity;
+import android.os.Bundle;
 import androidx.annotation.NonNull;
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -46,5 +48,34 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
         result.notImplemented()
       }
     }
+  }
+}
+
+/**
+Activity which is used when the web-based authentication flow links back to the app
+
+Implementing clients must add the follow to their `AnroidManifest.xml`
+
+```xml
+        <activity
+            android:name="de.aboutyou.mobile.app.sign_in_with_apple.SignInWithAppleCallback"
+            android:exported="true"
+        />
+```
+
+
+ */
+public class SignInWithAppleCallback: Activity {
+  constructor() : super()
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    print(intent)
+
+    print(intent?.action)
+    print(intent?.data)
+
+    finish()
   }
 }
