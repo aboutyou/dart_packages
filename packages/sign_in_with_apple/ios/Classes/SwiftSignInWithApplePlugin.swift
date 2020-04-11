@@ -6,7 +6,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
     var _lastAYSignInWithAppleAuthorizationController: Any? // will be `AYSignInWithAppleAuthorizationController` in practice, but we can't scope the variable to iOS13+
 
     public static func register(with registrar: FlutterPluginRegistrar) {
-        let channel = FlutterMethodChannel(name: "de.aboutyou.mobile.app.sign_in_with_apple", binaryMessenger: registrar.messenger())
+        let channel = FlutterMethodChannel(name: "com.aboutyou.dart_packages.sign_in_with_apple", binaryMessenger: registrar.messenger())
         let instance = SwiftSignInWithApplePlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
     }

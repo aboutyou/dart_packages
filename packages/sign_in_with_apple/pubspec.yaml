@@ -24,7 +24,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: de.aboutyou.mobile.app.sign_in_with_apple
+        package: com.aboutyou.dart_packages.sign_in_with_apple
         pluginClass: SignInWithApplePlugin
       ios:
         pluginClass: SignInWithApplePlugin

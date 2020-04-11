@@ -26,7 +26,7 @@ export './src/widgets/sign_in_with_apple_button.dart'
 class SignInWithApple {
   @visibleForTesting
   static const channel =
-      MethodChannel('de.aboutyou.mobile.app.sign_in_with_apple');
+      MethodChannel('com.aboutyou.dart_packages.sign_in_with_apple');
 
   /// Request credentials from the system, preferring existing keychain credentials
   /// over "Sign in with Apple"
@@ -80,7 +80,7 @@ class SignInWithApple {
     assert(Platform.isAndroid);
 
     await custom_tabs.launch(
-      // Build URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
+      // Builds URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
       Uri(
         scheme: 'https',
         host: 'appleid.apple.com',

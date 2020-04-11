@@ -1,4 +1,4 @@
-package de.aboutyou.mobile.app.sign_in_with_apple
+package com.aboutyou.dart_packages.sign_in_with_apple
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   private var channel: MethodChannel? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "de.aboutyou.mobile.app.sign_in_with_apple")
+    channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.aboutyou.dart_packages.sign_in_with_apple")
     channel?.setMethodCallHandler(this);
   }
 
@@ -36,7 +36,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
-      val channel = MethodChannel(registrar.messenger(), "de.aboutyou.mobile.app.sign_in_with_apple")
+      val channel = MethodChannel(registrar.messenger(), "com.aboutyou.dart_packages.sign_in_with_apple")
       channel.setMethodCallHandler(SignInWithApplePlugin())
     }
   }
@@ -58,12 +58,14 @@ Implementing clients must add the follow to their `AnroidManifest.xml`
 
 ```xml
         <activity
-            android:name="de.aboutyou.mobile.app.sign_in_with_apple.SignInWithAppleCallback"
+            android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
             android:exported="true"
         />
 ```
 
 
+
+ DO NOT rename this or it's package name, as it's used from external links!
  */
 public class SignInWithAppleCallback: Activity {
   constructor() : super()
@@ -76,6 +78,6 @@ public class SignInWithAppleCallback: Activity {
     print(intent?.action)
     print(intent?.data)
 
-    finish()
+    // finish()
   }
 }
