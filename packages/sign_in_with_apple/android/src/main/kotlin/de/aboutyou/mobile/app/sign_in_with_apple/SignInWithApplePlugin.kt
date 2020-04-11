@@ -41,7 +41,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
-      "isAvailable" -> result.success(false)
+      "isAvailable" -> result.success(true)
       else -> {
         result.notImplemented()
       }

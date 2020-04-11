@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
+import 'package:sign_in_with_apple/src/web_authentication_options.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
 
 import './authorization_credential.dart';
 import './credential_state.dart';
@@ -13,6 +16,7 @@ export './authorization_credential.dart'
         AuthorizationCredentialAppleID,
         AuthorizationCredentialPassword;
 export './credential_state.dart' show CredentialState;
+export './src/web_authentication_options.dart' show WebAuthenticationOptions;
 export './src/widgets/is_sign_in_with_apple_available.dart'
     show IsSignInWithAppleAvailable;
 export './src/widgets/sign_in_with_apple_button.dart'
@@ -37,9 +41,14 @@ class SignInWithApple {
     WebAuthenticationOptions webAuthenticationOptions,
   }) async {
     if (webAuthenticationOptions == null &&
-        (!Platform.iOS && !Platform.macOS)) {
+        (!Platform.isIOS && !Platform.isMacOS)) {
       throw Exception(
-          'webAuthenticationOptions parameter must be provided on non-Apple platforms');
+        'webAuthenticationOptions parameter must be provided on non-Apple platforms',
+      );
+    }
+
+    if (Platform.isAndroid) {
+      return _signInWithAppleAndroid(webAuthenticationOptions);
     }
 
     return parseCredentialsResponse(
@@ -63,5 +72,33 @@ class SignInWithApple {
 
   static Future<bool> isAvailable() {
     return channel.invokeMethod<bool>('isAvailable');
+  }
+
+  static Future<AuthorizationCredential> _signInWithAppleAndroid(
+    WebAuthenticationOptions webAuthenticationOptions,
+  ) async {
+    assert(Platform.isAndroid);
+
+    await custom_tabs.launch(
+      // Build URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
+      Uri(
+        scheme: 'https',
+        host: 'appleid.apple.com',
+        path: '/auth/authorize',
+        queryParameters: <String, String>{
+          'client_id': webAuthenticationOptions.clientId,
+          'redirect_uri': webAuthenticationOptions.redirectUri.toString(),
+          // TODO: Align with configurable scopes currently being implemented for iOS
+          'scope': 'name email',
+          // Request `code`, which is also what `ASAuthorizationAppleIDCredential.authorizationCode` contains
+          // So the same handling can be used for Apple and 3rd party platforms
+          'response_type': 'code',
+          'response_mode': 'form_post',
+        },
+      ).toString(),
+      option: custom_tabs.CustomTabsOption(),
+    );
+
+    throw Exception('');
   }
 }
