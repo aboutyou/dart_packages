@@ -2,13 +2,15 @@ import 'package:meta/meta.dart';
 import './authorization_request.dart';
 
 @immutable
-abstract class AuthorizationCredential {}
+abstract class AuthorizationCredential {
+  const AuthorizationCredential();
+}
 
 /// An [AuthorizationCredential] which comes from a succesful Apple ID authorization.
 ///
 /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidcredential
 class AuthorizationCredentialAppleID implements AuthorizationCredential {
-  AuthorizationCredentialAppleID({
+  const AuthorizationCredentialAppleID({
     @required this.userIdentifier,
     @required this.givenName,
     @required this.familyName,
@@ -74,8 +76,11 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
   }
 }
 
+/// An [AuthorizationCredential] which request a username/password combination from the users Keychain.
+///
+/// Apple Docs: https://developer.apple.com/documentation/authenticationservices/aspasswordcredential
 class AuthorizationCredentialPassword implements AuthorizationCredential {
-  AuthorizationCredentialPassword({
+  const AuthorizationCredentialPassword({
     @required this.username,
     @required this.password,
   })  : assert(username != null),
