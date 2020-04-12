@@ -4,6 +4,8 @@ import './authorization_request.dart';
 @immutable
 abstract class AuthorizationCredential {}
 
+/// An [AuthorizationCredential] which comes from a succesful Apple ID authorization.
+///
 /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidcredential
 class AuthorizationCredentialAppleID implements AuthorizationCredential {
   AuthorizationCredentialAppleID({
@@ -17,21 +19,39 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
         assert(identityToken != null),
         assert(authorizationCode != null);
 
-  /// TOOD
+  /// An identifier associated with the authenticated user.
+  ///
+  /// This will be provided upon every sign-in.
+  /// This will stay the same between sign ins, until the user deauthorizes your App. TODO check if this is actually the case
   final String userIdentifier;
 
-  /// Can be `null`, will only be returned on the first authorization
+  /// The users given name, in case it was requested.
+  /// You will need to provide the [AppleIDAuthorizationScopes.fullName] scope to the [AppleIDAuthorizationRequest] for requesting this information.
+  ///
+  /// This information will only be provided on the first authorizations.
+  /// Upon further authorizations, you will only get the [userIdentifier],
+  /// meaning you will need to store this data securely on your servers.
+  /// For more information see: https://forums.developer.apple.com/thread/121496
+  ///
+  /// Can be `null`
   final String givenName;
 
-  /// Can be `null`, will only be returned on the first authorization
+  /// The users family name, in case it was requested.
+  /// You will need to provide the [AppleIDAuthorizationScopes.fullName] scope to the [AppleIDAuthorizationRequest] for requesting this information.
+  ///
+  /// This information will only be provided on the first authorizations.
+  /// Upon further authorizations, you will only get the [userIdentifier],
+  /// meaning you will need to store this data securely on your servers.
+  /// For more information see: https://forums.developer.apple.com/thread/121496
+  ///
+  /// Can be `null`
   final String familyName;
 
   /// The users email in case it was requested.
-  ///
-  /// You will need to provide the [AppleIDAuthorizationScopes.email] scope.
+  /// You will need to provide the [AppleIDAuthorizationScopes.email] scope to the [AppleIDAuthorizationRequest] for requesting this information.
   ///
   /// This information will only be provided on the first authorizations.
-  /// Upon further authorizations, you will only get the user identifier,
+  /// Upon further authorizations, you will only get the [userIdentifier],
   /// meaning you will need to store this data securely on your servers.
   /// For more information see: https://forums.developer.apple.com/thread/121496
   ///
