@@ -35,10 +35,10 @@ class SignInWithApple {
 
   /// Request credentials from the system.
   ///
-  /// Through the [requests], you can specify which [AuthorizationCredential] should be requested.
+  /// Through the [requests], you can specify which [AuthorizationRequest] should be requested.
   /// We currently support the following two:
-  /// - [AuthorizationCredentialAppleID] which requests authentication with the users Apple ID.
-  /// - [AuthorizationCredentialPassword] which asks for some credentials in the users Keychain.
+  /// - [AppleIDAuthorizationRequest] which requests authentication with the users Apple ID.
+  /// - [PasswordAuthorizationRequest] which asks for some credentials in the users Keychain.
   ///
   /// In case the authorization is successful, we will return an [AuthorizationCredential].
   /// These can currently be two different type of credentials:
@@ -49,6 +49,7 @@ class SignInWithApple {
   /// In case of an error on the native side, we will throw an [SignInWithAppleException].
   /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationError],
   /// which has more information about the failure.
+  /// In case Sign in with Apple is not available, this will throw an [SignInWithAppleNotSupportedException].
   static Future<AuthorizationCredential> requestCredentials({
     @required List<AuthorizationRequest> requests,
   }) async {
@@ -66,10 +67,14 @@ class SignInWithApple {
     }
   }
 
-  /// Request the credentials state for the user.
+  /// Request the credentials state a giver [userIdentifier].
+  /// The [userIdentifier] should come from a previos call to [requestCredentials] which returned an [AuthorizationCredentialAppleID].
+  ///
+  /// This method allows you to check whether or not the user is still authorized, revoked the access or has not yet signed up with it.
   ///
   /// This methods either completes with a [CredentialState] or throws an [SignInWithAppleException].
   /// In case there was an error while getting the credentials state, this throws a [SignInWithAppleCredentialsException].
+  /// In case Sign in with Apple is not available, this will throw an [SignInWithAppleNotSupportedException].
   ///
   /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidprovider/3175423-getcredentialstate
   static Future<CredentialState> getCredentialState(
@@ -89,6 +94,12 @@ class SignInWithApple {
     }
   }
 
+  /// This checks with the native platform whether or not Sign in with Apple is available.
+  ///
+  /// For iOS, the user will need `iOS 13` or higher.
+  /// For macOS, the user will need `macOS Catalina` or higher.
+  ///
+  /// In case Sign in with Apple is not available, this will complete with `false`.
   static Future<bool> isAvailable() {
     return channel.invokeMethod<bool>('isAvailable');
   }

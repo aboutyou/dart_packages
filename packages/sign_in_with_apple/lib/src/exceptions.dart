@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 /// Implementations:
 /// - [SignInWithAppleNotSupportedException]
 /// - [SignInWithAppleAuthorizationError]
-/// - [SignInWithAppleAuthorizationError]
+/// - [UnknownSignInWithAppleException]
 @immutable
 abstract class SignInWithAppleException implements Exception {
   factory SignInWithAppleException.fromPlatformException(

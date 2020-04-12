@@ -1,8 +1,10 @@
 import 'package:meta/meta.dart';
+import './authorization_request.dart';
 
 @immutable
 abstract class AuthorizationCredential {}
 
+/// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidcredential
 class AuthorizationCredentialAppleID implements AuthorizationCredential {
   AuthorizationCredentialAppleID({
     @required this.userIdentifier,
@@ -15,6 +17,7 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
         assert(identityToken != null),
         assert(authorizationCode != null);
 
+  /// TOOD
   final String userIdentifier;
 
   /// Can be `null`, will only be returned on the first authorization
@@ -23,7 +26,16 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
   /// Can be `null`, will only be returned on the first authorization
   final String familyName;
 
-  /// Can be `null`, will only be returned on the first authorization
+  /// The users email in case it was requested.
+  ///
+  /// You will need to provide the [AppleIDAuthorizationScopes.email] scope.
+  ///
+  /// This information will only be provided on the first authorizations.
+  /// Upon further authorizations, you will only get the user identifier,
+  /// meaning you will need to store this data securely on your servers.
+  /// For more information see: https://forums.developer.apple.com/thread/121496
+  ///
+  /// Can be `null`
   final String email;
 
   /// Can be `null` on the native side, but is expected on the Flutter side,
