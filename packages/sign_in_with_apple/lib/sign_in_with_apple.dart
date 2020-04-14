@@ -47,7 +47,7 @@ class SignInWithApple {
   /// The returned credentials do depend on the [requests] that you specified.
   ///
   /// In case of an error on the native side, we will throw an [SignInWithAppleException].
-  /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationError],
+  /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationException],
   /// which has more information about the failure.
   /// In case Sign in with Apple is not available, this will throw an [SignInWithAppleNotSupportedException].
   static Future<AuthorizationCredential> requestCredentials({
