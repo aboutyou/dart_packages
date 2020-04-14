@@ -12,7 +12,7 @@ public enum SignInWithAppleError {
     @available(iOS 13.0, *)
     case credentialsError(String)
     @available(iOS 13.0, *)
-    case unexpectedCredentialsState(ASAuthorizationAppleIDProvider.CredentialState)
+    case unexpectedCredentialState(ASAuthorizationAppleIDProvider.CredentialState)
     @available(iOS 13.0, *)
     case unknownCredentials(ASAuthorizationCredential)
     @available(iOS 13.0, *)
