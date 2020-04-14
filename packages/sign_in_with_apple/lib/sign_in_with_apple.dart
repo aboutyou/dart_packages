@@ -6,16 +6,24 @@ import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
 import 'package:sign_in_with_apple/src/web_authentication_options.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as custom_tabs;
+import 'package:sign_in_with_apple/src/exceptions.dart';
 
-import './authorization_credential.dart';
-import './credential_state.dart';
+import './src/authorization_credential.dart';
+import './src/authorization_request.dart';
+import './src/credential_state.dart';
 
-export './authorization_credential.dart'
+export './src/authorization_credential.dart'
     show
         AuthorizationCredential,
         AuthorizationCredentialAppleID,
         AuthorizationCredentialPassword;
-export './credential_state.dart' show CredentialState;
+export './src/authorization_request.dart'
+    show
+        AuthorizationRequest,
+        PasswordAuthorizationRequest,
+        AppleIDAuthorizationScopes,
+        AppleIDAuthorizationRequest;
+export './src/credential_state.dart' show CredentialState;
 export './src/web_authentication_options.dart' show WebAuthenticationOptions;
 export './src/widgets/is_sign_in_with_apple_available.dart'
     show IsSignInWithAppleAvailable;
@@ -28,18 +36,30 @@ class SignInWithApple {
   static const channel =
       MethodChannel('com.aboutyou.dart_packages.sign_in_with_apple');
 
-  /// Request credentials from the system, preferring existing keychain credentials
-  /// over "Sign in with Apple"
+  /// Request credentials from the system.
   ///
-  /// When no credentials are returned (e.g. also by the user cancelling), this is treated as
-  /// all other errors (just like the native API), and will throw an Exception
+  /// Through the [requests], you can specify which [AuthorizationCredential] should be requested.
+  /// We currently support the following two:
+  /// - [AuthorizationCredentialAppleID] which requests authentication with the users Apple ID.
+  /// - [AuthorizationCredentialPassword] which asks for some credentials in the users Keychain.
   ///
-  /// On Apple platforms (iOS, macOS) a successful result will be either of type [AuthorizationCredentialAppleID] or [AuthorizationCredentialPassword].
-  /// On other platforms only [AuthorizationCredentialAppleID] will be returned in the success case
+  /// In case the authorization is successful, we will return an [AuthorizationCredential].
+  /// These can currently be two different type of credentials:
+  /// - [AuthorizationCredentialAppleID]
+  /// - [AuthorizationCredentialPassword] (only on Apple platforms)
+  /// The returned credentials do depend on the [requests] that you specified.
+  ///
+  /// In case of an error on the native side, we will throw an [SignInWithAppleException].
+  /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationError],
+  /// which has more information about the failure.
   static Future<AuthorizationCredential> requestCredentials({
+    @required List<AuthorizationRequest> requests,
+
     /// Optional parameters for web-based authentication flows on non-Apple platforms
     WebAuthenticationOptions webAuthenticationOptions,
   }) async {
+    assert(requests != null);
+
     if (webAuthenticationOptions == null &&
         (!Platform.isIOS && !Platform.isMacOS)) {
       throw Exception(
@@ -51,23 +71,39 @@ class SignInWithApple {
       return _signInWithAppleAndroid(webAuthenticationOptions);
     }
 
-    return parseCredentialsResponse(
-      await channel.invokeMethod<Map<dynamic, dynamic>>(
-        'performAuthorizationRequest',
-      ),
-    );
+    try {
+      return parseCredentialsResponse(
+        await channel.invokeMethod<Map<dynamic, dynamic>>(
+          'performAuthorizationRequest',
+          requests.map((request) => request.toJson()).toList(),
+        ),
+      );
+    } on PlatformException catch (exception) {
+      throw SignInWithAppleException.fromPlatformException(exception);
+    }
   }
 
-  /// Only supported on Apple platforms
+  /// Request the credentials state for the user.
+  ///
+  /// This methods either completes with a [CredentialState] or throws an [SignInWithAppleException].
+  /// In case there was an error while getting the credentials state, this throws a [SignInWithAppleCredentialsException].
+  ///
+  /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidprovider/3175423-getcredentialstate
   static Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
-    return parseCredentialState(
-      await channel.invokeMethod<String>(
-        'getCredentialState',
-        <String, String>{'userIdentifier': userIdentifier},
-      ),
-    );
+    assert(userIdentifier != null);
+
+    try {
+      return parseCredentialState(
+        await channel.invokeMethod<String>(
+          'getCredentialState',
+          <String, String>{'userIdentifier': userIdentifier},
+        ),
+      );
+    } on PlatformException catch (exception) {
+      throw SignInWithAppleException.fromPlatformException(exception);
+    }
   }
 
   static Future<bool> isAvailable() {
