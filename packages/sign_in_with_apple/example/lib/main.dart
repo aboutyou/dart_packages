@@ -24,7 +24,16 @@ class _MyAppState extends State<MyApp> {
           child: Center(
             child: SignInWithAppleButton(
               onPressed: () async {
-                final credentials = await SignInWithApple.requestCredentials();
+                final credentials = await SignInWithApple.requestCredentials(
+                  requests: [
+                    AppleIDAuthorizationRequest(
+                      scopes: [
+                        AppleIDAuthorizationScopes.email,
+                        AppleIDAuthorizationScopes.fullName,
+                      ],
+                    ),
+                  ],
+                );
 
                 print(credentials);
 

@@ -26,7 +26,16 @@ void main() {
     });
 
     expect(
-      await SignInWithApple.requestCredentials(),
+      await SignInWithApple.requestCredentials(
+        requests: [
+          AppleIDAuthorizationRequest(
+            scopes: [
+              AppleIDAuthorizationScopes.email,
+              AppleIDAuthorizationScopes.fullName,
+            ],
+          ),
+        ],
+      ),
       isA<AuthorizationCredentialAppleID>(),
     );
   });
@@ -45,7 +54,16 @@ void main() {
     });
 
     expect(
-      await SignInWithApple.requestCredentials(),
+      await SignInWithApple.requestCredentials(
+        requests: [
+          AppleIDAuthorizationRequest(
+            scopes: [
+              AppleIDAuthorizationScopes.email,
+              AppleIDAuthorizationScopes.fullName,
+            ],
+          ),
+        ],
+      ),
       isA<AuthorizationCredentialPassword>(),
     );
   });
