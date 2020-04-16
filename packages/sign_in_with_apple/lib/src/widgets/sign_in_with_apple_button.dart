@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:sign_in_with_apple/src/widgets/apple_logo_painter.dart';
 
 /// Style according to
 /// https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple/overview/buttons/
@@ -62,11 +63,13 @@ class SignInWithAppleButton extends StatelessWidget {
                   width: 28,
                   height: 28,
                   child: Center(
-                    child: Text(
-                      '',
-                      style: TextStyle(
-                        fontSize: height * 0.52,
-                        color: contrastColor,
+                    child: Container(
+                      width: height * 0.40,
+                      height: height * 0.40 / (25 / 31),
+                      child: CustomPaint(
+                        painter: AppleLogoPainter(
+                          color: contrastColor,
+                        ),
                       ),
                     ),
                   ),
