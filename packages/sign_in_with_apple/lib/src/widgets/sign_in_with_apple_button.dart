@@ -64,8 +64,8 @@ class SignInWithAppleButton extends StatelessWidget {
                   height: 28,
                   child: Center(
                     child: Container(
-                      width: height * 0.40,
-                      height: height * 0.40 / (25 / 31),
+                      width: height * 0.43 * (25 / 31),
+                      height: height * 0.43,
                       child: CustomPaint(
                         painter: AppleLogoPainter(
                           color: contrastColor,

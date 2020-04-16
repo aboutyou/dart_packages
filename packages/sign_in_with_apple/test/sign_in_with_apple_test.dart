@@ -26,14 +26,10 @@ void main() {
     });
 
     expect(
-      await SignInWithApple.requestCredentials(
-        requests: [
-          AppleIDAuthorizationRequest(
-            scopes: [
-              AppleIDAuthorizationScopes.email,
-              AppleIDAuthorizationScopes.fullName,
-            ],
-          ),
+      await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
         ],
       ),
       isA<AuthorizationCredentialAppleID>(),
@@ -54,16 +50,7 @@ void main() {
     });
 
     expect(
-      await SignInWithApple.requestCredentials(
-        requests: [
-          AppleIDAuthorizationRequest(
-            scopes: [
-              AppleIDAuthorizationScopes.email,
-              AppleIDAuthorizationScopes.fullName,
-            ],
-          ),
-        ],
-      ),
+      await SignInWithApple.getKeychainCredential(),
       isA<AuthorizationCredentialPassword>(),
     );
   });

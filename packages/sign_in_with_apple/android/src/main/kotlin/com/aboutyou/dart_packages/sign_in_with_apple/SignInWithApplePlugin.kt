@@ -110,21 +110,16 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 }
 
 /**
-Activity which is used when the web-based authentication flow links back to the app
-
-
- DO NOT rename this or it's package name as it's configured in the consumer's `AndroidManifest.xml`
+ * Activity which is used when the web-based authentication flow links back to the app
+ *
+ * DO NOT rename this or it's package name as it's configured in the consumer's `AndroidManifest.xml`
+ *
  */
 public class SignInWithAppleCallback: Activity {
   constructor() : super()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-
-    print(intent)
-
-    print(intent?.action)
-    print(intent?.data)
 
     SignInWithApplePlugin.lastAuthorizationRequestResult!!.success(intent?.data?.toString())
     SignInWithApplePlugin.lastAuthorizationRequestResult = null

@@ -1,3 +1,7 @@
+## 1.3.0
+
+- Added Android support; simplified external API
+
 ## 1.1.1
 
 - Remove re-declared method in Android wrapper (#37)
