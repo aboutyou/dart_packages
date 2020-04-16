@@ -60,7 +60,7 @@ In your `AndroidManifest.xml` inside `<application>` add
 On the Sign in with Apple callback (specified in `WebAuthenticationOptions.redirectUri`), redirect safely back to your Android app using the following URL:
 
 ```
-intent://callback?code=${CODE FROM POST BODY}#Intent;package=YOUR.PACKAGE.IDENTIFIER;scheme=signinwithapple;end
+intent://callback?${PARAMETERS FROM CALLBACK BODY}#Intent;package=YOUR.PACKAGE.IDENTIFIER;scheme=signinwithapple;end
 ```
 
 Leave the `callback` path and `signinwithapple` scheme untouched.
