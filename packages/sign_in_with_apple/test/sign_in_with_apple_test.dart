@@ -31,6 +31,10 @@ void main() {
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: 'com.example',
+          redirectUri: Uri.parse('https://example.com'),
+        ),
       ),
       isA<AuthorizationCredentialAppleID>(),
     );
