@@ -33,8 +33,9 @@ export './src/widgets/sign_in_with_apple_button.dart'
 // ignore: avoid_classes_with_only_static_members
 class SignInWithApple {
   @visibleForTesting
-  static const channel =
-      MethodChannel('com.aboutyou.dart_packages.sign_in_with_apple');
+  static const channel = MethodChannel(
+    'com.aboutyou.dart_packages.sign_in_with_apple',
+  );
 
   /// Request credentials from the system.
   ///
@@ -67,8 +68,11 @@ class SignInWithApple {
       );
     }
 
-    if (Platform.isAndroid) {
-      return _signInWithAppleAndroid(webAuthenticationOptions);
+    if (Platform.isAndroid &&
+        requests.whereType<AppleIDAuthorizationRequest>().isNotEmpty) {
+      return _signInWithAppleAndroid(
+          requests.whereType<AppleIDAuthorizationRequest>().first,
+          webAuthenticationOptions);
     }
 
     try {
@@ -111,36 +115,61 @@ class SignInWithApple {
   }
 
   static Future<AuthorizationCredential> _signInWithAppleAndroid(
+    AppleIDAuthorizationRequest appleIDAuthorizationRequest,
     WebAuthenticationOptions webAuthenticationOptions,
   ) async {
     assert(Platform.isAndroid);
 
-    await custom_tabs.launch(
-      // URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
-      Uri(
-        scheme: 'https',
-        host: 'appleid.apple.com',
-        path: '/auth/authorize',
-        queryParameters: <String, String>{
-          'client_id': webAuthenticationOptions.clientId,
-          'redirect_uri': webAuthenticationOptions.redirectUri.toString(),
-          // TODO: Align with configurable scopes currently being implemented for iOS
-          'scope': 'name email',
-          // Request `code`, which is also what `ASAuthorizationAppleIDCredential.authorizationCode` contains
-          // So the same handling can be used for Apple and 3rd party platforms
-          'response_type': 'code',
-          'response_mode': 'form_post',
-        },
-      ).toString(),
+    final uri = Uri(
+      scheme: 'https',
+      host: 'appleid.apple.com',
+      path: '/auth/authorize',
+      queryParameters: <String, String>{
+        'client_id': webAuthenticationOptions.clientId,
+        'redirect_uri': webAuthenticationOptions.redirectUri.toString(),
+        // TODO: Align with configurable scopes currently being implemented for iOS
+        'scope': appleIDAuthorizationRequest.scopes
+            .map((scope) {
+              switch (scope) {
+                case AppleIDAuthorizationScopes.email:
+                  return 'email';
+                case AppleIDAuthorizationScopes.fullName:
+                  return 'name';
+              }
+              return null;
+            })
+            .where((scope) => scope != null)
+            .join(' '),
+        // Request `code`, which is also what `ASAuthorizationAppleIDCredential.authorizationCode` contains.
+        // So the same handling can be used for Apple and 3rd party platforms
+        'response_type': 'code',
+        'response_mode': 'form_post',
+      },
+    ).toString();
 
-      option: custom_tabs.CustomTabsOption(),
-    );
+    print(uri);
+
+    // await custom_tabs.launch(
+    //   // URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
+    //   uri,
+
+    //   option: custom_tabs.CustomTabsOption(),
+    // );
 
     final result = await channel.invokeMethod<String>(
       'performAuthorizationRequest',
+      <String, String>{
+        'url': uri,
+      },
     );
 
     print(result);
+
+    /// second time
+
+    /// signinwithapple://callback?code=c7d1b13b5f1dd4c46ae22a128c2f28c2e.0.nrqtw.7xH1wz9jb9jyk8i5v2K2Jg
+
+    /// signinwithapple://callback?code=c7253d404c180400eaa4691aa9c8c07ff.0.nrqtw.OALT9--SjOoLRti_wvrF5Q&user=%7B%22name%22%3A%7B%22firstName%22%3A%22Timm%22%2C%22lastName%22%3A%22Preetz%22%7D%2C%22email%22%3A%224rtppgbhgb%40privaterelay.appleid.com%22%7D
 
     return AuthorizationCredentialAppleID(
       userIdentifier: 'TODO',

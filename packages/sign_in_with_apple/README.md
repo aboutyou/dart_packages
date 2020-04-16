@@ -41,7 +41,7 @@ SignInWithAppleButton(
 In your `AndroidManifest.xml` inside `<application>` add
 
 ```xml
-        <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->
+       <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->
         <activity
             android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
             android:exported="true"

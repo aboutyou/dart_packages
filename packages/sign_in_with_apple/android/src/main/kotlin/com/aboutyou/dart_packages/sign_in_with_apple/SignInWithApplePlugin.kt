@@ -10,9 +10,19 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 
+import android.net.Uri
+import android.content.Intent
+import androidx.browser.customtabs.CustomTabsIntent
+
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+
 /** SignInWithApplePlugin */
-public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
+public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private var channel: MethodChannel? = null
+
+  var activity: Activity? = null
+  
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.aboutyou.dart_packages.sign_in_with_apple")
@@ -35,6 +45,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   // in the same class.
   companion object {
     var lastAuthorizationRequestResult: Result? = null
+    var triggerMainActivityToHideChromeCustomTab : (() -> Unit)? = null
 
     @JvmStatic
     fun registerWith(registrar: Registrar) {
@@ -46,11 +57,55 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
       "isAvailable" -> result.success(true)
-      "performAuthorizationRequest" -> SignInWithApplePlugin.lastAuthorizationRequestResult = result
+      "performAuthorizationRequest" -> {
+        val _activity = activity
+
+        if (_activity == null) {
+          result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
+          return
+        }
+
+        val url: String? = call.argument("url")
+
+        if (url == null) {
+          result.error("MISSING_ARG", "Missing 'url' argument", call.arguments)
+          return
+        }
+
+        SignInWithApplePlugin.lastAuthorizationRequestResult = result
+        SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = {
+          val notificationIntent = _activity.getPackageManager().getLaunchIntentForPackage(_activity.getPackageName());
+          notificationIntent.setPackage(null)
+          notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+          _activity.startActivity(notificationIntent)
+        }
+
+
+        val builder = CustomTabsIntent.Builder();
+        val customTabsIntent = builder.build();
+        customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        customTabsIntent.launchUrl(_activity, Uri.parse(url));
+      }
       else -> {
         result.notImplemented()
       }
     }
+  }
+
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    activity = binding.activity
+  }
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    onAttachedToActivity(binding)
+  }
+
+  override fun onDetachedFromActivityForConfigChanges() {
+    onDetachedFromActivity()
+  }
+
+  override fun onDetachedFromActivity() {
+    activity = null
   }
 }
 
@@ -58,7 +113,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler {
 Activity which is used when the web-based authentication flow links back to the app
 
 
- DO NOT rename this or it's package name as it's configured in the consumer's android manifest
+ DO NOT rename this or it's package name as it's configured in the consumer's `AndroidManifest.xml`
  */
 public class SignInWithAppleCallback: Activity {
   constructor() : super()
@@ -73,6 +128,8 @@ public class SignInWithAppleCallback: Activity {
 
     SignInWithApplePlugin.lastAuthorizationRequestResult!!.success(intent?.data?.toString())
     SignInWithApplePlugin.lastAuthorizationRequestResult = null
+    SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab!!();
+    SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null;
 
     finish()
   }
