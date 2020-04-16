@@ -129,6 +129,7 @@ class SignInWithApple {
   }) async {
     assert(Platform.isAndroid);
 
+    /// URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
     final uri = Uri(
       scheme: 'https',
       host: 'appleid.apple.com',
@@ -154,15 +155,6 @@ class SignInWithApple {
         'response_mode': 'form_post',
       },
     ).toString();
-
-    print(uri);
-
-    // await custom_tabs.launch(
-    //   // URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
-    //   uri,
-
-    //   option: custom_tabs.CustomTabsOption(),
-    // );
 
     final result = await channel.invokeMethod<String>(
       'performAuthorizationRequest',
