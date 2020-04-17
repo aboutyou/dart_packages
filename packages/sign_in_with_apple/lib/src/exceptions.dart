@@ -5,8 +5,8 @@ import 'package:meta/meta.dart';
 ///
 /// Implementations:
 /// - [SignInWithAppleNotSupportedException]
-/// - [SignInWithAppleAuthorizationError]
-/// - [SignInWithAppleAuthorizationError]
+/// - [SignInWithAppleAuthorizationException]
+/// - [UnknownSignInWithAppleException]
 @immutable
 abstract class SignInWithAppleException implements Exception {
   factory SignInWithAppleException.fromPlatformException(
@@ -20,27 +20,27 @@ abstract class SignInWithAppleException implements Exception {
 
       /// Exceptions which indicate an [SignInWithAppleAuthorizationError]
       case 'authorization-error/unknown':
-        return SignInWithAppleAuthorizationError(
+        return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.unknown,
           message: exception.message,
         );
       case 'authorization-error/canceled':
-        return SignInWithAppleAuthorizationError(
+        return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.canceled,
           message: exception.message,
         );
       case 'authorization-error/invalidResponse':
-        return SignInWithAppleAuthorizationError(
+        return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.invalidResponse,
           message: exception.message,
         );
       case 'authorization-error/notHandled':
-        return SignInWithAppleAuthorizationError(
+        return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.notHandled,
           message: exception.message,
         );
       case 'authorization-error/failed':
-        return SignInWithAppleAuthorizationError(
+        return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.failed,
           message: exception.message,
         );
@@ -111,8 +111,9 @@ enum AuthorizationErrorCode {
 /// A [SignInWithAppleException] indicating something went wrong while authenticating.
 ///
 /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationerror
-class SignInWithAppleAuthorizationError implements SignInWithAppleException {
-  const SignInWithAppleAuthorizationError({
+class SignInWithAppleAuthorizationException
+    implements SignInWithAppleException {
+  const SignInWithAppleAuthorizationException({
     @required this.code,
     @required this.message,
   })  : assert(code != null),
