@@ -27,6 +27,7 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
         switch call.method {
         case "isAvailable":
             result(true)
+            
         case "performAuthorizationRequest":
             // Makes sure arguments exists and is a List
             guard let args = call.arguments as? [Any] else {
@@ -36,15 +37,16 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
                 return
             }
                 
-            let signInController = SignInWithAppleAuthorizationController(
-                SignInWithAppleAuthorizationController.parseRequests(rawRequests: args),
-                callback: result
-            )
+            let signInController = SignInWithAppleAuthorizationController(result)
 
             // store to keep alive
             _lastSignInWithAppleAuthorizationController = signInController
 
-            signInController.performRequests()
+            signInController.performRequests(
+                requests: SignInWithAppleAuthorizationController.parseRequests(
+                    rawRequests: args
+                )
+            )
 
         case "getCredentialState":
             // Makes sure arguments exists and is a Map
@@ -105,16 +107,13 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
 class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControllerDelegate {
     var callback: FlutterResult
     
-    var requests: [ASAuthorizationRequest]
-
-    init(_ requests: [ASAuthorizationRequest], callback: @escaping FlutterResult) {
-        self.requests = requests
+    init(_ callback: @escaping FlutterResult) {
         self.callback = callback
     }
     
-    /// Parses a list of json requests into the proper [ASAuthorizationRequest] type.
-    ///
-    /// The parsing itself tries to be as lenient as possible to recover gracefully from parsing errors.
+    // Parses a list of json requests into the proper [ASAuthorizationRequest] type.
+    //
+    // The parsing itself tries to be as lenient as possible to recover gracefully from parsing errors.
     public static func parseRequests(rawRequests: [Any]) -> [ASAuthorizationRequest] {
         var requests: [ASAuthorizationRequest] = []
         
@@ -166,7 +165,7 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
         return requests
     }
 
-    public func performRequests() {
+    public func performRequests(requests: [ASAuthorizationRequest]) {
         let authorizationController = ASAuthorizationController(
             authorizationRequests: requests
         )
