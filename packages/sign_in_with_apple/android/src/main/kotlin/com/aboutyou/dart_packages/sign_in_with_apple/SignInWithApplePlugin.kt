@@ -72,6 +72,9 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
           return
         }
 
+        SignInWithApplePlugin.lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.")
+        SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab?();
+
         SignInWithApplePlugin.lastAuthorizationRequestResult = result
         SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = {
           val notificationIntent = _activity.getPackageManager().getLaunchIntentForPackage(_activity.getPackageName());
@@ -79,7 +82,6 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
           notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
           _activity.startActivity(notificationIntent)
         }
-
 
         val builder = CustomTabsIntent.Builder();
         val customTabsIntent = builder.build();
@@ -121,10 +123,23 @@ public class SignInWithAppleCallback: Activity {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    SignInWithApplePlugin.lastAuthorizationRequestResult!!.success(intent?.data?.toString())
-    SignInWithApplePlugin.lastAuthorizationRequestResult = null
-    SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab!!();
-    SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null;
+    val lastAuthorizationRequestResult = SignInWithApplePlugin.lastAuthorizationRequestResult
+    if (lastAuthorizationRequestResult != null) {
+      lastAuthorizationRequestResult.success(intent?.data?.toString())
+      lastAuthorizationRequestResult = null
+    } else {
+      SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
+
+      throw Exception("Received Sign in with Apple callback, but 'lastAuthorizationRequestResult' function was `null`")
+    }
+
+    val triggerMainActivityToHideChromeCustomTab = SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab
+    if (triggerMainActivityToHideChromeCustomTab != null) {
+      triggerMainActivityToHideChromeCustomTab()
+      triggerMainActivityToHideChromeCustomTab = null
+    } else {
+      throw Exception("Received Sign in with Apple callback, but 'triggerMainActivityToHideChromeCustomTab' function was `null`")
+    }
 
     finish()
   }
