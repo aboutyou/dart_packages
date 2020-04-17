@@ -4,6 +4,8 @@ import AuthenticationServices
 import FlutterMacOS
 #elseif os(iOS)
 import Flutter
+// UIKit is only available on iOS and we need it for UIDevice
+import UIKit
 #endif
 
 public enum SignInWithAppleError {
@@ -43,7 +45,13 @@ public enum SignInWithAppleError {
     func toFlutterError() -> FlutterError {
         switch self {
         case .notSupported:
-            let platform = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
+            var platform = "unknown platform"
+            
+            #if os(OSX)
+                platform = "macOS \(ProcessInfo.processInfo.operatingSystemVersion)"
+            #elseif os(iOS)
+                platform = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
+            #endif
             
             return FlutterError(
                 code: "not-supported",
