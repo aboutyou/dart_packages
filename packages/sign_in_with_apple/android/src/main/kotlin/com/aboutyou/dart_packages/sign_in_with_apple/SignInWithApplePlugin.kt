@@ -72,8 +72,10 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
           return
         }
 
-        SignInWithApplePlugin.lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.")
-        SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab?();
+        SignInWithApplePlugin.lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
+        if (SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab != null) {
+          SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab!!()
+        }
 
         SignInWithApplePlugin.lastAuthorizationRequestResult = result
         SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = {
@@ -126,7 +128,7 @@ public class SignInWithAppleCallback: Activity {
     val lastAuthorizationRequestResult = SignInWithApplePlugin.lastAuthorizationRequestResult
     if (lastAuthorizationRequestResult != null) {
       lastAuthorizationRequestResult.success(intent?.data?.toString())
-      lastAuthorizationRequestResult = null
+      SignInWithApplePlugin.lastAuthorizationRequestResult = null
     } else {
       SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
 
@@ -136,7 +138,7 @@ public class SignInWithAppleCallback: Activity {
     val triggerMainActivityToHideChromeCustomTab = SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab
     if (triggerMainActivityToHideChromeCustomTab != null) {
       triggerMainActivityToHideChromeCustomTab()
-      triggerMainActivityToHideChromeCustomTab = null
+      SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
     } else {
       throw Exception("Received Sign in with Apple callback, but 'triggerMainActivityToHideChromeCustomTab' function was `null`")
     }
