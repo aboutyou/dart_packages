@@ -58,7 +58,7 @@ class SignInWithApple {
   /// and user data will only be set if this is the initial authentication for the Apple ID with your app.
   ///
   /// In case of an error on the native side, we will throw an [SignInWithAppleException].
-  /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationError],
+  /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationException],
   /// which has more information about the failure.
   static Future<AuthorizationCredential> getAppleIDCredential({
     @required List<AppleIDAuthorizationScopes> scopes,
