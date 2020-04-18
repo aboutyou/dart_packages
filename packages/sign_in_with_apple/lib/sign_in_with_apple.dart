@@ -83,6 +83,12 @@ class SignInWithApple {
     }
 
     try {
+      if (!Platform.isIOS && !Platform.isMacOS) {
+        throw SignInWithAppleNotSupportedException(
+          message: 'The current platform is not supported',
+        );
+      }
+
       return parseAuthorizationCredentialAppleID(
         await channel.invokeMethod<Map<dynamic, dynamic>>(
           'performAuthorizationRequest',
