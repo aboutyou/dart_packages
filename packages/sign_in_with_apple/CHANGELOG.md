@@ -1,4 +1,4 @@
-## 1.3.0
+## 2.0.0
 
 - Added Android support; simplified external API
 
