@@ -9,7 +9,7 @@ import Flutter
 public class SignInWithAppleUnavailablePlugin: NSObject, FlutterPlugin {
     // This plugin should not be registered with directly
     //
-    // This is merely a cross-platform plugin to handle the case Sign in with Apple is available
+    // This is merely a cross-platform plugin to handle the case Sign in with Apple is not available
     // on the target platform
     //
     // Each target platform will still need a specific Plugin implementation
