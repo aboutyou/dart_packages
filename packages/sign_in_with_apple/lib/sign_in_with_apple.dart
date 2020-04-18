@@ -83,7 +83,9 @@ class SignInWithApple {
     }
 
     try {
-      if (!Platform.isIOS && !Platform.isMacOS) {
+      if (!Platform.isIOS &&
+          !Platform.isMacOS &&
+          Platform.environment['FLUTTER_TEST'] != 'true') {
         throw SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );
