@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/services.dart';
+import 'package:sign_in_with_apple/src/web_authentication_options.dart';
 import 'package:sign_in_with_apple/src/exceptions.dart';
 
 import './src/authorization_credential.dart';
@@ -14,7 +16,6 @@ export './src/authorization_credential.dart'
         AuthorizationCredential,
         AuthorizationCredentialAppleID,
         AuthorizationCredentialPassword;
-
 export './src/authorization_request.dart'
     show
         AuthorizationRequest,
@@ -22,6 +23,7 @@ export './src/authorization_request.dart'
         AppleIDAuthorizationScopes,
         AppleIDAuthorizationRequest;
 export './src/credential_state.dart' show CredentialState;
+export './src/web_authentication_options.dart' show WebAuthenticationOptions;
 export './src/widgets/is_sign_in_with_apple_available.dart'
     show IsSignInWithAppleAvailable;
 export './src/widgets/sign_in_with_apple_button.dart'
@@ -30,35 +32,71 @@ export './src/widgets/sign_in_with_apple_button.dart'
 // ignore: avoid_classes_with_only_static_members
 class SignInWithApple {
   @visibleForTesting
-  static const channel =
-      MethodChannel('de.aboutyou.mobile.app.sign_in_with_apple');
+  static const channel = MethodChannel(
+    'com.aboutyou.dart_packages.sign_in_with_apple',
+  );
 
-  /// Request credentials from the system.
+  /// Returns the credentials stored in the Keychain for the app-associated websites
+  static Future<AuthorizationCredentialPassword> getKeychainCredential() async {
+    try {
+      return parseAuthorizationCredentialPassword(
+        await channel.invokeMethod<Map<dynamic, dynamic>>(
+          'performAuthorizationRequest',
+          [
+            PasswordAuthorizationRequest(),
+          ].map((request) => request.toJson()).toList(),
+        ),
+      );
+    } on PlatformException catch (exception) {
+      throw SignInWithAppleException.fromPlatformException(exception);
+    }
+  }
+
+  /// Requests Apple ID credentials from the system.
   ///
-  /// Through the [requests], you can specify which [AuthorizationCredential] should be requested.
-  /// We currently support the following two:
-  /// - [AuthorizationCredentialAppleID] which requests authentication with the users Apple ID.
-  /// - [AuthorizationCredentialPassword] which asks for some credentials in the users Keychain.
-  ///
-  /// In case the authorization is successful, we will return an [AuthorizationCredential].
-  /// These can currently be two different type of credentials:
-  /// - [AuthorizationCredentialAppleID]
-  /// - [AuthorizationCredentialPassword]
-  /// The returned credentials do depend on the [requests] that you specified.
+  /// Fields on the returned [AuthorizationCredential] will be set based on the given scopes,
+  /// and user data will only be set if this is the initial authentication for the Apple ID with your app.
   ///
   /// In case of an error on the native side, we will throw an [SignInWithAppleException].
   /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationException],
   /// which has more information about the failure.
-  static Future<AuthorizationCredential> requestCredentials({
-    @required List<AuthorizationRequest> requests,
+  static Future<AuthorizationCredential> getAppleIDCredential({
+    @required List<AppleIDAuthorizationScopes> scopes,
+
+    /// Optional parameters for web-based authentication flows on non-Apple platforms
+    WebAuthenticationOptions webAuthenticationOptions,
   }) async {
-    assert(requests != null);
+    assert(scopes != null);
+
+    if (webAuthenticationOptions == null &&
+        (!Platform.isIOS && !Platform.isMacOS)) {
+      throw Exception(
+        'webAuthenticationOptions parameter must be provided on non-Apple platforms',
+      );
+    }
+
+    if (Platform.isAndroid) {
+      return _signInWithAppleAndroid(
+        scopes: scopes,
+        webAuthenticationOptions: webAuthenticationOptions,
+      );
+    }
 
     try {
-      return parseCredentialsResponse(
+      if (!Platform.isIOS &&
+          !Platform.isMacOS &&
+          Platform.environment['FLUTTER_TEST'] != 'true') {
+        throw SignInWithAppleNotSupportedException(
+          message: 'The current platform is not supported',
+        );
+      }
+
+      return parseAuthorizationCredentialAppleID(
         await channel.invokeMethod<Map<dynamic, dynamic>>(
           'performAuthorizationRequest',
-          requests.map((request) => request.toJson()).toList(),
+          [
+            AppleIDAuthorizationRequest(scopes: scopes),
+          ].map((request) => request.toJson()).toList(),
         ),
       );
     } on PlatformException catch (exception) {
@@ -91,5 +129,48 @@ class SignInWithApple {
 
   static Future<bool> isAvailable() {
     return channel.invokeMethod<bool>('isAvailable');
+  }
+
+  static Future<AuthorizationCredential> _signInWithAppleAndroid({
+    @required List<AppleIDAuthorizationScopes> scopes,
+    @required WebAuthenticationOptions webAuthenticationOptions,
+  }) async {
+    assert(Platform.isAndroid);
+
+    /// URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
+    final uri = Uri(
+      scheme: 'https',
+      host: 'appleid.apple.com',
+      path: '/auth/authorize',
+      queryParameters: <String, String>{
+        'client_id': webAuthenticationOptions.clientId,
+        'redirect_uri': webAuthenticationOptions.redirectUri.toString(),
+        'scope': scopes
+            .map((scope) {
+              switch (scope) {
+                case AppleIDAuthorizationScopes.email:
+                  return 'email';
+                case AppleIDAuthorizationScopes.fullName:
+                  return 'name';
+              }
+              return null;
+            })
+            .where((scope) => scope != null)
+            .join(' '),
+        // Request `code`, which is also what `ASAuthorizationAppleIDCredential.authorizationCode` contains.
+        // So the same handling can be used for Apple and 3rd party platforms
+        'response_type': 'code',
+        'response_mode': 'form_post',
+      },
+    ).toString();
+
+    final result = await channel.invokeMethod<String>(
+      'performAuthorizationRequest',
+      <String, String>{
+        'url': uri,
+      },
+    );
+
+    return parseAuthorizationCredentialAppleIDFromDeeplink(Uri.parse(result));
   }
 }

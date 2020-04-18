@@ -26,15 +26,15 @@ void main() {
     });
 
     expect(
-      await SignInWithApple.requestCredentials(
-        requests: [
-          AppleIDAuthorizationRequest(
-            scopes: [
-              AppleIDAuthorizationScopes.email,
-              AppleIDAuthorizationScopes.fullName,
-            ],
-          ),
+      await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
         ],
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: 'com.example',
+          redirectUri: Uri.parse('https://example.com'),
+        ),
       ),
       isA<AuthorizationCredentialAppleID>(),
     );
@@ -54,16 +54,7 @@ void main() {
     });
 
     expect(
-      await SignInWithApple.requestCredentials(
-        requests: [
-          AppleIDAuthorizationRequest(
-            scopes: [
-              AppleIDAuthorizationScopes.email,
-              AppleIDAuthorizationScopes.fullName,
-            ],
-          ),
-        ],
-      ),
+      await SignInWithApple.getKeychainCredential(),
       isA<AuthorizationCredentialPassword>(),
     );
   });

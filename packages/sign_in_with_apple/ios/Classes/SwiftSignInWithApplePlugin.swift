@@ -89,7 +89,7 @@ public class SwiftSignInWithApplePlugin: NSObject, FlutterPlugin {
 
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(
-            name: "de.aboutyou.mobile.app.sign_in_with_apple",
+            name: "com.aboutyou.dart_packages.sign_in_with_apple",
             binaryMessenger: registrar.messenger()
         )
         let instance = SwiftSignInWithApplePlugin()

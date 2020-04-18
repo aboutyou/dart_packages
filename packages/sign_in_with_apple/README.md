@@ -6,8 +6,8 @@ Supports login via an Apple ID as well as credentials saved in the user's keycha
 
 ## Supported platforms
 
-* iOS
-* macOS
+- iOS
+- macOS
 
 ## Example Usage
 
@@ -15,7 +15,7 @@ Supports login via an Apple ID as well as credentials saved in the user's keycha
 SignInWithAppleButton(
     onPressed: () async {
         final credentials = await SignInWithApple.requestCredentials();
-        
+
         if (credentials is AuthorizationCredentialAppleID) {
             /// send credentials to your server to create a session
             /// after they have been validated with Apple
@@ -33,3 +33,36 @@ SignInWithAppleButton(
 ![](./screenshots/1.png)
 
 ![](./screenshots/2.png)
+
+## Integration
+
+### Android
+
+In your `AndroidManifest.xml` inside `<application>` add
+
+```xml
+       <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->
+        <activity
+            android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
+            android:exported="true"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="signinwithapple" />
+                <data android:path="callback" />
+            </intent-filter>
+        </activity>
+```
+
+On the Sign in with Apple callback (specified in `WebAuthenticationOptions.redirectUri`), redirect safely back to your Android app using the following URL:
+
+```
+intent://callback?${PARAMETERS FROM CALLBACK BODY}#Intent;package=YOUR.PACKAGE.IDENTIFIER;scheme=signinwithapple;end
+```
+
+Leave the `callback` path and `signinwithapple` scheme untouched.
+
+Furthermore, when handling the incoming credentials on the client, make sure to only overwrite the current (guest) session of the user once your own server have validated the incoming `code` parameter, such that your app is not susceptible to malicious incoming links (e.g. logging out the current user).
