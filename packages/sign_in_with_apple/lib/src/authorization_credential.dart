@@ -25,7 +25,7 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
   ///
   /// This will be provided upon every sign-in.
   /// This will stay the same between sign ins, until the user deauthorizes your App. TODO check if this is actually the case
-  /// 
+  ///
   /// Can be `null`
   final String userIdentifier;
 

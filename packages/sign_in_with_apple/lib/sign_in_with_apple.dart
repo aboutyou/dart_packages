@@ -60,7 +60,7 @@ class SignInWithApple {
   /// In case of an error on the native side, we will throw an [SignInWithAppleException].
   /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationException],
   /// which has more information about the failure.
-  /// 
+  ///
   /// In case Sign in with Apple is not available, this will throw an [SignInWithAppleNotSupportedException].
   static Future<AuthorizationCredential> getAppleIDCredential({
     @required List<AppleIDAuthorizationScopes> scopes,
