@@ -1,0 +1,1 @@
+./../../darwin/Classes/SignInWithAppleAvailablePlugin.swift
