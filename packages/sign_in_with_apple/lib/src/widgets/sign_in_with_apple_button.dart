@@ -79,6 +79,9 @@ class SignInWithAppleButton extends StatelessWidget {
                   style: TextStyle(
                     fontSize: height * 0.43 /* per Apple's guidelines */,
                     color: contrastColor,
+                    // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart
+                    fontFamily: '.SF Pro Text',
+                    letterSpacing: -0.41,
                   ),
                 ),
                 if (iconAlignment == IconAlignment.left)

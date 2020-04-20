@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sign_in_with_apple/src/widgets/is_sign_in_with_apple_available.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 void main() {
@@ -26,9 +25,8 @@ void main() {
 
       await tester.runAsync(() async {
         await tester.pumpWidget(
-          IsSignInWithAppleAvailable.internal(
-            isAvailableFuture: SignInWithApple.isAvailable(),
-            child: Container(
+          SignInWithAppleBuilder(
+            builder: (context) => Container(
               height: 20,
               width: 20,
             ),
@@ -64,15 +62,11 @@ void main() {
 
       await tester.runAsync(() async {
         await tester.pumpWidget(
-          IsSignInWithAppleAvailable.internal(
-            isAvailableFuture: SignInWithApple.isAvailable(),
-            child: Builder(
-              builder: (context) {
-                /// This would crash if we would ever render this
-                return null;
-              },
+          SignInWithAppleBuilder(
+            builder: (context) => Builder(
+              builder: (context) => SizedBox.shrink(),
             ),
-            fallback: Container(
+            fallbackBuilder: (context) => Container(
               height: 20,
               width: 20,
             ),
