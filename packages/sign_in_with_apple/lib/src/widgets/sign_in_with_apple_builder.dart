@@ -13,7 +13,6 @@ class SignInWithAppleBuilder extends StatefulWidget {
     this.fallbackBuilder = _fallbackBuilder,
   })  : assert(builder != null),
         assert(fallbackBuilder != null),
-        // isAvailableFuture = _isAvailable(),
         super(key: key);
 
   /// A [WidgetBuilder] which will be executed in case Sign in with Apple is available
