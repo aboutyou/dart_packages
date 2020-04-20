@@ -17,8 +17,6 @@ jobs:
       - uses: subosito/flutter-action@c1bf65eb311fe29b5bc99d6e91c4498decde268a # v1.3.0
         with:
           flutter-version: "1.12.13+hotfix.8"
-      - run: dart --version
-      - run: flutter --version
       - name: Install dependencies
         run: ./install_all.sh
       - name: Analyze
