@@ -29,7 +29,7 @@ class SignInWithApple {
   ///
   /// Only available on Apple platforms.
   ///
-  /// Throws a [SignInWithAppleException] exception when not credentials have been found in the Keychain.
+  /// Throws a [SignInWithAppleException] exception when no credentials have been found in the Keychain.
   static Future<AuthorizationCredentialPassword> getKeychainCredential() async {
     try {
       if (!Platform.isIOS &&
