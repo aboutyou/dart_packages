@@ -30,9 +30,9 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: "12.x"
-      - uses: subosito/flutter-action@v1.3.0
+      - uses: subosito/flutter-action@c1bf65eb311fe29b5bc99d6e91c4498decde268a # v1.3.0
         with:
-          flutter-version: "1.12.13-hotfix.8"
+          flutter-version: "1.12.13+hotfix.8"
       - run: dart --version
       - run: flutter --version
       - name: Install dependencies
