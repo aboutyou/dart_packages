@@ -8,10 +8,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_in_with_apple/src/widgets/sign_in_with_apple_button.dart';
 
 Future<void> main() async {
-  final fontData = File('../assets/fonts/SF.ttf')
-      .readAsBytes()
-      .then((bytes) => ByteData.view(Uint8List.fromList(bytes).buffer));
-  final fontLoader = FontLoader('SF')..addFont(fontData);
+  // Using Roboto here instead of Apple's San Francisco fonts, due to licensing issues
+  //
+  // Roboto is then remapped to the San Francisco's font name, so it gets picked up while running the tests
+  // (`fontFamilyFallback` didn't work in tests and `Ahem` (block) font would be used instead)
+  final fontData =
+      File.fromUri(_resolvePathInTestDirectory('../assets/fonts/Roboto.ttf'))
+          .readAsBytes()
+          .then((bytes) => ByteData.view(Uint8List.fromList(bytes).buffer));
+  final fontLoader = FontLoader('.SF Pro Text')..addFont(fontData);
   await fontLoader.load();
 
   if (!Platform.isMacOS) {
@@ -125,4 +130,17 @@ class TestSetup extends StatelessWidget {
       debugShowCheckedModeBanner: false,
     );
   }
+}
+
+Uri _resolvePathInTestDirectory(String path) {
+  var cwd = Directory.current;
+  final uri = cwd.uri.toString();
+
+  // The CWD will be the root when the test is run from VSCode directly
+  // We append ./test/ then to properly have resolve the response files
+  if (!uri.endsWith('/test/') && !path.endsWith('/test/')) {
+    cwd = Directory.fromUri(cwd.uri.resolve('./test'));
+  }
+
+  return cwd.uri.resolve(path);
 }
