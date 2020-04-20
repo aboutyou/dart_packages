@@ -3,22 +3,6 @@ name: Dart CI
 on: [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    container:
-      image: cirrusci/flutter:v1.12.13-hotfix.8
-
-    steps:
-      - uses: actions/checkout@v1
-      - name: Setup permissions
-        run: sudo chown -R cirrus /__w && sudo chmod -R 777 /__w
-      - name: Install dependencies
-        run: ./install_all.sh
-      - name: Analyze
-        run: ./analyze_all.sh
-      - name: Run tests
-        run: ./test_all.sh
-
   test:
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
