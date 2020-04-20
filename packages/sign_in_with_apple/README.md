@@ -30,9 +30,9 @@ SignInWithAppleButton(
 
 ## Flow
 
-![](./screenshots/1.png)
+![](https://raw.githubusercontent.com/aboutyou/dart_packages/be222ddd96233574f46b7ac512ec1e0735a9362d/assets/sign_in_with_apple/screenshots/1.png)
 
-![](./screenshots/2.png)
+![](https://raw.githubusercontent.com/aboutyou/dart_packages/be222ddd96233574f46b7ac512ec1e0735a9362d/assets/sign_in_with_apple/screenshots/2.png)
 
 ## Integration
 
