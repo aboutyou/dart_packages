@@ -106,7 +106,7 @@ class SignInWithApple {
     }
   }
 
-  /// Request the credentials state a giver [userIdentifier].
+  /// Request the credentials state for a [userIdentifier].
   /// The [userIdentifier] should come from a previos call to [requestCredentials] which returned an [AuthorizationCredentialAppleID].
   ///
   /// This method allows you to check whether or not the user is still authorized, revoked the access or has not yet signed up with it.
