@@ -1,9 +1,12 @@
 import 'package:flutter/services.dart';
 
-import './authorization_credential.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-/// The state of a credentials of a particular user.
+/// State of a credential of a particular user.
+///
 /// The user identifier that is needed for requesting this information comes from the [AuthorizationCredentialAppleID].
+///
+/// The current state of a user can be requested via [SignInWithApple.getCredentialState]
 ///
 /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidprovider/credentialstate
 enum CredentialState {
@@ -13,10 +16,15 @@ enum CredentialState {
   /// Authorization for the given user has been revoked.
   revoked,
 
-  /// The user can’t be found.
+  /// The user wasn't found.
   notFound,
 }
 
+/// Parses the string represenation of a [CredentialState] to its enum value.
+///
+/// The values are aligned with the native implementations.
+///
+/// Throws a [PlatformException] in case of unsupported [credentialState] arguments.
 CredentialState parseCredentialState(String credentialState) {
   switch (credentialState) {
     case 'authorized':

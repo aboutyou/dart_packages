@@ -16,16 +16,30 @@ import 'package:sign_in_with_apple/src/authorization_credential.dart'
 import 'package:sign_in_with_apple/src/credential_state.dart'
     show parseCredentialState;
 
+/// Wrapper class providing the methods to interact with Sign in with Apple.
 // ignore: avoid_classes_with_only_static_members
 class SignInWithApple {
   @visibleForTesting
+  // ignore: public_member_api_docs
   static const channel = MethodChannel(
     'com.aboutyou.dart_packages.sign_in_with_apple',
   );
 
-  /// Returns the credentials stored in the Keychain for the app-associated websites
+  /// Returns the credentials stored in the Keychain for the website associated with the current app.
+  ///
+  /// Only available on Apple platforms.
+  ///
+  /// Throws a [SignInWithAppleException] exception when not credentials have been found in the Keychain.
   static Future<AuthorizationCredentialPassword> getKeychainCredential() async {
     try {
+      if (!Platform.isIOS &&
+          !Platform.isMacOS &&
+          Platform.environment['FLUTTER_TEST'] != 'true') {
+        throw SignInWithAppleNotSupportedException(
+          message: 'The current platform is not supported',
+        );
+      }
+
       return parseAuthorizationCredentialPassword(
         await channel.invokeMethod<Map<dynamic, dynamic>>(
           'performAuthorizationRequest',
@@ -39,20 +53,34 @@ class SignInWithApple {
     }
   }
 
-  /// Requests Apple ID credentials from the system.
+  /// Requests an Apple ID credential.
   ///
-  /// Fields on the returned [AuthorizationCredential] will be set based on the given scopes,
-  /// and user data will only be set if this is the initial authentication for the Apple ID with your app.
+  /// Shows the native UI on Apple's platform and a Chrome Custom Tab on Android.
   ///
-  /// In case of an error on the native side, we will throw an [SignInWithAppleException].
-  /// If we have a more specific authorization error, we will throw [SignInWithAppleAuthorizationException],
-  /// which has more information about the failure.
+  /// The returned [AuthorizationCredentialAppleID]'s `authorizationCode` should then be used to validate the token with Apple's servers and
+  /// create a session in your system.
   ///
-  /// In case Sign in with Apple is not available, this will throw an [SignInWithAppleNotSupportedException].
-  static Future<AuthorizationCredential> getAppleIDCredential({
+  /// Fields on the returned [AuthorizationCredentialAppleID] will be set based on the given scopes.
+  ///
+  /// User data fields (first name, last name, email) will only be set if this is the initial authentication between the current app and Apple ID.
+  ///
+  /// The returned Future will resolve in all cases on iOS and macOS, either with an exception if Sign in with Apple is not available,
+  /// or as soon as the native UI goes away (either due cancellation or the completion of the authorization).
+  ///
+  /// On Android the returned Future will never resolve in case the user closes the Chrome Custom Tab without finsihing the authentication flow.
+  /// Any previous Future would be rejected if the [getAppleIDCredential] is called again, while an earlier one is still pending.
+  ///
+  /// Throws an [SignInWithAppleException] in case there was any error retrieving the credential.
+  /// A specialized [SignInWithAppleAuthorizationException] is thrown in case of authorization errors, which contains
+  /// further information about the failure.
+  ///
+  /// Throws an [SignInWithAppleNotSupportedException] in case Sign in with Apple is not available (e.g. iOS < 13, macOS < 10.15)
+  static Future<AuthorizationCredentialAppleID> getAppleIDCredential({
     @required List<AppleIDAuthorizationScopes> scopes,
 
     /// Optional parameters for web-based authentication flows on non-Apple platforms
+    ///
+    /// This parameter is required on Android.
     WebAuthenticationOptions webAuthenticationOptions,
   }) async {
     assert(scopes != null);
@@ -93,20 +121,28 @@ class SignInWithApple {
     }
   }
 
-  /// Request the credentials state for a [userIdentifier].
-  /// The [userIdentifier] should come from a previos call to `requestCredentials` which returned an [AuthorizationCredentialAppleID].
+  /// Returns the credentials state for a given user.
   ///
-  /// This method allows you to check whether or not the user is still authorized, revoked the access or has not yet signed up with it.
+  /// This method is only available on Apple platforms (which are also the only platforms where one retrieves a `userIdentifier` within [AuthorizationCredentialAppleID] instances).
   ///
-  /// This methods either completes with a [CredentialState] or throws an [SignInWithAppleException].
-  /// In case there was an error while getting the credentials state, this throws a [SignInWithAppleCredentialsException].
-  /// In case Sign in with Apple is not available, this will throw an [SignInWithAppleNotSupportedException].
+  /// The [userIdentifier] argument should come from a previous call to [getAppleIDCredential] which returned an [AuthorizationCredentialAppleID].
   ///
-  /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidprovider/3175423-getcredentialstate
+  /// Throws a [SignInWithAppleException] in case of errors, and a specific [SignInWithAppleCredentialsException] in case there was an error
+  /// while getting the credentials state.
+  ///
+  /// Throw a [SignInWithAppleNotSupportedException] on unsupported platforms.
   static Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
     assert(userIdentifier != null);
+
+    if (!Platform.isIOS &&
+        !Platform.isMacOS &&
+        Platform.environment['FLUTTER_TEST'] != 'true') {
+      throw SignInWithAppleNotSupportedException(
+        message: 'The current platform is not supported',
+      );
+    }
 
     try {
       return parseCredentialState(
@@ -120,23 +156,27 @@ class SignInWithApple {
     }
   }
 
-  /// This checks with the native platform whether or not Sign in with Apple is available.
+  /// Returns whether Sign in with Apple is available on the current platform.
   ///
-  /// For iOS, the user will need `iOS 13` or higher.
-  /// For macOS, the user will need `macOS Catalina` or higher.
+  /// If this returns `true`, [getAppleIDCredential] will not throw a [SignInWithAppleNotSupportedException] when called.
   ///
-  /// In case Sign in with Apple is not available, this will complete with `false`.
+  /// Sign in with Apple is available on:
+  /// - iOS 13 and higher
+  /// - macOS 10.15 and higher
+  /// - Android
+  ///
+  /// In case Sign in with Apple is not available, the returned Future completes with `false`.
   static Future<bool> isAvailable() {
     return channel.invokeMethod<bool>('isAvailable');
   }
 
-  static Future<AuthorizationCredential> _signInWithAppleAndroid({
+  static Future<AuthorizationCredentialAppleID> _signInWithAppleAndroid({
     @required List<AppleIDAuthorizationScopes> scopes,
     @required WebAuthenticationOptions webAuthenticationOptions,
   }) async {
     assert(Platform.isAndroid);
 
-    /// URL according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
+    // URL built according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
     final uri = Uri(
       scheme: 'https',
       host: 'appleid.apple.com',

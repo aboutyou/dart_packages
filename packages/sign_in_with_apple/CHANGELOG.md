@@ -1,6 +1,7 @@
 ## 2.0.0
 
-- Added Android support; simplified external API
+- Added Android support
+- Simplified external API
 
 ## 1.1.1
 

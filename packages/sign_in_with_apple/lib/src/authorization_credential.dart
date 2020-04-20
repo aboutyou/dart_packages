@@ -3,28 +3,31 @@ import 'dart:convert';
 import 'package:meta/meta.dart';
 import './authorization_request.dart';
 
-@immutable
-abstract class AuthorizationCredential {
-  const AuthorizationCredential();
-}
-
-/// An [AuthorizationCredential] which comes from a succesful Apple ID authorization.
+/// Authorization details from a successful Sign in with Apple flow.
 ///
-/// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidcredential
-class AuthorizationCredentialAppleID implements AuthorizationCredential {
+/// Most fields are optional in this class.
+///
+/// Especially [givenName], [familyName], and [email] member will only be provided on the first authorization between
+/// the app and Apple ID.
+///
+/// The [authorizationCode] member is always present and should be used to check the authorizations with Apple servers
+/// from your backend. Upon successful validation, you should create a session in your system for the current user,
+/// or consider her now logged in.
+@immutable
+class AuthorizationCredentialAppleID {
+  /// Creates an instance which contains the result of a successful Sign in with Apple flow.
   const AuthorizationCredentialAppleID({
     @required this.userIdentifier,
     @required this.givenName,
     @required this.familyName,
     @required this.email,
-    @required this.identityToken,
     @required this.authorizationCode,
   }) : assert(authorizationCode != null);
 
   /// An identifier associated with the authenticated user.
   ///
   /// This will be provided upon every sign-in.
-  /// This will stay the same between sign ins, until the user deauthorizes your App. TODO check if this is actually the case
+  /// This will stay the same between sign ins, until the user deauthorizes your App.
   ///
   /// Can be `null`
   final String userIdentifier;
@@ -62,9 +65,6 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
   /// Can be `null`
   final String email;
 
-  /// Can be `null`
-  final String identityToken;
-
   /// Can be `null` on the native side, but is expected on the Flutter side,
   /// as the authorization would be useless without the tokens to validate them
   /// on your own server
@@ -72,22 +72,23 @@ class AuthorizationCredentialAppleID implements AuthorizationCredential {
 
   @override
   String toString() {
-    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, identityToken set? ${identityToken != null}, authorizationCode set? ${authorizationCode != null})';
+    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, authorizationCode set? ${authorizationCode != null})';
   }
 }
 
-/// An [AuthorizationCredential] which request a username/password combination from the users Keychain.
-///
-/// Apple Docs: https://developer.apple.com/documentation/authenticationservices/aspasswordcredential
-class AuthorizationCredentialPassword implements AuthorizationCredential {
+/// Authorization details retrieved from the user's Keychain for the current app's website.
+class AuthorizationCredentialPassword {
+  /// Creates a new username/password combination, which is the result of a successful Keychain query.
   const AuthorizationCredentialPassword({
     @required this.username,
     @required this.password,
   })  : assert(username != null),
         assert(password != null);
 
+  /// The username for the credential
   final String username;
 
+  /// The password for the credential
   final String password;
 
   @override
@@ -96,7 +97,7 @@ class AuthorizationCredentialPassword implements AuthorizationCredential {
   }
 }
 
-// ignore_for_file: avoid_as
+// ignore_for_file: avoid_as, public_member_api_docs
 AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
   Map<dynamic, dynamic> response,
 ) {
@@ -106,7 +107,6 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
       givenName: response['givenName'] as String,
       familyName: response['familyName'] as String,
       email: response['email'] as String,
-      identityToken: response['identityToken'] as String,
       authorizationCode: response['authorizationCode'] as String,
     );
   } else {
@@ -140,6 +140,5 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
     givenName: user != null ? user['name']['firstName'] as String : null,
     familyName: user != null ? user['name']['lastName'] as String : null,
     userIdentifier: null,
-    identityToken: null,
   );
 }

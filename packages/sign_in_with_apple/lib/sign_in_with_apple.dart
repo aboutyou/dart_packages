@@ -1,8 +1,5 @@
 export './src/authorization_credential.dart'
-    show
-        AuthorizationCredential,
-        AuthorizationCredentialAppleID,
-        AuthorizationCredentialPassword;
+    show AuthorizationCredentialAppleID, AuthorizationCredentialPassword;
 export './src/authorization_request.dart'
     show
         AuthorizationRequest,
