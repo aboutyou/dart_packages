@@ -1,4 +1,7 @@
 import 'package:meta/meta.dart';
+import 'package:flutter/services.dart';
+
+import './authorization_credential.dart';
 
 /// A base class which describes an authorization request that we will make on the native side.
 ///
@@ -11,11 +14,18 @@ import 'package:meta/meta.dart';
 abstract class AuthorizationRequest {
   const AuthorizationRequest();
 
+  /// A method which turns this [AuthorizationRequest] into a JSON representation
+  /// which can be send over a [MethodChannel].
   Map<String, dynamic> toJson();
 }
 
 /// The scopes that will be requested with the [AppleIDAuthorizationRequest].
 /// This allows you to request additional information from the user upon sign up.
+///
+/// This information will only be provided on the first authorizations.
+/// Upon further authorizations, you will only get the user identifier,
+/// meaning you will need to store this data securely on your servers.
+/// For more information see: https://forums.developer.apple.com/thread/121496
 ///
 /// Apple Docs: https://developer.apple.com/documentation/authenticationservices/asauthorization/scope
 enum AppleIDAuthorizationScopes {
@@ -25,6 +35,9 @@ enum AppleIDAuthorizationScopes {
 
 /// An [AuthorizationRequest] which authenticates a user based on their Apple ID.
 ///
+/// This will prompt the user to sign in using their stored Apple ID on their device.
+/// Upon completion, this will result in an [AuthorizationCredentialAppleID].
+///
 /// Apple Docs:
 /// - https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidprovider
 /// - https://developer.apple.com/documentation/authenticationservices/asauthorizationappleidrequest
@@ -33,6 +46,12 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
     this.scopes = const [],
   }) : assert(scopes != null);
 
+  /// A list of scopes that can be requested from the user.
+  ///
+  /// This information will only be provided on the first authorization.
+  /// Upon further authorizations, you will only get the user identifier,
+  /// meaning you will need to store this data securely on your servers.
+  /// For more information see: https://forums.developer.apple.com/thread/121496
   final List<AppleIDAuthorizationScopes> scopes;
 
   @override

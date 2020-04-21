@@ -2,12 +2,13 @@
 
 Flutter bridge to Sign in with Apple.
 
-Supports login via an Apple ID as well as credentials saved in the user's keychain.
+Supports login via an Apple ID, as well as credentials saved in the user's keychain.
 
 ## Supported platforms
 
 - iOS
 - macOS
+- Android
 
 ## Example Usage
 
@@ -30,9 +31,9 @@ SignInWithAppleButton(
 
 ## Flow
 
-![](./screenshots/1.png)
+![](https://raw.githubusercontent.com/aboutyou/dart_packages/be222ddd96233574f46b7ac512ec1e0735a9362d/assets/sign_in_with_apple/screenshots/1.png)
 
-![](./screenshots/2.png)
+![](https://raw.githubusercontent.com/aboutyou/dart_packages/be222ddd96233574f46b7ac512ec1e0735a9362d/assets/sign_in_with_apple/screenshots/2.png)
 
 ## Integration
 
