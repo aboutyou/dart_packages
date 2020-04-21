@@ -85,14 +85,13 @@ class SignInWithApple {
   }) async {
     assert(scopes != null);
 
-    if (webAuthenticationOptions == null &&
-        (!Platform.isIOS && !Platform.isMacOS)) {
-      throw Exception(
-        'webAuthenticationOptions parameter must be provided on non-Apple platforms',
-      );
-    }
-
     if (Platform.isAndroid) {
+      if (webAuthenticationOptions == null) {
+        throw Exception(
+          '`webAuthenticationOptions` argument must be provided on Android.',
+        );
+      }
+
       return _signInWithAppleAndroid(
         scopes: scopes,
         webAuthenticationOptions: webAuthenticationOptions,
