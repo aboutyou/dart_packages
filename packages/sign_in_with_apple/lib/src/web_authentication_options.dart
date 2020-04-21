@@ -7,7 +7,8 @@ class WebAuthenticationOptions {
   WebAuthenticationOptions({
     @required this.clientId,
     @required this.redirectUri,
-  });
+  })  : assert(clientId != null),
+        assert(redirectUri != null);
 
   /// The developer’s client identifier, as provided by WWDR.
   ///

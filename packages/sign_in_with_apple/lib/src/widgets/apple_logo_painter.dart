@@ -59,5 +59,6 @@ class AppleLogoPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(AppleLogoPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
