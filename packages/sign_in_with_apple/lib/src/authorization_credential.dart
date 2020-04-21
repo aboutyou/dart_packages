@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import './authorization_request.dart';
 
 /// Authorization details from a successful Sign in with Apple flow.
@@ -16,13 +17,21 @@ import './authorization_request.dart';
 @immutable
 class AuthorizationCredentialAppleID {
   /// Creates an instance which contains the result of a successful Sign in with Apple flow.
-  const AuthorizationCredentialAppleID({
+  AuthorizationCredentialAppleID({
     @required this.userIdentifier,
     @required this.givenName,
     @required this.familyName,
     @required this.email,
     @required this.authorizationCode,
-  }) : assert(authorizationCode != null);
+  }) {
+    if (authorizationCode == null) {
+      throw SignInWithAppleAuthorizationException(
+        code: AuthorizationErrorCode.invalidResponse,
+        message:
+            'AuthorizationCredentialAppleID: `authorizationCode` argument was null',
+      );
+    }
+  }
 
   /// An identifier associated with the authenticated user.
   ///
@@ -65,9 +74,9 @@ class AuthorizationCredentialAppleID {
   /// Can be `null`
   final String email;
 
-  /// Can be `null` on the native side, but is expected on the Flutter side,
-  /// as the authorization would be useless without the tokens to validate them
-  /// on your own server
+  /// The verification code for the current authorization.
+  ///
+  /// This code should be used by your server component to validate the authorization with Apple within 5 minutes upon receiving it.
   final String authorizationCode;
 
   @override
