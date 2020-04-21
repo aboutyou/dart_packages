@@ -31,10 +31,12 @@ class SignInWithAppleButton extends StatelessWidget {
 
   /// The height of the button.
   ///
-  /// This default to `44` according to the Apple Guidelines.
+  /// This defaults to `44` according to the Apple Guidelines.
   final double height;
 
-  /// The style of the button
+  /// The style of the button according to Apple Guidelines.
+  ///
+  /// This defaults to [SignInWithAppleButtonStyle.black].
   final SignInWithAppleButtonStyle style;
 
   /// The border radius of the button.
@@ -43,15 +45,62 @@ class SignInWithAppleButton extends StatelessWidget {
   final BorderRadius borderRadius;
 
   /// How the icon should be aligned inside the button
+  ///
+  /// Defaults to [IconAlignment.center]
   final IconAlignment iconAlignment;
+
+  /// Returns the background color of the button based on the [style]
+  Color get _backgroundColor {
+    switch (style) {
+      case SignInWithAppleButtonStyle.black:
+        return Colors.black;
+      case SignInWithAppleButtonStyle.white:
+      case SignInWithAppleButtonStyle.whiteOutlined:
+        return Colors.white;
+    }
+
+    assert(false, 'Unknown style: $style');
+    return null;
+  }
+
+  /// Returns the contrast color to the [_backgroundColor]
+  ///
+  /// This is used for the text color and the icon color of the button
+  Color get _contrastColor {
+    switch (style) {
+      case SignInWithAppleButtonStyle.black:
+        return Colors.white;
+      case SignInWithAppleButtonStyle.white:
+      case SignInWithAppleButtonStyle.whiteOutlined:
+        return Colors.black;
+    }
+
+    assert(false, 'Unknown style: $style');
+    return null;
+  }
+
+  /// The decoration which should be applied to the inner container inside the button
+  ///
+  /// This allows to customize the border of the button
+  Decoration get _decoration {
+    switch (style) {
+      case SignInWithAppleButtonStyle.black:
+      case SignInWithAppleButtonStyle.white:
+        return null;
+
+      case SignInWithAppleButtonStyle.whiteOutlined:
+        return BoxDecoration(
+          border: Border.all(width: 1, color: Colors.black),
+          borderRadius: borderRadius,
+        );
+    }
+
+    assert(false, 'Unknown style: $style');
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor =
-        style == SignInWithAppleButtonStyle.black ? Colors.black : Colors.white;
-    final contrastColor =
-        style == SignInWithAppleButtonStyle.black ? Colors.white : Colors.black;
-
     // per Apple's guidelines
     final fontSize = height * 0.43;
 
@@ -60,7 +109,7 @@ class SignInWithAppleButton extends StatelessWidget {
       textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: fontSize,
-        color: contrastColor,
+        color: _contrastColor,
         // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart#L16
         fontFamily: '.SF Pro Text',
         letterSpacing: -0.41,
@@ -76,12 +125,36 @@ class SignInWithAppleButton extends StatelessWidget {
           height: fontSize,
           child: CustomPaint(
             painter: AppleLogoPainter(
-              color: contrastColor,
+              color: _contrastColor,
             ),
           ),
         ),
       ),
     );
+
+    var children = <Widget>[];
+
+    switch (iconAlignment) {
+      case IconAlignment.center:
+        children = [
+          appleIcon,
+          Flexible(
+            child: textWidget,
+          ),
+        ];
+        break;
+      case IconAlignment.left:
+        children = [
+          appleIcon,
+          Expanded(
+            child: textWidget,
+          ),
+          SizedBox(
+            width: _appleIconSize,
+          ),
+        ];
+        break;
+    }
 
     return Container(
       height: height,
@@ -89,35 +162,15 @@ class SignInWithAppleButton extends StatelessWidget {
         child: CupertinoButton(
           borderRadius: borderRadius,
           padding: EdgeInsets.zero,
-          color: backgroundColor,
+          color: _backgroundColor,
           child: Container(
-            decoration: style == SignInWithAppleButtonStyle.whiteOutlined
-                ? BoxDecoration(
-                    border: Border.all(width: 1, color: Colors.black),
-                    borderRadius: borderRadius,
-                  )
-                : null,
+            decoration: _decoration,
             padding: EdgeInsets.symmetric(
               horizontal: 16.0,
             ),
             height: height,
             child: Row(
-              children: <Widget>[
-                if (iconAlignment == IconAlignment.center) ...[
-                  appleIcon,
-                  Flexible(
-                    child: textWidget,
-                  ),
-                ] else if (iconAlignment == IconAlignment.left) ...[
-                  appleIcon,
-                  Expanded(
-                    child: textWidget,
-                  ),
-                  SizedBox(
-                    width: _appleIconSize,
-                  ),
-                ],
-              ],
+              children: children,
               mainAxisAlignment: MainAxisAlignment.center,
             ),
           ),
