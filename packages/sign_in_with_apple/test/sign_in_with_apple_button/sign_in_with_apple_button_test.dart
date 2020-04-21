@@ -19,8 +19,10 @@ Future<void> main() async {
   final fontLoader = FontLoader('.SF Pro Text')..addFont(fontData);
   await fontLoader.load();
 
+  // The tests should only be run on macOS system
+  // On other systems small differences can lead to failing goldens (e.g. text rendering)
   if (!Platform.isMacOS) {
-    return;
+    throw UnsupportedError('Widget tests should only be run on macOS machines');
   }
 
   setUp(() {
@@ -30,23 +32,6 @@ Future<void> main() async {
 
     binding.window.devicePixelRatioTestValue = 3;
     binding.window.physicalSizeTestValue = Size(300, 100) * 3;
-  });
-  testWidgets('Pill-shaped', (tester) async {
-    await tester.pumpWidget(
-      TestSetup(
-        child: SignInWithAppleButton(
-          onPressed: () {},
-          borderRadius: BorderRadius.all(
-            Radius.circular(22.0),
-          ),
-        ),
-      ),
-    );
-
-    await expectLater(
-      find.byType(CupertinoApp),
-      matchesGoldenFile('goldens/pill_shaped.png'),
-    );
   });
 
   group('Button Style', () {
@@ -132,6 +117,71 @@ Future<void> main() async {
         matchesGoldenFile('goldens/center_aligned_icon.png'),
       );
     });
+  });
+
+  testWidgets('Allows to customize the border radius of the button',
+      (tester) async {
+    await tester.pumpWidget(
+      TestSetup(
+        child: SignInWithAppleButton(
+          onPressed: () {},
+          borderRadius: BorderRadius.all(
+            Radius.circular(22.0),
+          ),
+        ),
+      ),
+    );
+
+    await expectLater(
+      find.byType(CupertinoApp),
+      matchesGoldenFile('goldens/custom_border_radius.png'),
+    );
+  });
+
+  testWidgets('Allows to customize the height of the button', (tester) async {
+    await tester.pumpWidget(
+      TestSetup(
+        child: SignInWithAppleButton(
+          onPressed: () {},
+          height: 60,
+        ),
+      ),
+    );
+
+    await expectLater(
+      find.byType(CupertinoApp),
+      matchesGoldenFile('goldens/custom_height.png'),
+    );
+
+    expect(
+      tester
+          .getSize(
+            find.byType(SignInWithAppleButton),
+          )
+          .height,
+      60,
+    );
+  });
+
+  testWidgets('Allows customizing of the text', (tester) async {
+    await tester.pumpWidget(
+      TestSetup(
+        child: SignInWithAppleButton(
+          onPressed: () {},
+          text: 'Login with Apple',
+        ),
+      ),
+    );
+
+    await expectLater(
+      find.byType(CupertinoApp),
+      matchesGoldenFile('goldens/custom_text.png'),
+    );
+
+    expect(
+      find.text('Login with Apple'),
+      findsOneWidget,
+    );
   });
 }
 
