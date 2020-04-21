@@ -92,7 +92,7 @@ class SignInWithAppleButton extends StatelessWidget {
 
       case SignInWithAppleButtonStyle.whiteOutlined:
         return BoxDecoration(
-          border: Border.all(width: 1, color: Colors.black),
+          border: Border.all(width: 1, color: _contrastColor),
           borderRadius: borderRadius,
         );
     }
