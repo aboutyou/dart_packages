@@ -26,7 +26,9 @@ class SignInWithAppleButton extends StatelessWidget {
   /// The callback which will be called when the button is pressed.
   final VoidCallback onPressed;
 
-  /// The text to the
+  /// The text which should be rendered inside the button.
+  ///
+  /// Defaults to `Sign in with Apple`.
   final String text;
 
   /// The height of the button.
