@@ -48,7 +48,7 @@ class SignInWithAppleButton extends StatelessWidget {
 
   /// Controls how the icon should be aligned inside the button.
   ///
-  /// Defaults to [IconAlignment.center]
+  /// This defaults to [IconAlignment.center].
   final IconAlignment iconAlignment;
 
   /// Returns the background color of the button based on the [style]
