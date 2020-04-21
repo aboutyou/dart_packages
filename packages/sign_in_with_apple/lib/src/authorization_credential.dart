@@ -35,7 +35,7 @@ class AuthorizationCredentialAppleID {
 
   /// An identifier associated with the authenticated user.
   ///
-  /// This will be provided upon every sign-in.
+  /// This will always be provided on iOS and macOS systems. On Android, however, this will not be present.
   /// This will stay the same between sign ins, until the user deauthorizes your App.
   ///
   /// Can be `null`
