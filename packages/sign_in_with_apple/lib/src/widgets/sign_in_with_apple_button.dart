@@ -46,7 +46,7 @@ class SignInWithAppleButton extends StatelessWidget {
   /// Defaults to `8` pixels.
   final BorderRadius borderRadius;
 
-  /// How the icon should be aligned inside the button
+  /// Controls how the icon should be aligned inside the button.
   ///
   /// Defaults to [IconAlignment.center]
   final IconAlignment iconAlignment;
