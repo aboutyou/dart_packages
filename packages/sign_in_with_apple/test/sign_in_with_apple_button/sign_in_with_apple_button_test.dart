@@ -183,6 +183,28 @@ Future<void> main() async {
       findsOneWidget,
     );
   });
+
+  testWidgets('Calls the onPressed callback when the button is pressed',
+      (tester) async {
+    var callCount = 0;
+
+    await tester.pumpWidget(
+      TestSetup(
+        child: SignInWithAppleButton(
+          onPressed: () {
+            callCount++;
+          },
+        ),
+      ),
+    );
+
+    await tester.tapAt(
+      tester.getCenter(find.byType(SignInWithAppleButton)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(callCount, 1);
+  });
 }
 
 class TestSetup extends StatelessWidget {
