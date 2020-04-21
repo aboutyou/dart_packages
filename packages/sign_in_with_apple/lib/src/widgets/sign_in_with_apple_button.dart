@@ -10,7 +10,7 @@ class SignInWithAppleButton extends StatelessWidget {
     @required this.onPressed,
     this.text = 'Sign in with Apple',
     this.height = 44,
-    this.style = SignInWithAppleButtonStyle.dark,
+    this.style = SignInWithAppleButtonStyle.black,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     this.iconAlignment = IconAlignment.center,
   })  : assert(text != null),
@@ -35,9 +35,9 @@ class SignInWithAppleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final backgroundColor =
-        style == SignInWithAppleButtonStyle.dark ? Colors.black : Colors.white;
+        style == SignInWithAppleButtonStyle.black ? Colors.black : Colors.white;
     final contrastColor =
-        style == SignInWithAppleButtonStyle.dark ? Colors.white : Colors.black;
+        style == SignInWithAppleButtonStyle.black ? Colors.white : Colors.black;
 
     return Container(
       height: height,
@@ -102,12 +102,24 @@ class SignInWithAppleButton extends StatelessWidget {
   }
 }
 
+/// The style of the button
 enum SignInWithAppleButtonStyle {
-  dark,
+  /// A black button with white text and white icon
+  black,
+
+  /// A white button with black text and black icon
   white,
 }
 
+/// This controls the alignment of the Apple Logo on the [SignInWithAppleButton]
 enum IconAlignment {
+  /// The icon will be centered together with the text
+  ///
+  /// ![Center Icon Alignment](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/left_aligned_icon.png)
   center,
+
+  /// The icon will be on the left side, while the text will be centered accordingly
+  ///
+  /// ![Center Icon Alignment](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/left_aligned_icon.png)
   left,
 }

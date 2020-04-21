@@ -45,22 +45,6 @@ Future<void> main() async {
     );
   });
 
-  testWidgets('Left aligned icon', (tester) async {
-    await tester.pumpWidget(
-      TestSetup(
-        child: SignInWithAppleButton(
-          onPressed: () {},
-          iconAlignment: IconAlignment.left,
-        ),
-      ),
-    );
-
-    await expectLater(
-      find.byType(CupertinoApp),
-      matchesGoldenFile('goldens/left_aligned_icon.png'),
-    );
-  });
-
   testWidgets('Pill-shaped', (tester) async {
     await tester.pumpWidget(
       TestSetup(
@@ -94,6 +78,74 @@ Future<void> main() async {
       find.byType(CupertinoApp),
       matchesGoldenFile('goldens/default_style_white.png'),
     );
+  });
+
+  group('Button Style', () {
+    testWidgets('Black', (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            style: SignInWithAppleButtonStyle.black,
+          ),
+        ),
+      );
+
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/black_button.png'),
+      );
+    });
+
+    testWidgets('White', (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            style: SignInWithAppleButtonStyle.white,
+          ),
+        ),
+      );
+
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/white_button.png'),
+      );
+    });
+  });
+
+  group('Icon Alignment', () {
+    testWidgets('Left aligned icon', (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            iconAlignment: IconAlignment.left,
+          ),
+        ),
+      );
+
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/left_aligned_icon.png'),
+      );
+    });
+
+    testWidgets('Center aligned Icon', (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            iconAlignment: IconAlignment.center,
+          ),
+        ),
+      );
+
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/center_aligned_icon.png'),
+      );
+    });
   });
 }
 
