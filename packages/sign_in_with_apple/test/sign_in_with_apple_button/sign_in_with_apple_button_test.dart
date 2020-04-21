@@ -100,6 +100,7 @@ Future<void> main() async {
     testWidgets('White', (tester) async {
       await tester.pumpWidget(
         TestSetup(
+          backgroundColor: Colors.black,
           child: SignInWithAppleButton(
             onPressed: () {},
             style: SignInWithAppleButtonStyle.white,
@@ -110,6 +111,22 @@ Future<void> main() async {
       await expectLater(
         find.byType(CupertinoApp),
         matchesGoldenFile('goldens/white_button.png'),
+      );
+    });
+
+    testWidgets('White Outlined', (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            style: SignInWithAppleButtonStyle.whiteOutlined,
+          ),
+        ),
+      );
+
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/white_outlined_button.png'),
       );
     });
   });

@@ -47,7 +47,7 @@ class SignInWithAppleButton extends StatelessWidget {
           padding: EdgeInsets.zero,
           color: backgroundColor,
           child: Container(
-            decoration: style == SignInWithAppleButtonStyle.white
+            decoration: style == SignInWithAppleButtonStyle.whiteOutlined
                 ? BoxDecoration(
                     border: Border.all(width: 1, color: Colors.black),
                     borderRadius: borderRadius,
@@ -102,24 +102,35 @@ class SignInWithAppleButton extends StatelessWidget {
   }
 }
 
-/// The style of the button
+/// The style of the button according to the Apple Documentation.
+///
+/// https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple/overview/buttons/
 enum SignInWithAppleButtonStyle {
   /// A black button with white text and white icon
+  ///
+  /// ![Black Button](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/black_button.png)
   black,
 
   /// A white button with black text and black icon
+  ///
+  /// ![White Button](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/white_button.png)
   white,
+
+  /// A white button which has a black outline
+  ///
+  /// ![White Outline Button](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/white_outlined_button.png)
+  whiteOutlined,
 }
 
 /// This controls the alignment of the Apple Logo on the [SignInWithAppleButton]
 enum IconAlignment {
   /// The icon will be centered together with the text
   ///
-  /// ![Center Icon Alignment](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/left_aligned_icon.png)
+  /// ![Center Icon Alignment](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/center_aligned_icon.png)
   center,
 
   /// The icon will be on the left side, while the text will be centered accordingly
   ///
-  /// ![Center Icon Alignment](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/left_aligned_icon.png)
+  /// ![Left Icon Alignment](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/left_aligned_icon.png)
   left,
 }
