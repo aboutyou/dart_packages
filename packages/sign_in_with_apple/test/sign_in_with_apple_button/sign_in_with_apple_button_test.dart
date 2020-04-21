@@ -31,20 +31,6 @@ Future<void> main() async {
     binding.window.devicePixelRatioTestValue = 3;
     binding.window.physicalSizeTestValue = Size(300, 100) * 3;
   });
-
-  testWidgets('Default style', (tester) async {
-    await tester.pumpWidget(
-      TestSetup(
-        child: SignInWithAppleButton(onPressed: () {}),
-      ),
-    );
-
-    await expectLater(
-      find.byType(CupertinoApp),
-      matchesGoldenFile('goldens/default_style.png'),
-    );
-  });
-
   testWidgets('Pill-shaped', (tester) async {
     await tester.pumpWidget(
       TestSetup(
@@ -60,23 +46,6 @@ Future<void> main() async {
     await expectLater(
       find.byType(CupertinoApp),
       matchesGoldenFile('goldens/pill_shaped.png'),
-    );
-  });
-
-  testWidgets('Default style (white)', (tester) async {
-    await tester.pumpWidget(
-      TestSetup(
-        child: SignInWithAppleButton(
-          onPressed: () {},
-          style: SignInWithAppleButtonStyle.white,
-        ),
-        backgroundColor: Colors.grey[350],
-      ),
-    );
-
-    await expectLater(
-      find.byType(CupertinoApp),
-      matchesGoldenFile('goldens/default_style_white.png'),
     );
   });
 

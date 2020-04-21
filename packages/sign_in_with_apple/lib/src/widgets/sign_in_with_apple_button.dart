@@ -57,6 +57,7 @@ class SignInWithAppleButton extends StatelessWidget {
 
     final textWidget = Text(
       text,
+      textAlign: TextAlign.center,
       style: TextStyle(
         fontSize: fontSize,
         color: contrastColor,
