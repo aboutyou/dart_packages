@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_in_with_apple/src/widgets/sign_in_with_apple_button.dart';
 
+// The tests are only run on macOS system, on other systems they will be skipped
+// On other systems small differences can lead to failing goldens (e.g. text rendering)
 Future<void> main() async {
   // Using Roboto here instead of Apple's San Francisco fonts, due to licensing issues
   //
@@ -18,12 +20,6 @@ Future<void> main() async {
           .then((bytes) => ByteData.view(Uint8List.fromList(bytes).buffer));
   final fontLoader = FontLoader('.SF Pro Text')..addFont(fontData);
   await fontLoader.load();
-
-  // The tests should only be run on macOS system
-  // On other systems small differences can lead to failing goldens (e.g. text rendering)
-  if (!Platform.isMacOS) {
-    throw UnsupportedError('Widget tests should only be run on macOS machines');
-  }
 
   setUp(() {
     // ignore: avoid_as
