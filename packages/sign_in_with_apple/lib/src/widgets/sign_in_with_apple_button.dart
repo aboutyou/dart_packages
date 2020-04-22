@@ -67,7 +67,7 @@ class SignInWithAppleButton extends StatelessWidget {
     return null;
   }
 
-  /// Returns the contrast color to the [_backgroundColor]
+  /// Returns the contrast color to the [_backgroundColor] derived from the current [style].
   ///
   /// This is used for the text color and the icon color of the button
   Color get _contrastColor {
