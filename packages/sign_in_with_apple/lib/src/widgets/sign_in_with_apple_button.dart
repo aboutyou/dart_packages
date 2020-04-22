@@ -53,7 +53,7 @@ class SignInWithAppleButton extends StatelessWidget {
   /// This defaults to [IconAlignment.center].
   final IconAlignment iconAlignment;
 
-  /// Returns the background color of the button based on the [style]
+  /// Returns the background color of the button based on the current [style].
   Color get _backgroundColor {
     switch (style) {
       case SignInWithAppleButtonStyle.black:
