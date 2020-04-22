@@ -184,7 +184,7 @@ class SignInWithAppleButton extends StatelessWidget {
   }
 }
 
-/// The style of the button according to the Apple Documentation.
+/// The style of the button according to Apple's documentation.
 ///
 /// https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple/overview/buttons/
 enum SignInWithAppleButtonStyle {
