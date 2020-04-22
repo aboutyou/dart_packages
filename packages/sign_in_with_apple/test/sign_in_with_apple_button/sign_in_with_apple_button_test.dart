@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_in_with_apple/src/widgets/sign_in_with_apple_button.dart';
 
+// The tests are only run on macOS system, on other systems they will be skipped
+// On other systems small differences can lead to failing goldens (e.g. text rendering)
 Future<void> main() async {
   // Using Roboto here instead of Apple's San Francisco fonts, due to licensing issues
   //
@@ -19,10 +21,6 @@ Future<void> main() async {
   final fontLoader = FontLoader('.SF Pro Text')..addFont(fontData);
   await fontLoader.load();
 
-  if (!Platform.isMacOS) {
-    return;
-  }
-
   setUp(() {
     // ignore: avoid_as
     final binding = TestWidgetsFlutterBinding.ensureInitialized()
@@ -32,69 +30,211 @@ Future<void> main() async {
     binding.window.physicalSizeTestValue = Size(300, 100) * 3;
   });
 
-  testWidgets('Default style', (tester) async {
-    await tester.pumpWidget(
-      TestSetup(
-        child: SignInWithAppleButton(onPressed: () {}),
-      ),
+  group('Button Style', () {
+    testWidgets(
+      'Black',
+      (tester) async {
+        await tester.pumpWidget(
+          TestSetup(
+            child: SignInWithAppleButton(
+              onPressed: () {},
+              style: SignInWithAppleButtonStyle.black,
+            ),
+          ),
+        );
+
+        await expectLater(
+          find.byType(CupertinoApp),
+          matchesGoldenFile('goldens/black_button.png'),
+        );
+      },
+      skip: !Platform.isMacOS,
     );
 
-    await expectLater(
-      find.byType(CupertinoApp),
-      matchesGoldenFile('goldens/default_style.png'),
+    testWidgets(
+      'White',
+      (tester) async {
+        await tester.pumpWidget(
+          TestSetup(
+            backgroundColor: Colors.black,
+            child: SignInWithAppleButton(
+              onPressed: () {},
+              style: SignInWithAppleButtonStyle.white,
+            ),
+          ),
+        );
+
+        await expectLater(
+          find.byType(CupertinoApp),
+          matchesGoldenFile('goldens/white_button.png'),
+        );
+      },
+      skip: !Platform.isMacOS,
+    );
+
+    testWidgets(
+      'White Outlined',
+      (tester) async {
+        await tester.pumpWidget(
+          TestSetup(
+            child: SignInWithAppleButton(
+              onPressed: () {},
+              style: SignInWithAppleButtonStyle.whiteOutlined,
+            ),
+          ),
+        );
+
+        await expectLater(
+          find.byType(CupertinoApp),
+          matchesGoldenFile('goldens/white_outlined_button.png'),
+        );
+      },
+      skip: !Platform.isMacOS,
     );
   });
 
-  testWidgets('Left aligned icon', (tester) async {
-    await tester.pumpWidget(
-      TestSetup(
-        child: SignInWithAppleButton(
-          onPressed: () {},
-          iconAlignment: IconAlignment.left,
-        ),
-      ),
+  group('Icon Alignment', () {
+    testWidgets(
+      'Left aligned icon',
+      (tester) async {
+        await tester.pumpWidget(
+          TestSetup(
+            child: SignInWithAppleButton(
+              onPressed: () {},
+              iconAlignment: IconAlignment.left,
+            ),
+          ),
+        );
+
+        await expectLater(
+          find.byType(CupertinoApp),
+          matchesGoldenFile('goldens/left_aligned_icon.png'),
+        );
+      },
+      skip: !Platform.isMacOS,
     );
 
-    await expectLater(
-      find.byType(CupertinoApp),
-      matchesGoldenFile('goldens/left_aligned_icon.png'),
+    testWidgets(
+      'Center aligned Icon',
+      (tester) async {
+        await tester.pumpWidget(
+          TestSetup(
+            child: SignInWithAppleButton(
+              onPressed: () {},
+              iconAlignment: IconAlignment.center,
+            ),
+          ),
+        );
+
+        await expectLater(
+          find.byType(CupertinoApp),
+          matchesGoldenFile('goldens/center_aligned_icon.png'),
+        );
+      },
+      skip: !Platform.isMacOS,
     );
   });
 
-  testWidgets('Pill-shaped', (tester) async {
-    await tester.pumpWidget(
-      TestSetup(
-        child: SignInWithAppleButton(
-          onPressed: () {},
-          borderRadius: BorderRadius.all(
-            Radius.circular(22.0),
+  testWidgets(
+    'Allows to customize the border radius of the button',
+    (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            borderRadius: BorderRadius.all(
+              Radius.circular(22.0),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    await expectLater(
-      find.byType(CupertinoApp),
-      matchesGoldenFile('goldens/pill_shaped.png'),
-    );
-  });
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/custom_border_radius.png'),
+      );
+    },
+    skip: !Platform.isMacOS,
+  );
 
-  testWidgets('Default style (white)', (tester) async {
-    await tester.pumpWidget(
-      TestSetup(
-        child: SignInWithAppleButton(
-          onPressed: () {},
-          style: SignInWithAppleButtonStyle.white,
+  testWidgets(
+    'Allows to customize the height of the button',
+    (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            height: 60,
+          ),
         ),
-        backgroundColor: Colors.grey[350],
-      ),
-    );
+      );
 
-    await expectLater(
-      find.byType(CupertinoApp),
-      matchesGoldenFile('goldens/default_style_white.png'),
-    );
-  });
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/custom_height.png'),
+      );
+
+      expect(
+        tester
+            .getSize(
+              find.byType(SignInWithAppleButton),
+            )
+            .height,
+        60,
+      );
+    },
+    skip: !Platform.isMacOS,
+  );
+
+  testWidgets(
+    'Allows customizing of the text',
+    (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            text: 'Login with Apple',
+          ),
+        ),
+      );
+
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/custom_text.png'),
+      );
+
+      expect(
+        find.text('Login with Apple'),
+        findsOneWidget,
+      );
+    },
+    skip: !Platform.isMacOS,
+  );
+
+  testWidgets(
+    'Calls the onPressed callback when the button is pressed',
+    (tester) async {
+      var callCount = 0;
+
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {
+              callCount++;
+            },
+          ),
+        ),
+      );
+
+      await tester.tapAt(
+        tester.getCenter(find.byType(SignInWithAppleButton)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(callCount, 1);
+    },
+    skip: !Platform.isMacOS,
+  );
 }
 
 class TestSetup extends StatelessWidget {
