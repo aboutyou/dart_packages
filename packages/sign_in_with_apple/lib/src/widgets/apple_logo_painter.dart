@@ -6,7 +6,7 @@
 
 import 'package:flutter/widgets.dart';
 
-/// A custom painter which draws an Apple Logo in it's boundaries.
+/// A custom painter which draws Apple's logo inside its boundaries.
 class AppleLogoPainter extends CustomPainter {
   /// Creates an Apple Logo Painter with the provided [color]
   const AppleLogoPainter({
