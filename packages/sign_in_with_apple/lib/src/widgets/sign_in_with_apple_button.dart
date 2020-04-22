@@ -126,7 +126,7 @@ class SignInWithAppleButton extends StatelessWidget {
       width: _appleIconSizeScale * height,
       height: _appleIconSizeScale * height + 2,
       padding: EdgeInsets.only(
-        // Properly aligns the Apple Icon with the text of the button
+        // Properly aligns the Apple icon with the text of the button
         bottom: (4 / 44) * height,
       ),
       child: Center(
