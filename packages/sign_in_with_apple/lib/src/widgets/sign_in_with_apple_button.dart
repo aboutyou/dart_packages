@@ -110,6 +110,7 @@ class SignInWithAppleButton extends StatelessWidget {
       text,
       textAlign: TextAlign.center,
       style: TextStyle(
+        inherit: false,
         fontSize: fontSize,
         color: _contrastColor,
         // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart#L16
