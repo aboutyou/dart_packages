@@ -15,16 +15,16 @@ Supports login via an Apple ID, as well as credentials saved in the user's keych
 ```dart
 SignInWithAppleButton(
   onPressed: () async {
-    final credentials = await SignInWithApple.getAppleIDCredential(
+    final credential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
     );
 
-    print(credentials);
+    print(credential);
 
-    // Now send the credential to your server to create a session
+    // Now send the credential (especially `credentials.authorizationCode`) to your server to create a session
     // after they have been validated with Apple
   },
 );
