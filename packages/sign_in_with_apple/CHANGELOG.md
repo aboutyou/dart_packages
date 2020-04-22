@@ -1,3 +1,7 @@
+## 2.0.0+1
+
+- Fix example code in README to show simplified API
+
 ## 2.0.0
 
 - Added Android support

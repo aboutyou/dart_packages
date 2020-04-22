@@ -33,12 +33,8 @@ class _MyAppState extends State<MyApp> {
 
                 print(credentials);
 
-                if (credentials is AuthorizationCredentialAppleID) {
-                  /// send credentials to your server to create a session
-                  /// after they have been validated with Apple
-                } else if (credentials is AuthorizationCredentialPassword) {
-                  /// Login the user using username/password combination
-                }
+                // send credentials (especially `credentials.authorizationCode`) to your server to create a session
+                // after they have been validated with Apple
               },
             ),
           ),
