@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:sign_in_with_apple/src/widgets/apple_logo_painter.dart';
 
-const _appleIconSize = 28.0;
+/// The scale based on the height of the button
+const _appleIconSizeScale = 28 / 44;
 
 /// A `Sign in with Apple` button according to the Apple Guidelines.
 ///
@@ -122,8 +123,8 @@ class SignInWithAppleButton extends StatelessWidget {
     );
 
     final appleIcon = Container(
-      width: _appleIconSize,
-      height: _appleIconSize,
+      width: _appleIconSizeScale * height,
+      height: _appleIconSizeScale * height,
       child: Center(
         child: Container(
           width: fontSize * (25 / 31),
@@ -155,7 +156,7 @@ class SignInWithAppleButton extends StatelessWidget {
             child: textWidget,
           ),
           SizedBox(
-            width: _appleIconSize,
+            width: _appleIconSizeScale * height,
           ),
         ];
         break;
