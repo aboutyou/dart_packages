@@ -36,7 +36,9 @@ class SignInWithAppleButton extends StatelessWidget {
   /// This defaults to `44` according to Apple's guidelines.
   final double height;
 
-  /// The style of the button according to Apple Guidelines.
+  /// The style of the button.
+  ///
+  /// Supported options are in line with Apple's guidelines.
   ///
   /// This defaults to [SignInWithAppleButtonStyle.black].
   final SignInWithAppleButtonStyle style;
