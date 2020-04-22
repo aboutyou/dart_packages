@@ -23,7 +23,7 @@ class SignInWithAppleButton extends StatelessWidget {
         assert(iconAlignment != null),
         super(key: key);
 
-  /// The callback which will be called when the button is pressed.
+  /// The callback that is be called when the button is pressed.
   final VoidCallback onPressed;
 
   /// The text which should be rendered inside the button.
