@@ -2,7 +2,7 @@
 
 Flutter bridge to Sign in with Apple.
 
-Supports login via an Apple ID, as well as credentials saved in the user's keychain.
+Supports login via an Apple ID, as well as retrieving credentials saved in the user's keychain.
 
 ## Supported platforms
 
@@ -14,19 +14,20 @@ Supports login via an Apple ID, as well as credentials saved in the user's keych
 
 ```dart
 SignInWithAppleButton(
-    onPressed: () async {
-        final credentials = await SignInWithApple.requestCredentials();
+  onPressed: () async {
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+      ],
+    );
 
-        if (credentials is AuthorizationCredentialAppleID) {
-            /// send credentials to your server to create a session
-            /// after they have been validated with Apple
-        } else if (credentials is AuthorizationCredentialPassword) {
-            /// Login the user using username/password combination
-        }
-    },
+    print(credential);
+
+    // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+    // after they have been validated with Apple
+  },
 );
-
-
 ```
 
 ## Flow

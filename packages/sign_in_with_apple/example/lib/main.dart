@@ -24,21 +24,17 @@ class _MyAppState extends State<MyApp> {
           child: Center(
             child: SignInWithAppleButton(
               onPressed: () async {
-                final credentials = await SignInWithApple.getAppleIDCredential(
+                final credential = await SignInWithApple.getAppleIDCredential(
                   scopes: [
                     AppleIDAuthorizationScopes.email,
                     AppleIDAuthorizationScopes.fullName,
                   ],
                 );
 
-                print(credentials);
+                print(credential);
 
-                if (credentials is AuthorizationCredentialAppleID) {
-                  /// send credentials to your server to create a session
-                  /// after they have been validated with Apple
-                } else if (credentials is AuthorizationCredentialPassword) {
-                  /// Login the user using username/password combination
-                }
+                // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
+                // after they have been validated with Apple
               },
             ),
           ),
