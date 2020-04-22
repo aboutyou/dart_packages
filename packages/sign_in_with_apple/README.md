@@ -24,7 +24,7 @@ SignInWithAppleButton(
 
     print(credentials);
 
-    // Now send credentials (to your server to create a session
+    // Now send the credential to your server to create a session
     // after they have been validated with Apple
   },
 );

@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
 
                 print(credentials);
 
-                // send credentials (especially `credentials.authorizationCode`) to your server to create a session
+                // Now send the credential (especially `credentials.authorizationCode`) to your server to create a session
                 // after they have been validated with Apple
               },
             ),
