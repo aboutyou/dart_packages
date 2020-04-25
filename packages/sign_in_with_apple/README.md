@@ -102,6 +102,21 @@ Now everything is set up on Apple's Developer portal and we can start setting up
 
 ### Server
 
+The server part is usually integrated into your existing backends, and there are existing packages for most existing programming languages and web frameworks out there.
+
+In order to show how to build a complete example, we set up a example project on [Glitch](https://glitch.com/) which offers simple and free hosting of a HTTPS-enabled web API, which is exactly what's needed here.
+
+
+To get started with the Glitch-based example go to the project's page at https://glitch.com/~flutter-sign-in-with-apple-example and click "Remix this". Now you have your own copy of the sample server!
+
+First select the `.env` file in the file browser on the left and put in your credentials (these will not be public, but only shared with invited collaborators).
+
+Then click on the "Share" button next to your avatar in the upper left, select "Live App" and copy the entry page URL (e.g. `https://some-random-identifier.glitch.me`).
+
+Now update the services you created earlier at https://developer.apple.com/account/resources/identifiers/list/serviceId to include the following URL under `Return URLs`: `https://[YOUR-PROJECT-NAME].glitch.me/callbacks/sign_in_with_apple` (replacing the name inside the `[]`).
+
+After this is done, you can now proceed to integrate Sign in with Apple into the code of your Flutter app.
+
 ### iOS
 
 ### Android
