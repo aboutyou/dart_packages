@@ -38,6 +38,72 @@ SignInWithAppleButton(
 
 ## Integration
 
+Integrating Sign in with Apple goes beyond just adding this plugin to your `pubspec.yaml` and using the credential-receiving functions exposed by it.
+
+Once you receive the credentials, they need to the verified with Apple's servers (to ensure that they are valid and really concern the mentioned user) and then a new session should be derived from them in your system.
+
+Your server should then daily verify the session with Apple (via a refresh token it obtained on the initial validation), and revoke the session in your system if the authorization has been withdrawn on Apple's side.
+
+### Prerequisites
+
+Before you can start integrating (or even testing) Sign in with Apple you need a [paid membership to the Apple Developer Program](https://developer.apple.com/programs/). Sign in with Apple is one of the restricted services which is not available for free with just an Apple ID ([source](https://developer.apple.com/programs/whats-included/)).
+
+### Setup
+
+#### Register an App ID  
+
+If you don't have one yet, create a new one at https://developer.apple.com/account/resources/identifiers/list/bundleId following these steps:
+
+* Click "Register an App ID"
+* In the wizard select "App IDs", click "Continue"
+* Set the `Description` and `Bundle ID`, and select the `Sign In with Apple` capability
+  * Usually the default setting of "Enable as a primary App ID" should suffice here. If you ship multiple apps that should all share the same Apple ID credentials for your users, please consult the Apple documentation on how to best set these up.
+* Click "Continue", and then click "Register" to finish the creation of the App ID
+
+In case you already have an existing App ID that you want to use with Sign in with Apple:
+
+* Open that App ID from the list
+* Check the "Sign in with Apple" capability
+* Click "Save"
+
+If you have change your app's capabilities, you need to fetch the updated provisioning profiles (for example via Xcode) to use the new capabilities.
+
+#### Create a Service ID
+
+Next go to https://developer.apple.com/account/resources/identifiers/list/serviceId and follow these steps:
+
+* Click "Register an Services ID"
+* Select "Services IDs", click "Continue"
+* Set your "Description" and "Identifier"
+  * The "Identifier" will later be referred to as your `clientID`
+* Click "Continue" and then "Register"
+
+Now that the service is created, we have to enable it to be used for Sign in with Apple:
+
+* Select the service from the list of services
+* Check the box next to "Sign in with Apple", then click "Configure"
+* In the `Domains and Subdomains` add the domains of the websites on which you want to use Sign in with Apple, e.g. `example.com`. You have to enter at least one domain here, even if you don't intend to use Sign in with Apple on any website.
+* In the `Return URLs` box add the full return URL you want to use, e.g. https://example.com/callbacks/sign_in_with_apple
+* Click "Next" and then "Done" to close the settings dialog
+* Click "Continue" and then "Save" to update the service
+
+In order to communicate with Apple's servers to verify the incoming authorization codes from your app clients, you need to create a key at https://developer.apple.com/account/resources/authkeys/list:
+
+* Click "Create a key"
+* Set the "Key Name" (E.g. "Sign in with Apple key")
+* Check the box next to "Sign in with Apple", then click "Configure" on the same row
+* Under "Primary App ID" select the App ID of the app you want to use (either the newly created one or an existing one)
+* Click "Save" to leave the detail view
+* Click "Continue" and then click "Register"
+* Now you'll see a one-time-only screen where you must download the key by clicking the "Download" button
+  * Also note the "Key ID" which will be used later when configuring the server
+
+Now everything is set up on Apple's Developer portal and we can start setting up the server.
+
+### Server
+
+### iOS
+
 ### Android
 
 In your `AndroidManifest.xml` inside `<application>` add
