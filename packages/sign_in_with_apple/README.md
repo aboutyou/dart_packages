@@ -117,35 +117,49 @@ Now update the services you created earlier at https://developer.apple.com/accou
 
 After this is done, you can now proceed to integrate Sign in with Apple into the code of your Flutter app.
 
-### iOS
-
 ### Android
+
+Adding Sign in with Apple to a Flutter app is shown from 2 sides here. First we look into making the example app work with our server-side setup, and then we go over the additional steps required to set up your app from scratch.
+
+#### Example App
+
+* Open the `example` folder inside this package in an editor of your choice
+* Run `flutter packages get`
+* Open `lib/main.dart` and look at the `SignInWithAppleButton.onPressed` callback
+  * Set the `scopes` parameter to your required scopes, for testing we can keep requesting a name and email
+  * Update the values passed to the `WebAuthenticationOptions` constructor to match the values in the Apple Developer Portal
+  * Likewise update the `signInWithAppleEndpoint` variable to point to your 
+* Once you have updated the code, `flutter run` the example on an Android device or emulator
+
+#### Your App
 
 In your `AndroidManifest.xml` inside `<application>` add
 
 ```xml
-       <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->
-        <activity
-            android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
-            android:exported="true"
-        >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+<!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->
+<activity
+    android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
+    android:exported="true"
+>
+    <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="signinwithapple" />
-                <data android:path="callback" />
-            </intent-filter>
-        </activity>
+        <data android:scheme="signinwithapple" />
+        <data android:path="callback" />
+    </intent-filter>
+</activity>
 ```
 
-On the Sign in with Apple callback (specified in `WebAuthenticationOptions.redirectUri`), redirect safely back to your Android app using the following URL:
+On the Sign in with Apple callback on your sever (specified in `WebAuthenticationOptions.redirectUri`), redirect safely back to your Android app using the following URL:
 
 ```
 intent://callback?${PARAMETERS FROM CALLBACK BODY}#Intent;package=YOUR.PACKAGE.IDENTIFIER;scheme=signinwithapple;end
 ```
 
-Leave the `callback` path and `signinwithapple` scheme untouched.
+The `PARAMETERS FROM CALLBACK BODY` should be filled with the urlencoded body you receive on the endpoint from Apple's server, and the `package` parameter should be changed to match your app's package identifier (as published on the Google Play Store). Leave the `callback` path and `signinwithapple` scheme untouched.
 
 Furthermore, when handling the incoming credentials on the client, make sure to only overwrite the current (guest) session of the user once your own server have validated the incoming `code` parameter, such that your app is not susceptible to malicious incoming links (e.g. logging out the current user).
+
+### iOS
