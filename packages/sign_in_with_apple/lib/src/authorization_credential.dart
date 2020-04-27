@@ -23,6 +23,7 @@ class AuthorizationCredentialAppleID {
     @required this.familyName,
     @required this.email,
     @required this.authorizationCode,
+    @required this.identityToken,
   }) {
     if (authorizationCode == null) {
       throw SignInWithAppleAuthorizationException(
@@ -79,6 +80,11 @@ class AuthorizationCredentialAppleID {
   /// This code should be used by your server component to validate the authorization with Apple within 5 minutes upon receiving it.
   final String authorizationCode;
 
+  /// A JSON Web Token (JWT) that securely communicates information about the user to your app.
+  ///
+  /// Can be `null`.
+  final String identityToken;
+
   @override
   String toString() {
     return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, authorizationCode set? ${authorizationCode != null})';
@@ -117,6 +123,7 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
       familyName: response['familyName'] as String,
       email: response['email'] as String,
       authorizationCode: response['authorizationCode'] as String,
+      identityToken: response['identityToken'] as String,
     );
   } else {
     throw Exception('Unsupported result type ${response['type']}');
