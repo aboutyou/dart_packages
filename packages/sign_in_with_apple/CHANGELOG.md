@@ -1,3 +1,7 @@
+## 2.0.0+5
+
+- Extend integration docs for iOS and macOS
+
 ## 2.0.0+4
 
 - Fix publication to really include 2.0.0+3

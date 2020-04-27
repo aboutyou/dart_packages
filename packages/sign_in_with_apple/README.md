@@ -179,3 +179,21 @@ For the tutorial we assume that you manage your app's signing certificates and p
 * In the terminal navigate back to the root of the `example` folder and `flutter run` on your test device
 
 
+#### Your App
+
+* First and foremost make sure that your app has the "Sign in with Apple" capability (`Runner` (file browser side bar) -> `Targets` -> `Runner` -> `Signing & Capabilities`), as otherwise Sign in with Apple will fail without visual indication (the code will still receive exceptions)
+* Either integrate the example server as shown above, or build your own backend
+  * Ensure that the `clientID` used when validating the received `code` parameter with Apple's server is dependent on the client: Use the App ID (also called "Bundle ID" in some places) when using codes from apps running on Apple platforms, and use the service ID when using a code retrieved from a web authentication flow
+
+### macOS
+
+The setup for macOS is mostly similar to iOS. As usual for Flutter development for macOS, you must be on the `dev` or `master` channel.
+
+#### Example
+
+* Open the `example` folder in a terminal and run `flutter packages get`
+* Open `example/macos/Runner.xcworkspace` in Xcode
+* Under `Runner` (file browser side bar) -> `Targets` -> `Runner` -> `Signing & Capabilities` set the "Bundle Identifier" ("App ID") you have created in the Apple Developer Portal earlier
+  * Ensure that "Sign in with Apple" is listed under the capabilities (if not, add it via the `+`) 
+  * Additionally there should be no warning on that screen. (For example your Mac must be registered for local development. (If not, you'll see a "one click fix" button to do so.))
+* In the terminal navigate back to the root of the `example` folder and `flutter run` on your test device
