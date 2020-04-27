@@ -1,3 +1,7 @@
+## 2.0.0+4
+
+- Fix publication to really include 2.0.0+3
+
 ## 2.0.0+3
 
 - Added Android integration example to README
