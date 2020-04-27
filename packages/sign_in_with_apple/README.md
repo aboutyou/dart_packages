@@ -164,7 +164,13 @@ Furthermore, when handling the incoming credentials on the client, make sure to 
 
 ### iOS
 
-For the tutorial we assume that you manage your app's signing certificates and profiles via Xcode (compared to alternate methods like [Fastlane match](https://docs.fastlane.tools/actions/match/)) and are signed in to the same Apple ID you used in the Apple Developer Portal. At this point you should have added the Sign in with Apple capability to either your own app's capabilities or the test application you created to run the example. Additionally this assumes that you have at least one iOS device registered in your developer account for local testing.
+At this point you should have added the Sign in with Apple capability to either your own app's capabilities or the test application you created to run the example.
+
+In case you don't have `Automatically manage Signing` turned on in Xcode, you will need to recreate and download the updated Provisioning Profiles for your app, so they include the new `Sign in with Apple` capability. Then you can download the new certificates and select them in Xcode.
+
+In case XCode manages your signing, this step will be done automatically for you. Just make sure  the `Sign in with Apple` capability is actived as  described in the example below.
+
+Additionally this assumes that you have at least one iOS device registered in your developer account for local testing, so you can run the example on a device.
 
 #### Example
 
