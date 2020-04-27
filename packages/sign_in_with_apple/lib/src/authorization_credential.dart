@@ -156,5 +156,8 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
     givenName: user != null ? user['name']['firstName'] as String : null,
     familyName: user != null ? user['name']['lastName'] as String : null,
     userIdentifier: null,
+
+    /// TODO: Do we get this here
+    identityToken: null,
   );
 }
