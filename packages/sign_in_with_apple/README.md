@@ -171,6 +171,7 @@ For the tutorial we assume that you manage your app's signing certificates and p
 * Open the `example` folder in a terminal and run `flutter packages get`
 * Open `example/ios/Runner.xcworkspace` in Xcode
 * Under `Runner` (file browser side bar) -> `Targets` -> `Runner` -> `Signing & Capabilities` set the "Bundle Identifier" ("App ID") you have created in the Apple Developer Portal earlier
+  * Ensure that "Sign in with Apple" is listed under the capabilities (if not, add it via the `+`) 
 * Now open a terminal in the `example` folder and execute the follow commands
   * `cd ios`
   * `bundle install`, to install the Ruby dependencies used for Cocoapods

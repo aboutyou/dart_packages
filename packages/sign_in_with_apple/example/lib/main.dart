@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -32,7 +34,8 @@ class _MyAppState extends State<MyApp> {
                   ],
                   webAuthenticationOptions: WebAuthenticationOptions(
                     // TODO: Set these 2 parameters to the values you entered in the Apple Developer portal during the setup
-                    clientId: '',
+                    clientId:
+                        'de.lunaone.flutter.signinwithappleexample.service',
                     redirectUri: Uri.parse(
                       'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
                     ),
@@ -47,6 +50,8 @@ class _MyAppState extends State<MyApp> {
                   path: '/sign_in_with_apple',
                   queryParameters: <String, String>{
                     'code': credential.authorizationCode,
+                    'useBundleId':
+                        Platform.isIOS || Platform.isMacOS ? 'true' : 'false',
                   },
                 );
 
