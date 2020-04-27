@@ -25,7 +25,7 @@ SignInWithAppleButton(
     print(credential);
 
     // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-    // after they have been validated with Apple
+    // after they have been validated with Apple (see `Integration` section for more information on how to do this)
   },
 );
 ```
@@ -98,7 +98,7 @@ In order to communicate with Apple's servers to verify the incoming authorizatio
 * Now you'll see a one-time-only screen where you must download the key by clicking the "Download" button
   * Also note the "Key ID" which will be used later when configuring the server
 
-Now everything is set up on Apple's Developer portal and we can start setting up the server.
+Now everything is set up on Apple's developer portal and we can start setting up the server.
 
 ### Server
 
@@ -163,3 +163,18 @@ The `PARAMETERS FROM CALLBACK BODY` should be filled with the urlencoded body yo
 Furthermore, when handling the incoming credentials on the client, make sure to only overwrite the current (guest) session of the user once your own server have validated the incoming `code` parameter, such that your app is not susceptible to malicious incoming links (e.g. logging out the current user).
 
 ### iOS
+
+For the tutorial we assume that you manage your app's signing certificates and profiles via Xcode (compared to alternate methods like [Fastlane match](https://docs.fastlane.tools/actions/match/)) and are signed in to the same Apple ID you used in the Apple Developer Portal. At this point you should have added the Sign in with Apple capability to either your own app's capabilities or the test application you created to run the example. Additionally this assumes that you have at least one iOS device registered in your developer account for local testing.
+
+#### Example
+
+* Open the `example` folder in a terminal and run `flutter packages get`
+* Open `example/ios/Runner.xcworkspace` in Xcode
+* Under `Runner` (file browser side bar) -> `Targets` -> `Runner` -> `Signing & Capabilities` set the "Bundle Identifier" ("App ID") you have created in the Apple Developer Portal earlier
+* Now open a terminal in the `example` folder and execute the follow commands
+  * `cd ios`
+  * `bundle install`, to install the Ruby dependencies used for Cocoapods
+  * `bundle exec pod install`, to install the Cocoapods for the iOS project
+* In the terminal navigate back to the root of the `example` folder and `flutter run` on your test device
+
+
