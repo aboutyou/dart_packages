@@ -82,6 +82,11 @@ class SignInWithApple {
     ///
     /// This parameter is required on Android.
     WebAuthenticationOptions webAuthenticationOptions,
+
+    /// A String value used to associate a client session with an ID token. This value is also used to mitigate replay attacks.
+    ///
+    /// Can be `null`, in that case no nonce will be passed to the request.
+    String nonce,
   }) async {
     assert(scopes != null);
 
@@ -95,6 +100,7 @@ class SignInWithApple {
       return _signInWithAppleAndroid(
         scopes: scopes,
         webAuthenticationOptions: webAuthenticationOptions,
+        nonce: nonce,
       );
     }
 
@@ -111,8 +117,11 @@ class SignInWithApple {
         await channel.invokeMethod<Map<dynamic, dynamic>>(
           'performAuthorizationRequest',
           [
-            AppleIDAuthorizationRequest(scopes: scopes),
-          ].map((request) => request.toJson()).toList(),
+            AppleIDAuthorizationRequest(
+              scopes: scopes,
+              nonce: nonce,
+            ).toJson(),
+          ],
         ),
       );
     } on PlatformException catch (exception) {
@@ -172,6 +181,7 @@ class SignInWithApple {
   static Future<AuthorizationCredentialAppleID> _signInWithAppleAndroid({
     @required List<AppleIDAuthorizationScopes> scopes,
     @required WebAuthenticationOptions webAuthenticationOptions,
+    @required String nonce,
   }) async {
     assert(Platform.isAndroid);
 
@@ -199,6 +209,9 @@ class SignInWithApple {
         // So the same handling can be used for Apple and 3rd party platforms
         'response_type': 'code+id_token',
         'response_mode': 'form_post',
+
+        if (nonce != null)
+          'nonce': nonce,
       },
     ).toString();
 

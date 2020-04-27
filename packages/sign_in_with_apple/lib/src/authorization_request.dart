@@ -44,6 +44,7 @@ enum AppleIDAuthorizationScopes {
 class AppleIDAuthorizationRequest implements AuthorizationRequest {
   const AppleIDAuthorizationRequest({
     this.scopes = const [],
+    this.nonce,
   }) : assert(scopes != null);
 
   /// A list of scopes that can be requested from the user.
@@ -54,6 +55,11 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
   /// For more information see: https://forums.developer.apple.com/thread/121496
   final List<AppleIDAuthorizationScopes> scopes;
 
+  /// A String value used to associate a client session with an ID token. This value is also used to mitigate replay attacks.
+  ///
+  /// Can be `null`
+  final String nonce;
+
   @override
   String toString() => 'AppleIDAuthorizationRequest(scopes: $scopes)';
 
@@ -61,6 +67,7 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'type': 'appleid',
+      'nonce': nonce,
       'scopes': [
         for (final scope in scopes)
           if (scope == AppleIDAuthorizationScopes.email)
