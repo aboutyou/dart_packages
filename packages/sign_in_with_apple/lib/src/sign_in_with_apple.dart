@@ -197,7 +197,7 @@ class SignInWithApple {
             .join(' '),
         // Request `code`, which is also what `ASAuthorizationAppleIDCredential.authorizationCode` contains.
         // So the same handling can be used for Apple and 3rd party platforms
-        'response_type': 'code+id_token',
+        'response_type': 'code id_token',
         'response_mode': 'form_post',
       },
     ).toString();
