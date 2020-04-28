@@ -84,7 +84,7 @@ class SignInWithApple {
     WebAuthenticationOptions webAuthenticationOptions,
 
     ///  Optional string which, if set, will be be embedded in the resulting `identityToken` field on the [AuthorizationCredentialAppleID].
-    ///     
+    ///
     /// This can be used to mitigate replay attacks by using a unique argument per sign-in attempt.
     ///
     /// Can be `null`, in which case no nonce will be passed to the request.

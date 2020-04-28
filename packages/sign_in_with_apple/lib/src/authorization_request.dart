@@ -67,8 +67,7 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'type': 'appleid',
-      if (nonce != null)
-        'nonce': nonce,
+      if (nonce != null) 'nonce': nonce,
       'scopes': [
         for (final scope in scopes)
           if (scope == AppleIDAuthorizationScopes.email)
