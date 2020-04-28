@@ -25,7 +25,7 @@ SignInWithAppleButton(
     print(credential);
 
     // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
-    // after they have been validated with Apple
+    // after they have been validated with Apple (see `Integration` section for more information on how to do this)
   },
 );
 ```
@@ -98,7 +98,7 @@ In order to communicate with Apple's servers to verify the incoming authorizatio
 * Now you'll see a one-time-only screen where you must download the key by clicking the "Download" button
   * Also note the "Key ID" which will be used later when configuring the server
 
-Now everything is set up on Apple's Developer portal and we can start setting up the server.
+Now everything is set up on Apple's developer portal and we can start setting up the server.
 
 ### Server
 
@@ -163,3 +163,43 @@ The `PARAMETERS FROM CALLBACK BODY` should be filled with the urlencoded body yo
 Furthermore, when handling the incoming credentials on the client, make sure to only overwrite the current (guest) session of the user once your own server have validated the incoming `code` parameter, such that your app is not susceptible to malicious incoming links (e.g. logging out the current user).
 
 ### iOS
+
+At this point you should have added the Sign in with Apple capability to either your own app's capabilities or the test application you created to run the example.
+
+In case you don't have `Automatically manage Signing` turned on in Xcode, you will need to recreate and download the updated Provisioning Profiles for your app, so they include the new `Sign in with Apple` capability. Then you can download the new certificates and select them in Xcode.
+
+In case XCode manages your signing, this step will be done automatically for you. Just make sure  the `Sign in with Apple` capability is actived as  described in the example below.
+
+Additionally this assumes that you have at least one iOS device registered in your developer account for local testing, so you can run the example on a device.
+
+#### Example
+
+* Open the `example` folder in a terminal and run `flutter packages get`
+* Open `example/ios/Runner.xcworkspace` in Xcode
+* Under `Runner` (file browser side bar) -> `Targets` -> `Runner` -> `Signing & Capabilities` set the "Bundle Identifier" ("App ID") you have created in the Apple Developer Portal earlier
+  * Ensure that "Sign in with Apple" is listed under the capabilities (if not, add it via the `+`) 
+* Now open a terminal in the `example` folder and execute the follow commands
+  * `cd ios`
+  * `bundle install`, to install the Ruby dependencies used for Cocoapods
+  * `bundle exec pod install`, to install the Cocoapods for the iOS project
+* In the terminal navigate back to the root of the `example` folder and `flutter run` on your test device
+
+
+#### Your App
+
+* First and foremost make sure that your app has the "Sign in with Apple" capability (`Runner` (file browser side bar) -> `Targets` -> `Runner` -> `Signing & Capabilities`), as otherwise Sign in with Apple will fail without visual indication (the code will still receive exceptions)
+* Either integrate the example server as shown above, or build your own backend
+  * Ensure that the `clientID` used when validating the received `code` parameter with Apple's server is dependent on the client: Use the App ID (also called "Bundle ID" in some places) when using codes from apps running on Apple platforms, and use the service ID when using a code retrieved from a web authentication flow
+
+### macOS
+
+The setup for macOS is mostly similar to iOS. As usual for Flutter development for macOS, you must be on the `dev` or `master` channel.
+
+#### Example
+
+* Open the `example` folder in a terminal and run `flutter packages get`
+* Open `example/macos/Runner.xcworkspace` in Xcode
+* Under `Runner` (file browser side bar) -> `Targets` -> `Runner` -> `Signing & Capabilities` set the "Bundle Identifier" ("App ID") you have created in the Apple Developer Portal earlier
+  * Ensure that "Sign in with Apple" is listed under the capabilities (if not, add it via the `+`) 
+  * Additionally there should be no warning on that screen. (For example your Mac must be registered for local development. (If not, you'll see a "one click fix" button to do so.))
+* In the terminal navigate back to the root of the `example` folder and `flutter run` on your test device
