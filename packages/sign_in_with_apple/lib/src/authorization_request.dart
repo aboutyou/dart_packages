@@ -55,7 +55,7 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
   /// For more information see: https://forums.developer.apple.com/thread/121496
   final List<AppleIDAuthorizationScopes> scopes;
 
-  /// A String value used to associate a client session with an ID token. This value is also used to mitigate replay attacks.
+  /// The nonce value which was provided when initiating the sign-in.
   ///
   /// Can be `null` if no value was given on the request.
   final String nonce;
