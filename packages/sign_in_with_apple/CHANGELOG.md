@@ -1,6 +1,7 @@
 ## 2.1.0
 
 - Expose `identityToken` to enable Firebase integration (https://github.com/aboutyou/dart_packages/issues/62)
+- Add support for passing a `nonce` to the authentication request
 
 ## 2.0.0+5
 
