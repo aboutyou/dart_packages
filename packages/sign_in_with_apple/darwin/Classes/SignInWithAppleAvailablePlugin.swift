@@ -133,6 +133,10 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
                 let appleIDProvider = ASAuthorizationAppleIDProvider()
                 let appleIDRequest = appleIDProvider.createRequest()
                 
+                if let nonce = requestMap["nonce"] as? String {
+                    appleIDRequest.nonce = nonce;
+                }
+                
                 if let scopes = requestMap["scopes"] as? [String] {
                     appleIDRequest.requestedScopes = []
                     
