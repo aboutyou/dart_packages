@@ -57,7 +57,7 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
 
   /// A String value used to associate a client session with an ID token. This value is also used to mitigate replay attacks.
   ///
-  /// Can be `null`
+  /// Can be `null` if no value was given on the request.
   final String nonce;
 
   @override
