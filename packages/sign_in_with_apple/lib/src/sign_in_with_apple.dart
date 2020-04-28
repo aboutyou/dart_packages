@@ -83,9 +83,11 @@ class SignInWithApple {
     /// This parameter is required on Android.
     WebAuthenticationOptions webAuthenticationOptions,
 
-    /// A String value used to associate a client session with an ID token. This value is also used to mitigate replay attacks.
+    ///  Optional string which, if set, will be be embedded in the resulting `identityToken` field on the [AuthorizationCredentialAppleID].
+    ///     
+    /// This can be used to mitigate replay attacks by using a unique argument per sign-in attempt.
     ///
-    /// Can be `null`, in that case no nonce will be passed to the request.
+    /// Can be `null`, in which case no nonce will be passed to the request.
     String nonce,
   }) async {
     assert(scopes != null);
