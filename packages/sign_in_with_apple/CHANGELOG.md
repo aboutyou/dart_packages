@@ -1,3 +1,7 @@
+## 2.1.0+1
+
+- Format Code (https://github.com/aboutyou/dart_packages/pull/68)
+
 ## 2.1.0
 
 - Expose `identityToken` to enable Firebase integration (https://github.com/aboutyou/dart_packages/issues/62)
