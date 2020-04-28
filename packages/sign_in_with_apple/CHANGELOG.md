@@ -1,3 +1,15 @@
+## 2.0.0+5
+
+- Extend integration docs for iOS and macOS
+
+## 2.0.0+4
+
+- Fix publication to really include 2.0.0+3
+
+## 2.0.0+3
+
+- Added Android integration example to README
+
 ## 2.0.0+2
 
 - Fix typos in README
