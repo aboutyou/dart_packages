@@ -21,11 +21,12 @@ jobs:
       - uses: subosito/flutter-action@c1bf65eb311fe29b5bc99d6e91c4498decde268a # v1.3.0
         with:
           flutter-version: "1.12.13+hotfix.8"
-      - name: Go to package
-        run: cd packages/${{ matrix.package }}
       - name: Install dependencies
-        run: pwd && flutter packages get
+        run: flutter packages get
+        working-directory: packages/${{ matrix.package }}
       - name: Analyze
         run: flutter analyze
+        working-directory: packages/${{ matrix.package }}
       - name: Run tests
         run: flutter test --coverage
+        working-directory: packages/${{ matrix.package }}
