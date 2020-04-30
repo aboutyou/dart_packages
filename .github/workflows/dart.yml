@@ -36,4 +36,5 @@ jobs:
         with:
           flags: ${{ matrix.package }}
           name: ${{ matrix.package }}
-          fail_ci_if_error: true
+          fail_ci_if_error: false
+        working-directory: packages/${{ matrix.package }}
