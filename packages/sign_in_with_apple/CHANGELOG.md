@@ -1,3 +1,7 @@
+## 2.1.0+1
+
+- Clean up example project to come without a pre-set team ID and a unused bundle ID.
+
 ## 2.1.0
 
 - Expose `identityToken` to enable Firebase integration (https://github.com/aboutyou/dart_packages/issues/62)
