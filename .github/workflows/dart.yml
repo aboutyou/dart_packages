@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-16.04, macos-10.15]
+        package: [pending_operations, sign_in_with_apple]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -20,9 +21,11 @@ jobs:
       - uses: subosito/flutter-action@c1bf65eb311fe29b5bc99d6e91c4498decde268a # v1.3.0
         with:
           flutter-version: "1.12.13+hotfix.8"
+      - name: Go to package
+        run: cd packages/${{ matrix.package }}
       - name: Install dependencies
-        run: ./install_all.sh
+        run: flutter packages get
       - name: Analyze
-        run: ./analyze_all.sh
+        run: flutter analyze
       - name: Run tests
-        run: ./test_all.sh
+        run: flutter test --coverage
