@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-16.04, macos-10.15]
-        package: [pending_operations, sign_in_with_apple]
+        package: [with_bloc, sign_in_with_apple]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -30,3 +30,9 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
         working-directory: packages/${{ matrix.package }}
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          flags: unittests,uitests
+          name: ${{ matrix.package }}
+          fail_ci_if_error: true
