@@ -12,7 +12,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-16.04, macos-10.15]
-        package: [with_bloc, sign_in_with_apple]
+        package:
+          [pending_operations, sign_in_with_apple, state_queue, with_bloc]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
