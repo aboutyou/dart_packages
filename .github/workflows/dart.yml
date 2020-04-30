@@ -35,4 +35,9 @@ jobs:
         with:
           flags: unittests,uitests
           name: ${{ matrix.package }}
-          fail_ci_if_error: true
+          fail_ci_if_error: false
+      - name: Coveralls
+          uses: coverallsapp/github-action@v1.1.0
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            
