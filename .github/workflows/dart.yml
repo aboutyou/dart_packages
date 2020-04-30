@@ -33,7 +33,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1.0.6
         with:
-          flags: unittests,uitests
+          flags: ${{ matrix.package }}
           name: ${{ matrix.package }}
           fail_ci_if_error: false
       - name: Coveralls
