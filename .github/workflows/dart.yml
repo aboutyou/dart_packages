@@ -32,6 +32,7 @@ jobs:
         run: flutter test --coverage
         working-directory: packages/${{ matrix.package }}
       - name: Upload coverage to Codecov
+        if: startsWith(matrix.os, 'macos')
         uses: codecov/codecov-action@v1.0.6
         with:
           flags: ${{ matrix.package }}
