@@ -7,7 +7,7 @@ env:
 
 jobs:
   test:
-    name: Test on ${{ matrix.os }}
+    name: Test ${{ matrix.package }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -24,7 +24,7 @@ jobs:
       - name: Go to package
         run: cd packages/${{ matrix.package }}
       - name: Install dependencies
-        run: flutter packages get
+        run: pwd && flutter packages get
       - name: Analyze
         run: flutter analyze
       - name: Run tests
