@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
                   webAuthenticationOptions: WebAuthenticationOptions(
                     // TODO: Set these 2 parameters to the values you entered in the Apple Developer portal during the setup
                     clientId:
-                        'de.lunaone.flutter.signinwithappleexample.service',
+                        'com.aboutyou.dart_packages.sign_in_with_apple.example',
                     redirectUri: Uri.parse(
                       'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
                     ),
