@@ -3,7 +3,7 @@
 Flutter bridge to Sign in with Apple.  
 Supports login via an Apple ID, as well as retrieving credentials saved in the user's keychain.
 
-<img src="https://raw.githubusercontent.com/aboutyou/dart_packages/28594220a50e98ca7cf82953482403938dae5cf6/assets/flutter_favorite.png" width="100" />
+[<img src="https://raw.githubusercontent.com/aboutyou/dart_packages/28594220a50e98ca7cf82953482403938dae5cf6/assets/flutter_favorite.png" width="100" />](https://flutter.dev/docs/development/packages-and-plugins/favorites)
 
 ## Supported platforms
 
