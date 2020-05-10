@@ -1,12 +1,9 @@
 # Sign in With Apple
 
-<div style="display: flex">
-  <span>
-    Flutter bridge to Sign in with Apple.</br>
-    Supports login via an Apple ID, as well as retrieving credentials saved in the user's keychain.
-  </span>
-  <img src="https://flutter.dev/assets/development/packages-and-plugins/FlutterFavoriteLogo-c581613beba0abd3a92fa9d1c86e7b38062f92d104347a3a6bb28841233331fd.png" width="80" />
-</div>
+Flutter bridge to Sign in with Apple.\
+Supports login via an Apple ID, as well as retrieving credentials saved in the user's keychain.
+
+<img src="https://flutter.dev/assets/development/packages-and-plugins/FlutterFavoriteLogo-c581613beba0abd3a92fa9d1c86e7b38062f92d104347a3a6bb28841233331fd.png" width="100" />
 
 ## Supported platforms
 
