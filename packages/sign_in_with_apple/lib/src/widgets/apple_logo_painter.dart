@@ -1,8 +1,7 @@
-/**
- * based on https://github.com/tomgilder/flutter_apple_sign_in/blob/8673cc2c0cf9067c3ab5dd392065df059e182b51/lib/apple_sign_in_button.dart
- * 
- * MIT License, Copyright (c) 2019 Rody Davis / https://github.com/tomgilder
- */
+// based on https://github.com/tomgilder/flutter_apple_sign_in/blob/8673cc2c0cf9067c3ab5dd392065df059e182b51/lib/apple_sign_in_button.dart
+//
+// MIT License, Copyright (c) 2019 Rody Davis / https://github.com/tomgilder
+//
 
 import 'package:flutter/widgets.dart';
 
