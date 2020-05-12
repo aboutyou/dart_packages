@@ -200,6 +200,7 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
                 "email": appleIDCredential.email,
                 "identityToken": parseData(data: appleIDCredential.identityToken),
                 "authorizationCode": parseData(data: appleIDCredential.authorizationCode),
+                "state": appleIDCredential.state,
             ]
             callback(result)
 
