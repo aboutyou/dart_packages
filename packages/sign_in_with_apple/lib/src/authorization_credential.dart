@@ -24,6 +24,7 @@ class AuthorizationCredentialAppleID {
     @required this.email,
     @required this.authorizationCode,
     @required this.identityToken,
+    @required this.state,
   }) {
     if (authorizationCode == null) {
       throw SignInWithAppleAuthorizationException(
@@ -85,9 +86,14 @@ class AuthorizationCredentialAppleID {
   /// Can be `null`.
   final String identityToken;
 
+  /// The `state` parameter that was passed to the request, this data will not be modified by Apple.
+  ///
+  /// Can be `null`
+  final String state;
+
   @override
   String toString() {
-    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, authorizationCode set? ${authorizationCode != null})';
+    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, authorizationCode set? ${authorizationCode != null}, $state)';
   }
 }
 
@@ -124,6 +130,7 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
       email: response['email'] as String,
       authorizationCode: response['authorizationCode'] as String,
       identityToken: response['identityToken'] as String,
+      state: response['state'] as String,
     );
   } else {
     throw Exception('Unsupported result type ${response['type']}');
@@ -157,5 +164,6 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
     familyName: user != null ? user['name']['lastName'] as String : null,
     userIdentifier: null,
     identityToken: deeplink.queryParameters['id_token'],
+    state: deeplink.queryParameters['state'],
   );
 }
