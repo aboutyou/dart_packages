@@ -224,7 +224,7 @@ class SignInWithApple {
           'nonce': nonce,
 
         if (state != null)
-          'state': 'state',
+          'state': state,
       },
     ).toString();
 
