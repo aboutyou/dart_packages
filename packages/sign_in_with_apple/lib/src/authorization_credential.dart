@@ -87,7 +87,7 @@ class AuthorizationCredentialAppleID {
   final String identityToken;
 
   /// The `state` parameter that was passed to the request.
-  /// 
+  ///
   /// This data is not modified by Apple.
   ///
   /// Can be `null`
