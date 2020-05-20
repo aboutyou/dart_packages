@@ -136,6 +136,10 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
                 if let nonce = requestMap["nonce"] as? String {
                     appleIDRequest.nonce = nonce;
                 }
+
+                if let state = requestMap["state"] as? String {
+                    appleIDRequest.state = state;
+                }
                 
                 if let scopes = requestMap["scopes"] as? [String] {
                     appleIDRequest.requestedScopes = []
