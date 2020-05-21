@@ -45,6 +45,7 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
   const AppleIDAuthorizationRequest({
     this.scopes = const [],
     this.nonce,
+    this.state,
   }) : assert(scopes != null);
 
   /// A list of scopes that can be requested from the user.
@@ -60,6 +61,11 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
   /// Can be `null` if no value was given on the request.
   final String nonce;
 
+  /// Data that’s returned to you unmodified in the corresponding [AuthorizationCredentialAppleID.state] after a successful authentication.
+  ///
+  /// Can be `null` if no value was given on the request.
+  final String state;
+
   @override
   String toString() => 'AppleIDAuthorizationRequest(scopes: $scopes)';
 
@@ -68,6 +74,7 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
     return <String, dynamic>{
       'type': 'appleid',
       if (nonce != null) 'nonce': nonce,
+      if (state != null) 'state': state,
       'scopes': [
         for (final scope in scopes)
           if (scope == AppleIDAuthorizationScopes.email)

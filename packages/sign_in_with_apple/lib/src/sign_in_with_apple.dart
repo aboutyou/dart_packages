@@ -83,12 +83,17 @@ class SignInWithApple {
     /// This parameter is required on Android.
     WebAuthenticationOptions webAuthenticationOptions,
 
-    ///  Optional string which, if set, will be be embedded in the resulting `identityToken` field on the [AuthorizationCredentialAppleID].
+    /// Optional string which, if set, will be be embedded in the resulting `identityToken` field on the [AuthorizationCredentialAppleID].
     ///
     /// This can be used to mitigate replay attacks by using a unique argument per sign-in attempt.
     ///
     /// Can be `null`, in which case no nonce will be passed to the request.
     String nonce,
+
+    /// Data that’s returned to you unmodified in the corresponding [AuthorizationCredentialAppleID.state] after a successful authentication.
+    ///
+    /// Can be `null`, in which case no state will be passed to the request.
+    String state,
   }) async {
     assert(scopes != null);
 
@@ -103,6 +108,7 @@ class SignInWithApple {
         scopes: scopes,
         webAuthenticationOptions: webAuthenticationOptions,
         nonce: nonce,
+        state: state,
       );
     }
 
@@ -122,6 +128,7 @@ class SignInWithApple {
             AppleIDAuthorizationRequest(
               scopes: scopes,
               nonce: nonce,
+              state: state,
             ).toJson(),
           ],
         ),
@@ -184,6 +191,7 @@ class SignInWithApple {
     @required List<AppleIDAuthorizationScopes> scopes,
     @required WebAuthenticationOptions webAuthenticationOptions,
     @required String nonce,
+    @required String state,
   }) async {
     assert(Platform.isAndroid);
 
@@ -214,6 +222,9 @@ class SignInWithApple {
 
         if (nonce != null)
           'nonce': nonce,
+
+        if (state != null)
+          'state': state,
       },
     ).toString();
 

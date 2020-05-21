@@ -4,7 +4,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.3.0 <3.0.0"
   # For macOS make sure you're on Flutter master or dev channel and
   # that `flutter config` shows `enable-macos-desktop: true`
   flutter: ">=1.12.13+hotfix.8 <2.0.0"

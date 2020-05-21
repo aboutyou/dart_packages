@@ -33,14 +33,19 @@ class _MyAppState extends State<MyApp> {
                     AppleIDAuthorizationScopes.fullName,
                   ],
                   webAuthenticationOptions: WebAuthenticationOptions(
-                    // TODO: Set these 2 parameters to the values you entered in the Apple Developer portal during the setup
+                    // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
                     clientId:
                         'com.aboutyou.dart_packages.sign_in_with_apple.example',
                     redirectUri: Uri.parse(
                       'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
                     ),
                   ),
+                  // TODO: Remove these if you have no need for them
+                  nonce: 'example-nonce',
+                  state: 'example-state',
                 );
+
+                print(credential);
 
                 // This is the endpoint that will convert an authorization code obtained
                 // via Sign in with Apple into a session in your system
@@ -54,6 +59,7 @@ class _MyAppState extends State<MyApp> {
                     'lastName': credential.familyName,
                     'useBundleId':
                         Platform.isIOS || Platform.isMacOS ? 'true' : 'false',
+                    if (credential.state != null) 'state': credential.state,
                   },
                 );
 

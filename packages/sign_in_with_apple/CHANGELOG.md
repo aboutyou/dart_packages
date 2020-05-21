@@ -1,3 +1,7 @@
+## 2.2.0
+
+- Add the ability to pass a `state` value through the authentication flow
+
 ## 2.1.0+1
 
 - Clean up example project to come without a pre-set team ID and a unused bundle ID.
