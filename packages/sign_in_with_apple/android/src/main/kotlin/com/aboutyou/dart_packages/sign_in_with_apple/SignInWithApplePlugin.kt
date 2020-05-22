@@ -81,7 +81,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
         SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = {
           val notificationIntent = _activity.getPackageManager().getLaunchIntentForPackage(_activity.getPackageName());
           notificationIntent.setPackage(null)
-          notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+          notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
           _activity.startActivity(notificationIntent)
         }
 
