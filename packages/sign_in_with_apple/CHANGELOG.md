@@ -1,3 +1,9 @@
+## 2.3.0
+
+- Fix the Android implementation closing the Chrome Custom Tab to not execute `runApp` in the Flutter again, but rather bring the existing Flutter activity to the front
+  - https://github.com/aboutyou/dart_packages/issues/81 / https://github.com/aboutyou/dart_packages/pull/82
+  - Thanks to [@eduribas](https://github.com/eduribas) for contributing this fix
+
 ## 2.2.0
 
 - Add the ability to pass a `state` value through the authentication flow
