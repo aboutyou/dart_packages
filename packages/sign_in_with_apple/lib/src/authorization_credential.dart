@@ -155,6 +155,15 @@ AuthorizationCredentialPassword parseAuthorizationCredentialPassword(
 AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
   Uri deeplink,
 ) {
+  if (deeplink.queryParameters.containsKey('error')) {
+    if (deeplink.queryParameters['error'] == 'user_cancelled_authorize') {
+      throw SignInWithAppleAuthorizationException(
+        code: AuthorizationErrorCode.canceled,
+        message: 'User canceled authorize',
+      );
+    }
+  }
+
   final user = deeplink.queryParameters.containsKey('user')
       ? json.decode(deeplink.queryParameters['user']) as Map<String, dynamic>
       : null;
