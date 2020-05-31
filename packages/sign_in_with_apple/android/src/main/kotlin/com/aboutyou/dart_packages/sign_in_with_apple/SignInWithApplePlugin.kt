@@ -1,28 +1,29 @@
 package com.aboutyou.dart_packages.sign_in_with_apple
 
-import android.app.Activity;
-import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import androidx.annotation.NonNull
+import androidx.browser.customtabs.CustomTabsIntent
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.Registrar
-
-import android.net.Uri
-import android.content.Intent
-import androidx.browser.customtabs.CustomTabsIntent
-
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.Log
 
 /** SignInWithApplePlugin */
-public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
+public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAware, ActivityResultListener {
+  private val CUSTOM_TABS_REQUEST_CODE = 1001;
+
   private var channel: MethodChannel? = null
 
-  var activity: Activity? = null
-  
+  var binding: ActivityPluginBinding? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.aboutyou.dart_packages.sign_in_with_apple")
@@ -58,7 +59,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
     when (call.method) {
       "isAvailable" -> result.success(true)
       "performAuthorizationRequest" -> {
-        val _activity = activity
+        val _activity = binding?.activity
 
         if (_activity == null) {
           result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
@@ -72,24 +73,30 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
           return
         }
 
-        SignInWithApplePlugin.lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
-        if (SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab != null) {
-          SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab!!()
+        lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
+        if (triggerMainActivityToHideChromeCustomTab != null) {
+          triggerMainActivityToHideChromeCustomTab!!()
         }
 
-        SignInWithApplePlugin.lastAuthorizationRequestResult = result
-        SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = {
-          val notificationIntent = _activity.getPackageManager().getLaunchIntentForPackage(_activity.getPackageName());
+        lastAuthorizationRequestResult = result
+        triggerMainActivityToHideChromeCustomTab = {
+          val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
           notificationIntent.setPackage(null)
           // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
-          notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
           _activity.startActivity(notificationIntent)
         }
 
         val builder = CustomTabsIntent.Builder();
         val customTabsIntent = builder.build();
         customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        customTabsIntent.launchUrl(_activity, Uri.parse(url));
+        customTabsIntent.intent.data = Uri.parse(url)
+
+        _activity.startActivityForResult(
+          customTabsIntent.intent,
+          CUSTOM_TABS_REQUEST_CODE,
+          customTabsIntent.startAnimationBundle
+        )
       }
       else -> {
         result.notImplemented()
@@ -98,7 +105,8 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    activity = binding.activity
+    this.binding = binding
+    binding.addActivityResultListener(this)
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -110,7 +118,22 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
   }
 
   override fun onDetachedFromActivity() {
-    activity = null
+    binding?.removeActivityResultListener(this)
+    binding = null
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+    if (requestCode == CUSTOM_TABS_REQUEST_CODE) {
+      val _lastAuthorizationRequestResult = lastAuthorizationRequestResult
+
+      if (_lastAuthorizationRequestResult != null) {
+        _lastAuthorizationRequestResult.error("authorization-error/canceled", "The user closed the Custom Tab", null)
+
+        lastAuthorizationRequestResult = null
+      }
+    }
+
+    return false
   }
 }
 
