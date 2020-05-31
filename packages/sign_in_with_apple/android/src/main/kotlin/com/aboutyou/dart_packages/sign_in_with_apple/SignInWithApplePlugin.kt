@@ -130,6 +130,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
         _lastAuthorizationRequestResult.error("authorization-error/canceled", "The user closed the Custom Tab", null)
 
         lastAuthorizationRequestResult = null
+        triggerMainActivityToHideChromeCustomTab = null
       }
     }
 
