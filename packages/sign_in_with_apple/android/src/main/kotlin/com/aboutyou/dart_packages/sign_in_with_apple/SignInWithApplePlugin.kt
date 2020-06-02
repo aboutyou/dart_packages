@@ -150,6 +150,8 @@ public class SignInWithAppleCallback: Activity {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
+    // Note: The order is important here, as we first need to send the data to Flutter and then close the custom tab
+    // That way we can detect a manually closed tab in `SignInWithApplePlugin.onActivityResult` (by detecting that we're still waiting on data)
     val lastAuthorizationRequestResult = SignInWithApplePlugin.lastAuthorizationRequestResult
     if (lastAuthorizationRequestResult != null) {
       lastAuthorizationRequestResult.success(intent?.data?.toString())
