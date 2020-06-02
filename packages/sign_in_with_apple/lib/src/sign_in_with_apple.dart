@@ -228,13 +228,17 @@ class SignInWithApple {
       },
     ).toString();
 
-    final result = await channel.invokeMethod<String>(
-      'performAuthorizationRequest',
-      <String, String>{
-        'url': uri,
-      },
-    );
+    try {
+      final result = await channel.invokeMethod<String>(
+        'performAuthorizationRequest',
+        <String, String>{
+          'url': uri,
+        },
+      );
 
-    return parseAuthorizationCredentialAppleIDFromDeeplink(Uri.parse(result));
+      return parseAuthorizationCredentialAppleIDFromDeeplink(Uri.parse(result));
+    } on PlatformException catch (exception) {
+      throw SignInWithAppleException.fromPlatformException(exception);
+    }
   }
 }
