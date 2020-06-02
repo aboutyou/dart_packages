@@ -17,6 +17,7 @@ export './src/exceptions.dart'
         SignInWithAppleCredentialsException;
 export './src/sign_in_with_apple.dart' show SignInWithApple;
 export './src/web_authentication_options.dart' show WebAuthenticationOptions;
+export './src/widgets/apple_logo_painter.dart' show AppleLogoPainter;
 export './src/widgets/sign_in_with_apple_builder.dart'
     show SignInWithAppleBuilder;
 export './src/widgets/sign_in_with_apple_button.dart'

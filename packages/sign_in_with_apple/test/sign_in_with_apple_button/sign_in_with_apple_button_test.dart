@@ -22,8 +22,8 @@ Future<void> main() async {
   await fontLoader.load();
 
   setUp(() {
-    // ignore: avoid_as
     final binding = TestWidgetsFlutterBinding.ensureInitialized()
+        // ignore: avoid_as
         as TestWidgetsFlutterBinding;
 
     binding.window.devicePixelRatioTestValue = 3;
