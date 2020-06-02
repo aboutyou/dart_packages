@@ -1,3 +1,7 @@
+## TBD
+
+- `AppleLogoPainter` is now exposed, so consumers can use it to build their own buttons
+
 ## 2.3.0
 
 - Fix the Android implementation closing the Chrome Custom Tab to not execute `runApp` in the Flutter again, but rather bring the existing Flutter activity to the front
