@@ -17,7 +17,6 @@ class SignInWithAppleButton extends StatelessWidget {
     this.style = SignInWithAppleButtonStyle.black,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     this.iconAlignment = IconAlignment.center,
-    this.fontFamilyFallback,
   })  : assert(text != null),
         assert(height != null),
         assert(style != null),
@@ -54,11 +53,6 @@ class SignInWithAppleButton extends StatelessWidget {
   ///
   /// This defaults to [IconAlignment.center].
   final IconAlignment iconAlignment;
-
-  /// The fallback fonts to try if the SF font is not available
-  ///
-  /// `fontSize` and `letterSpacing` will still be set to work best for the SF font
-  final List<String> fontFamilyFallback;
 
   /// Returns the background color of the button based on the current [style].
   Color get _backgroundColor {
@@ -124,7 +118,6 @@ class SignInWithAppleButton extends StatelessWidget {
         color: _contrastColor,
         // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart#L16
         fontFamily: '.SF Pro Text',
-        fontFamilyFallback: fontFamilyFallback,
         letterSpacing: -0.41,
       ),
     );
