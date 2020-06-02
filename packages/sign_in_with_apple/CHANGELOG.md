@@ -1,5 +1,6 @@
-## TBD
+## 2.4.0
 
+- Manual closes of the Chrome Custom Tab on Android are now reported through a `SignInWithAppleAuthorizationException` with the `code` `AuthorizationErrorCode.canceled` (same as on iOS)
 - `AppleLogoPainter` is now exposed, so consumers can use it to build their own buttons
 
 ## 2.3.0
