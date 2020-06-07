@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - secure_storage (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - secure_storage (from `.symlinks/plugins/secure_storage/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  secure_storage:
+    :path: ".symlinks/plugins/secure_storage/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  secure_storage: e79846f524a82ed9551142ce7c5bfe27327d5863
+
+PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
+
+COCOAPODS: 1.9.1
