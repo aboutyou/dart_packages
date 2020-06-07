@@ -19,43 +19,22 @@ public class SwiftSecureStoragePlugin: NSObject, FlutterPlugin {
         return
     }
     
-    // Every request will need a key
-    guard let key = args["key"] as? String else {
-        // TODO: Call result with proper error
-        return
-    }
-    
     switch call.method {
     case "read":
-        let attributes: [String: Any] = [
-            kSecClass as String: "",
-        ];
+        let query = parseFlutterMethodQuery(args: args)
         
-        var result: CFTypeRef?;
+        var r: CFTypeRef?;
+        let status = SecItemCopyMatching(query, &r)
         
-        let status = SecItemCopyMatching(attributes as CFDictionary, &result)
-        
-        if (status == noErr) {
-            // TODO: Parse result
+        if let data = r as? Data {
+            result(String(data: data, encoding: String.Encoding.utf8))
         }
         
+        // TODO: Otherwise error
         
         break;
     case "write":
-       
-        
-        guard let value = args["value"] as? String else {
-            // TODO: Call result with proper error
-            return
-        }
-        
-        
-        let attributes = [
-            kSecClass: "",
-            kSecValueData: value,
-        ] as CFDictionary;
-        
-        SecItemAdd(attributes, nil);
+       // TODO
         
         break;
         

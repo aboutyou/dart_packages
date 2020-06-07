@@ -1,12 +1,14 @@
+import 'package:meta/meta.dart';
+
 abstract class KeychainClass {
-  Map<String, dynamic> toJson() {}
+  Map<String, dynamic> toJson();
 }
 
 class GenericPasswordKeychainClass implements KeychainClass {
   const GenericPasswordKeychainClass({
-    this.account,
+    @required this.account,
     this.service,
-  });
+  }) : assert(account != null);
 
   final String account;
 
@@ -16,7 +18,7 @@ class GenericPasswordKeychainClass implements KeychainClass {
   Map<String, dynamic> toJson() {
     return {
       'type': 'generic-password',
-      if (account != null) 'account': account,
+      'account': account,
       if (service != null) 'service': service,
     };
   }
