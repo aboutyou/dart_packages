@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  newrelic:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.nrdaemon
+
+  server:
+    # Configuration for building the docker image for the service
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    # ports:
+    #   - "3030:3030"
+
+    env_file: .env
+
+    depends_on:
+      - newrelic
+    # Mount the current directory into the /app directory in the container
+    # This allows gin to restart inside the container when you change some code
+    # volumes: # Would be needed for dev
+    # - .:/app
