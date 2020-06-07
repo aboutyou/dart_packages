@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 
-func parseFlutterMethodQuery(args:[String: Any]) -> CFDictionary {
+func parseFlutterMethodQuery(args:[String: Any]) -> [CFString: Any] {
     var query: [CFString: Any] = [:];
     
     if let keychainClass = args["keychain-class"] as? [String: Any] {
@@ -25,5 +25,5 @@ func parseFlutterMethodQuery(args:[String: Any]) -> CFDictionary {
         }
     }
     
-    return query as CFDictionary;
+    return query;
 }

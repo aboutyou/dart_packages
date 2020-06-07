@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 
+@available(iOS 11.3, *)
 public class SwiftSecureStoragePlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(
@@ -13,6 +14,8 @@ public class SwiftSecureStoragePlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+    print(call.method)
+    print(call.arguments)
     // Makes sure arguments exists and is a List
     guard let args = call.arguments as? [String: Any] else {
         // TODO: Call result with proper error
@@ -21,12 +24,13 @@ public class SwiftSecureStoragePlugin: NSObject, FlutterPlugin {
     
     switch call.method {
     case "read":
-        let query = parseFlutterMethodQuery(args: args)
+        var query = parseFlutterMethodQuery(args: args)
+        query[kSecReturnData] = true
         
-        var r: CFTypeRef?;
-        let status = SecItemCopyMatching(query, &r)
+        var item: CFTypeRef?;
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
         
-        if let data = r as? Data {
+        if let data = item as? Data {
             result(String(data: data, encoding: String.Encoding.utf8))
         }
         
@@ -34,7 +38,21 @@ public class SwiftSecureStoragePlugin: NSObject, FlutterPlugin {
         
         break;
     case "write":
-       // TODO
+       var query = parseFlutterMethodQuery(args: args)
+       
+       query[kSecValueData] = (args["value"] as! String).data(using: String.Encoding.utf8)
+       
+       let status = SecItemAdd(query as CFDictionary, nil)
+       
+       if status == errSecDuplicateItem {
+        let attr = [
+            kSecValueData: (args["value"] as! String).data(using: String.Encoding.utf8)
+        ]
+            
+        SecItemUpdate(query as CFDictionary, attr as CFDictionary)
+       }
+       
+       result("");
         
         break;
         
