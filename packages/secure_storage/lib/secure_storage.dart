@@ -1,13 +1,3 @@
-import 'dart:async';
+library secure_storage;
 
-import 'package:flutter/services.dart';
-
-class SecureStorage {
-  static const MethodChannel _channel =
-      const MethodChannel('secure_storage');
-
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-}
+export './src/secure_storage.dart';
