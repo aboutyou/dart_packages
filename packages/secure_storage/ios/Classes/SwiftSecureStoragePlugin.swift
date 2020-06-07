@@ -57,6 +57,9 @@ public class SwiftSecureStoragePlugin: NSObject, FlutterPlugin {
         break;
         
     case "delete":
+        let query = parseFlutterMethodQuery(args: args)
+        
+        SecItemDelete(query as CFDictionary)
         break;
         
         

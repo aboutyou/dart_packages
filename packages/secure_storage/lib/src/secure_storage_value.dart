@@ -63,4 +63,22 @@ class SecureStorageValue {
       );
     } catch (exception) {}
   }
+
+  Future<void> delete() async {
+    try {
+      Map<String, dynamic> args;
+
+      if (Platform.isIOS || Platform.isMacOS) {
+        args = ios.toJson();
+      } else if (Platform.isAndroid) {
+        /// TODO: Android support
+      }
+
+      if (args == null) {
+        throw UnsupportedError('Unsuportted platform');
+      }
+
+      await methodChannel.invokeMethod<String>('delete', args);
+    } catch (exception) {}
+  }
 }
