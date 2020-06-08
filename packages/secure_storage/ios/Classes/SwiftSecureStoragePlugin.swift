@@ -35,34 +35,27 @@ public class SwiftSecureStoragePlugin: NSObject, FlutterPlugin {
         }
         
         // TODO: Otherwise error
-        
         break;
     case "write":
-       var query = parseFlutterMethodQuery(args: args)
+        var query = parseFlutterMethodQuery(args: args)
+        query[kSecValueData] = (args["value"] as! String).data(using: String.Encoding.utf8)
        
-       query[kSecValueData] = (args["value"] as! String).data(using: String.Encoding.utf8)
-       
-       let status = SecItemAdd(query as CFDictionary, nil)
-       
-       if status == errSecDuplicateItem {
-        let attr = [
-            kSecValueData: (args["value"] as! String).data(using: String.Encoding.utf8)
-        ]
+        let status = SecItemAdd(query as CFDictionary, nil)
+        if status == errSecDuplicateItem {
+            let attr = [
+                kSecValueData: (args["value"] as! String).data(using: String.Encoding.utf8)
+            ]
             
-        SecItemUpdate(query as CFDictionary, attr as CFDictionary)
-       }
+            SecItemUpdate(query as CFDictionary, attr as CFDictionary)
+        }
        
-       result("");
-        
+        result("");
         break;
-        
     case "delete":
         let query = parseFlutterMethodQuery(args: args)
         
         SecItemDelete(query as CFDictionary)
         break;
-        
-        
     default:
         result(FlutterMethodNotImplemented)
         break;
