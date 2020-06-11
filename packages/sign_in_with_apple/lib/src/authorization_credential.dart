@@ -159,7 +159,7 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
     if (deeplink.queryParameters['error'] == 'user_cancelled_authorize') {
       throw SignInWithAppleAuthorizationException(
         code: AuthorizationErrorCode.canceled,
-        message: 'User canceled authorize',
+        message: 'User canceled authorization',
       );
     }
   }
