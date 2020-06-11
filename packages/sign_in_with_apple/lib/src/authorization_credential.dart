@@ -156,6 +156,12 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
   Uri deeplink,
 ) {
   if (deeplink.queryParameters.containsKey('error')) {
+    // In case the user canceled the sign-in, the URL will have an `error` parameter
+    // 
+    // The only error code that might be returned is `user_cancelled_authorize`, 
+    // which indicates that the user clicked the `Cancel` button during the web flow
+    //
+    // https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms
     if (deeplink.queryParameters['error'] == 'user_cancelled_authorize') {
       throw SignInWithAppleAuthorizationException(
         code: AuthorizationErrorCode.canceled,
