@@ -27,7 +27,7 @@ void main() {
 
     unawaited(
       // running this in a zone in order to be able to surpress the error logging to the console
-      runZoned<Future<void>>(
+      runZonedGuarded<Future<void>>(
         () async {
           final bloc = _TestBloc()
             ..setState(100)
@@ -41,7 +41,7 @@ void main() {
           completer.complete(bloc.value);
         },
         // ignore: avoid_annotating_with_dynamic, avoid_types_on_closure_parameters
-        onError: (dynamic localError, StackTrace stackTrace) {
+        (dynamic localError, StackTrace stackTrace) {
           assert(error == null);
 
           error = localError;
