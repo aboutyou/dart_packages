@@ -1,3 +1,8 @@
+## 2.5.0
+
+- Properly handle the cancellation of the user from the web flow
+  - Thanks to [@eduribas](https://github.com/eduribas) for contributing this fix 
+
 ## 2.4.0
 
 - Manual closes of the Chrome Custom Tab on Android are now reported through a `SignInWithAppleAuthorizationException` with the `code` `AuthorizationErrorCode.canceled` (same as on iOS)
