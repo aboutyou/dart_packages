@@ -1,6 +1,6 @@
 ## 2.5.1
 
-- Fix security deeplink issue which allowed to crash Flutter apps which have the `signinwithapple` plugin installed on Android ![#103](https://github.com/aboutyou/dart_packages/pull/103)
+- Fix security deeplink issue which allowed to crash Flutter apps which have the `signinwithapple` plugin installed on Android [#103](https://github.com/aboutyou/dart_packages/pull/103)
 
 ## 2.5.0
 
