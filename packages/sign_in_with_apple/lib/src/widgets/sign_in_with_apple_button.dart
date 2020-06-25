@@ -166,25 +166,31 @@ class SignInWithAppleButton extends StatelessWidget {
         break;
     }
 
-    return Container(
-      height: height,
-      child: SizedBox.expand(
-        child: CupertinoButton(
-          borderRadius: borderRadius,
-          padding: EdgeInsets.zero,
-          color: _backgroundColor,
-          child: Container(
-            decoration: _decoration,
-            padding: EdgeInsets.symmetric(
-              horizontal: 16.0,
+    return Semantics(
+      button: true,
+      onTap: onPressed,
+      label: text,
+      enabled: onPressed != null,
+      child: Container(
+        height: height,
+        child: SizedBox.expand(
+          child: CupertinoButton(
+            borderRadius: borderRadius,
+            padding: EdgeInsets.zero,
+            color: _backgroundColor,
+            child: Container(
+              decoration: _decoration,
+              padding: EdgeInsets.symmetric(
+                horizontal: 16.0,
+              ),
+              height: height,
+              child: Row(
+                children: children,
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
             ),
-            height: height,
-            child: Row(
-              children: children,
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
+            onPressed: onPressed,
           ),
-          onPressed: onPressed,
         ),
       ),
     );
