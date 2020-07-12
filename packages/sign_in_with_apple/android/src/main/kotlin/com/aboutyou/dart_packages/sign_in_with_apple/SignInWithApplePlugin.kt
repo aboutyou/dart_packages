@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.NonNull
 import androidx.browser.customtabs.CustomTabsIntent
+import io.flutter.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -15,7 +16,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import io.flutter.Log
+import com.auth0.android.jwt.DecodeException
+import com.auth0.android.jwt.JWT
 
 val TAG = "SignInWithApple"
 
@@ -167,6 +169,30 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
  * DO NOT rename this or it's package name as it's configured in the consumer's `AndroidManifest.xml`
  */
 public class SignInWithAppleCallback : Activity() {
+  private fun validateNonce( uri: Uri, expectedNonce: String?): Boolean {
+    val idToken = uri.getQueryParameter("id_token")
+    if (idToken == null) {
+      Log.e(TAG, "Missing id_token query parameter in signinwithapple callback")
+      return false
+    }
+
+    try {
+      val jwt = JWT(idToken)
+
+      if (jwt.getClaim("nonce_supported").asBoolean() == true) {
+        if (jwt.getClaim("nonce").asString() != expectedNonce) {
+          Log.e(TAG, "Expected that the JWT nonce matches the initially provided one, but they differed")
+          return false
+        }
+      }
+
+      return true
+    } catch ( exception: DecodeException) {
+      Log.e(TAG, "Error while decoding JWT id_token from uri")
+      return false
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -184,8 +210,8 @@ public class SignInWithAppleCallback : Activity() {
       return
     }
 
-    if (uri.getQueryParameter("nonce") != onGoingLoginAttempt.nonce) {
-      Log.e(TAG, "Received Sign in with Apple callback, but the nonce parameter did not match")
+    if (!validateNonce(uri, onGoingLoginAttempt.nonce)) {
+      Log.e(TAG, "Received Sign in with Apple callback, but the nonce parameter validation failed")
       finish()
       return
     }
