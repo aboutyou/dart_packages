@@ -18,6 +18,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
+
+  e2e: ^0.6.1
 
   sign_in_with_apple:
     path: ../

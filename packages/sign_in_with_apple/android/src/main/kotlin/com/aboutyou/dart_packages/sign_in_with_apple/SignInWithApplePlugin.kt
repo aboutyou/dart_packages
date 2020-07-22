@@ -1,6 +1,7 @@
 package com.aboutyou.dart_packages.sign_in_with_apple
 
 import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -25,7 +26,9 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 
   private var channel: MethodChannel? = null
 
-  var binding: ActivityPluginBinding? = null
+  private var binding: ActivityPluginBinding? = null
+
+  private var activity: Activity? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.aboutyou.dart_packages.sign_in_with_apple")
@@ -53,62 +56,91 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
     @JvmStatic
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "com.aboutyou.dart_packages.sign_in_with_apple")
-      channel.setMethodCallHandler(SignInWithApplePlugin())
+      val plugin = SignInWithApplePlugin()
+      channel.setMethodCallHandler(plugin)
+
+      registrar.addActivityResultListener(plugin)
+      registrar.activity()?.let(plugin::registerActivity)
+      registerLifecycle(application(registrar), plugin)
     }
+
+    private fun registerLifecycle(app: Application, plugin: SignInWithApplePlugin) {
+      app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+        override fun onActivityPaused(activity: Activity) = Unit
+        override fun onActivityResumed(activity: Activity) = Unit
+        override fun onActivityDestroyed(activity: Activity?) = plugin.unregisterActivity()
+        override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) = Unit
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = plugin.registerActivity(activity)
+        override fun onActivityStarted(activity: Activity) = Unit
+        override fun onActivityStopped(activity: Activity) = Unit
+      })
+    }
+
+    private fun application(registrar: Registrar) = registrar.context().applicationContext as Application
+  }
+
+  fun registerActivity(currentActivity: Activity) {
+    activity = currentActivity
+  }
+
+  fun unregisterActivity() {
+    activity = null
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
       "isAvailable" -> result.success(true)
-      "performAuthorizationRequest" -> {
-        val _activity = binding?.activity
-
-        if (_activity == null) {
-          result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
-          return
-        }
-
-        val url: String? = call.argument("url")
-
-        if (url == null) {
-          result.error("MISSING_ARG", "Missing 'url' argument", call.arguments)
-          return
-        }
-
-        lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
-        if (triggerMainActivityToHideChromeCustomTab != null) {
-          triggerMainActivityToHideChromeCustomTab!!()
-        }
-
-        lastAuthorizationRequestResult = result
-        triggerMainActivityToHideChromeCustomTab = {
-          val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
-          notificationIntent.setPackage(null)
-          // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
-          notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
-          _activity.startActivity(notificationIntent)
-        }
-
-        val builder = CustomTabsIntent.Builder();
-        val customTabsIntent = builder.build();
-        customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        customTabsIntent.intent.data = Uri.parse(url)
-
-        _activity.startActivityForResult(
-          customTabsIntent.intent,
-          CUSTOM_TABS_REQUEST_CODE,
-          customTabsIntent.startAnimationBundle
-        )
-      }
-      else -> {
-        result.notImplemented()
-      }
+      "performAuthorizationRequest" -> performAuthorizationRequest(result, call)
+      else -> result.notImplemented()
     }
   }
 
+  private fun performAuthorizationRequest(result: Result, call: MethodCall) {
+    val currentActivity = activity
+
+    if (currentActivity == null) {
+      result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
+      return
+    }
+
+    val url: String? = call.argument("url")
+
+    if (url == null) {
+      result.error("MISSING_ARG", "Missing 'url' argument", call.arguments)
+      return
+    }
+
+    lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
+    if (triggerMainActivityToHideChromeCustomTab != null) {
+      triggerMainActivityToHideChromeCustomTab!!()
+    }
+
+    lastAuthorizationRequestResult = result
+    triggerMainActivityToHideChromeCustomTab = {
+      val notificationIntent = currentActivity.packageManager.getLaunchIntentForPackage(currentActivity.packageName);
+      notificationIntent.setPackage(null)
+      // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
+      notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+      currentActivity.startActivity(notificationIntent)
+    }
+
+    val builder = CustomTabsIntent.Builder();
+    val customTabsIntent = builder.build();
+    customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    customTabsIntent.intent.data = Uri.parse(url)
+
+    currentActivity.startActivityForResult(
+            customTabsIntent.intent,
+            CUSTOM_TABS_REQUEST_CODE,
+            customTabsIntent.startAnimationBundle
+    )
+  }
+
+
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    this.binding = binding
     binding.addActivityResultListener(this)
+    activity = binding.activity
+    this.binding = binding;
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
@@ -122,6 +154,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
   override fun onDetachedFromActivity() {
     binding?.removeActivityResultListener(this)
     binding = null
+    activity = null
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
