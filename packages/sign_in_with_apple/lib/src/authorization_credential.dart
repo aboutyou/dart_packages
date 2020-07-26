@@ -173,12 +173,13 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
   final user = deeplink.queryParameters.containsKey('user')
       ? json.decode(deeplink.queryParameters['user']) as Map<String, dynamic>
       : null;
+  final name = user != null ? user['name'] as Map<String, dynamic> : null;
 
   return AuthorizationCredentialAppleID(
     authorizationCode: deeplink.queryParameters['code'],
     email: user != null ? user['email'] as String : null,
-    givenName: user != null ? user['name']['firstName'] as String : null,
-    familyName: user != null ? user['name']['lastName'] as String : null,
+    givenName: name != null ? name['firstName'] as String : null,
+    familyName: name != null ? name['lastName'] as String : null,
     userIdentifier: null,
     identityToken: deeplink.queryParameters['id_token'],
     state: deeplink.queryParameters['state'],

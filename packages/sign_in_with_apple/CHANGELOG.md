@@ -1,3 +1,7 @@
+## 2.5.2
+
+- Fix a bug where the authentication would crash on Android if only the `AppleIDAuthorizationScopes.email` was requested ([#117](https://github.com/aboutyou/dart_packages/pull/117))
+
 ## 2.5.1
 
 - Fix security deeplink issue which allowed to crash Flutter apps which have the `signinwithapple` plugin installed on Android ([#103](https://github.com/aboutyou/dart_packages/pull/103))
