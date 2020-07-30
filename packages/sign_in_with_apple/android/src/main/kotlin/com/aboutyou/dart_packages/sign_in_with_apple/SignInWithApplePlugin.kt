@@ -211,6 +211,7 @@ public class SignInWithAppleCallback : Activity() {
     }
 
     if (!validateNonce(uri, onGoingLoginAttempt.nonce)) {
+      // Just log the occurrence, but don't affect any ongoing logins (so the app can't be spammed)
       Log.e(TAG, "Received Sign in with Apple callback, but the nonce parameter validation failed")
       finish()
       return
