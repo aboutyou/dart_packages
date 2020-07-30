@@ -169,7 +169,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
  * DO NOT rename this or it's package name as it's configured in the consumer's `AndroidManifest.xml`
  */
 public class SignInWithAppleCallback : Activity() {
-  private fun validateNonce( uri: Uri, expectedNonce: String?): Boolean {
+  private fun validateNonce(uri: Uri, expectedNonce: String?): Boolean {
     val idToken = uri.getQueryParameter("id_token")
     if (idToken == null) {
       Log.e(TAG, "Missing id_token query parameter in signinwithapple callback")
