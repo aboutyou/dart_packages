@@ -145,7 +145,7 @@ In case you are not yet using Android V2 Embedding, please first upgrade your ap
 
 #### Your App
 
-In your `AndroidManifest.xml` inside `<application>` add
+In your `android/app/src/main/AndroidManifest.xml` inside `<application>` add
 
 ```xml
 <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->
