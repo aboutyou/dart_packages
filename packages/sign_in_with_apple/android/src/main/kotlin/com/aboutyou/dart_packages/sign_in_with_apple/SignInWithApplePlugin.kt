@@ -83,9 +83,9 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
         lastAuthorizationRequestResult = result
         triggerMainActivityToHideChromeCustomTab = {
           val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
-          notificationIntent.setPackage(null)
+          notificationIntent?.setPackage(null)
           // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
-          notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+          notificationIntent?.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
           _activity.startActivity(notificationIntent)
         }
 
