@@ -15,6 +15,7 @@ export './src/exceptions.dart'
         AuthorizationErrorCode,
         SignInWithAppleAuthorizationException,
         SignInWithAppleCredentialsException;
+export './src/nonce.dart' show generateNonce;
 export './src/sign_in_with_apple.dart' show SignInWithApple;
 export './src/web_authentication_options.dart' show WebAuthenticationOptions;
 export './src/widgets/apple_logo_painter.dart' show AppleLogoPainter;
