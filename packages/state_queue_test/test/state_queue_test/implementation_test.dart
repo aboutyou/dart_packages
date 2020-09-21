@@ -43,18 +43,19 @@ void main() {
       () async {
         await runBlocTest<_TestBloc, int>(
           build: () => _TestBloc(),
-          // act: (_) => throw Exception('Act failure'),
           expect: [0, 1],
         );
       },
-      // ignore: avoid_annotating_with_dynamic
-      throwsA((dynamic e) =>
-          e is TestFailure &&
-          e.message.contains('Which: shorter than expected')),
+      throwsA(
+        // ignore: avoid_annotating_with_dynamic
+        (dynamic e) =>
+            e is TestFailure &&
+            e.message.contains('Which: shorter than expected'),
+      ),
     );
   });
 
-  test('Errors with too many states', () {
+  test('Errors with too few states', () {
     expect(
       () async {
         await runBlocTest<_TestBloc, int>(
@@ -65,14 +66,16 @@ void main() {
           expect: [0, 1],
         );
       },
-      // ignore: avoid_annotating_with_dynamic
-      throwsA((dynamic e) =>
-          e is TestFailure &&
-          e.message.contains('Which: longer than expected')),
+      throwsA(
+        // ignore: avoid_annotating_with_dynamic
+        (dynamic e) =>
+            e is TestFailure &&
+            e.message.contains('Which: longer than expected'),
+      ),
     );
   });
 
-  test('Errors with too wrong states', () {
+  test('Errors with wrong states', () {
     expect(
       () async {
         await runBlocTest<_TestBloc, int>(
@@ -83,10 +86,12 @@ void main() {
           expect: [0, 7],
         );
       },
-      // ignore: avoid_annotating_with_dynamic
-      throwsA((dynamic e) =>
-          e is TestFailure &&
-          e.message.contains('Which: was <1> instead of <7> at location [1]')),
+      throwsA(
+        // ignore: avoid_annotating_with_dynamic
+        (dynamic e) =>
+            e is TestFailure &&
+            e.message.contains('Which: was <1> instead of <7> at location [1]'),
+      ),
     );
   });
 }
