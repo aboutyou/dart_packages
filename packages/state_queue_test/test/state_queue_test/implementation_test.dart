@@ -43,7 +43,7 @@ void main() {
       () async {
         await runBlocTest<_TestBloc, int>(
           build: () => _TestBloc(),
-          expect: [0, 1],
+          expect: <int>[0, 1],
         );
       },
       throwsA(
@@ -63,7 +63,7 @@ void main() {
           act: (b) {
             b..incr()..incr()..incr();
           },
-          expect: [0, 1],
+          expect: <int>[0, 1],
         );
       },
       throwsA(
@@ -83,7 +83,7 @@ void main() {
           act: (b) {
             b.incr();
           },
-          expect: [0, 7],
+          expect: <int>[0, 7],
         );
       },
       throwsA(

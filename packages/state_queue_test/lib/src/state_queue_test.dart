@@ -10,7 +10,14 @@ void blocTest<B extends StateQueue<State>, State>(
   String description, {
   @required B Function() build,
   FutureOr<void> Function(B bloc) act,
-  Iterable<State> expect,
+
+  /// Iterable of either `State`s or `Matcher`s (can be mixed)
+  ///
+  /// Each item in this list is compared to the states output from the bloc,
+  /// starting with the initial state.
+  ///
+  /// The length of emitted states must be equal to the length of this argument.
+  Iterable expect,
 }) {
   test.test(description, () async {
     await runBlocTest<B, State>(
@@ -25,7 +32,7 @@ void blocTest<B extends StateQueue<State>, State>(
 Future<void> runBlocTest<B extends StateQueue<State>, State>({
   @required B Function() build,
   FutureOr<void> Function(B bloc) act,
-  Iterable<State> expect,
+  Iterable expect,
 }) async {
   final collectStates = expect != null;
 
