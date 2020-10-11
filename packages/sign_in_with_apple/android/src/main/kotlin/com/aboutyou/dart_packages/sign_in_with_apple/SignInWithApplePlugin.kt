@@ -61,11 +61,10 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 
       registrar.addActivityResultListener(plugin)
       registrar.activity()?.let(plugin::registerActivity)
-      registerLifecycle(application(registrar), plugin)
-    }
 
-    private fun registerLifecycle(app: Application, plugin: SignInWithApplePlugin) {
-      app.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+      val application = registrar.context().applicationContext as Application;
+
+      application.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
         override fun onActivityPaused(activity: Activity) = Unit
         override fun onActivityResumed(activity: Activity) = Unit
         override fun onActivityDestroyed(activity: Activity?) = plugin.unregisterActivity()
@@ -75,8 +74,6 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
         override fun onActivityStopped(activity: Activity) = Unit
       })
     }
-
-    private fun application(registrar: Registrar) = registrar.context().applicationContext as Application
   }
 
   fun registerActivity(currentActivity: Activity) {
