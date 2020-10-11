@@ -12,8 +12,9 @@ void main() {
     expect(isAvailable, isTrue);
   });
 
-  testWidgets('opnes sign in', (tester) async {
-    final credential = SignInWithApple.getAppleIDCredential(
+  testWidgets('opens sign in', (tester) async {
+    // ignore: unawaited_futures
+    SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
