@@ -38,6 +38,7 @@
             </intent-filter>
         </activity>
 
+        <!-- An addtional activity for testing Android Embedding V1 -->
         <activity
                 android:name="com.example.sign_in_with_apple_example.EmbeddingV1Activity"
                 android:launchMode="singleTop"
