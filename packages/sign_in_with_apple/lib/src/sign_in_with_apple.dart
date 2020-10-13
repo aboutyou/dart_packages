@@ -220,11 +220,9 @@ class SignInWithApple {
         'response_type': 'code id_token',
         'response_mode': 'form_post',
 
-        if (nonce != null)
-          'nonce': nonce,
+        if (nonce != null) 'nonce': nonce,
 
-        if (state != null)
-          'state': state,
+        if (state != null) 'state': state,
       },
     ).toString();
 
