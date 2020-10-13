@@ -1,3 +1,7 @@
+### 2.5.3.
+
+- Fixes an issue with the compilation if `compileSdkVersion 29` or higher is forced upon the package's build ([#126](https://github.com/aboutyou/dart_packages/pull/126))
+
 ## 2.5.2
 
 - Fix a bug where the authentication would crash on Android if only the `AppleIDAuthorizationScopes.email` was requested ([#117](https://github.com/aboutyou/dart_packages/pull/117))
@@ -9,7 +13,7 @@
 ## 2.5.0
 
 - Properly handle the cancellation of the user from the web flow
-  - Thanks to [@eduribas](https://github.com/eduribas) for contributing this fix 
+  - Thanks to [@eduribas](https://github.com/eduribas) for contributing this fix
 
 ## 2.4.0
 
