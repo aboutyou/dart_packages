@@ -44,9 +44,9 @@ enum AppleIDAuthorizationScopes {
 class AppleIDAuthorizationRequest implements AuthorizationRequest {
   const AppleIDAuthorizationRequest({
     this.scopes = const [],
-    this.nonce,
-    this.state,
-  }) : assert(scopes != null);
+    required this.nonce,
+    required this.state,
+  });
 
   /// A list of scopes that can be requested from the user.
   ///
@@ -59,12 +59,12 @@ class AppleIDAuthorizationRequest implements AuthorizationRequest {
   /// The nonce value which was provided when initiating the sign-in.
   ///
   /// Can be `null` if no value was given on the request.
-  final String nonce;
+  final String? nonce;
 
   /// Data that’s returned to you unmodified in the corresponding [AuthorizationCredentialAppleID.state] after a successful authentication.
   ///
   /// Can be `null` if no value was given on the request.
-  final String state;
+  final String? state;
 
   @override
   String toString() => 'AppleIDAuthorizationRequest(scopes: $scopes)';

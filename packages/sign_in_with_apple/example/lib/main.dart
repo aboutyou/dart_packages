@@ -55,11 +55,13 @@ class _MyAppState extends State<MyApp> {
                   path: '/sign_in_with_apple',
                   queryParameters: <String, String>{
                     'code': credential.authorizationCode,
-                    'firstName': credential.givenName,
-                    'lastName': credential.familyName,
+                    if (credential.givenName != null)
+                      'firstName': credential.givenName!,
+                    if (credential.familyName != null)
+                      'lastName': credential.familyName!,
                     'useBundleId':
                         Platform.isIOS || Platform.isMacOS ? 'true' : 'false',
-                    if (credential.state != null) 'state': credential.state,
+                    if (credential.state != null) 'state': credential.state!,
                   },
                 );
 

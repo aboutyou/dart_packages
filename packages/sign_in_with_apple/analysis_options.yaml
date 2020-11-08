@@ -135,3 +135,6 @@ analyzer:
 
   errors:
     argument_type_not_assignable: info
+
+  enable-experiment:
+    - non-nullable

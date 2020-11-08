@@ -12,14 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-16.04, macos-10.15]
-        package:
-          [
-            pending_operations,
-            sign_in_with_apple,
-            state_queue,
-            state_queue_test,
-            with_bloc,
-          ]
+        package: [pending_operations, state_queue, state_queue_test, with_bloc]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -39,6 +32,42 @@ jobs:
         working-directory: packages/${{ matrix.package }}
       - name: Run tests
         run: flutter test --coverage
+        working-directory: packages/${{ matrix.package }}
+      - name: Upload coverage to Codecov
+        if: startsWith(matrix.os, 'macos')
+        uses: codecov/codecov-action@v1.0.6
+        with:
+          flags: ${{ matrix.package }}
+          name: ${{ matrix.package }}
+          fail_ci_if_error: false
+
+  test-nnbd:
+    name: Test ${{ matrix.package }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-16.04, macos-10.15]
+        package: [sign_in_with_apple]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@c1bf65eb311fe29b5bc99d6e91c4498decde268a # v1.3.0
+        with:
+          flutter-version: "1.24.0-3.0.pre"
+          channel: "dev"
+      - name: Install dependencies
+        run: flutter packages get
+        working-directory: packages/${{ matrix.package }}
+      - name: Analyze
+        run: flutter analyze
+        working-directory: packages/${{ matrix.package }}
+      - name: Format
+        run: flutter format --set-exit-if-changed .
+        working-directory: packages/${{ matrix.package }}
+      - name: Run tests
+        run: flutter test --coverage --enable-experiment=non-nullable
         working-directory: packages/${{ matrix.package }}
       - name: Upload coverage to Codecov
         if: startsWith(matrix.os, 'macos')
