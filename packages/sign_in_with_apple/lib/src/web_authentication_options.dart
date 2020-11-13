@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 /// Parameters required for web-based authentication flows
 ///
 /// As described in https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms

@@ -109,11 +109,11 @@ class AuthorizationCredentialPassword {
 
 // ignore_for_file: avoid_as, public_member_api_docs
 AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
-  Map<dynamic, dynamic>? response,
+  Map<dynamic, dynamic> response,
 ) {
-  if (response?['type'] == 'appleid') {
+  if (response['type'] == 'appleid') {
     return AuthorizationCredentialAppleID(
-      userIdentifier: response!['userIdentifier'] as String?,
+      userIdentifier: response['userIdentifier'] as String?,
       givenName: response['givenName'] as String?,
       familyName: response['familyName'] as String?,
       email: response['email'] as String?,
@@ -122,20 +122,20 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
       state: response['state'] as String?,
     );
   } else {
-    throw Exception('Unsupported result type ${response?['type']}');
+    throw Exception('Unsupported result type ${response['type']}');
   }
 }
 
 AuthorizationCredentialPassword parseAuthorizationCredentialPassword(
-  Map<dynamic, dynamic>? response,
+  Map<dynamic, dynamic> response,
 ) {
-  if (response?['type'] == 'password') {
+  if (response['type'] == 'password') {
     return AuthorizationCredentialPassword(
-      username: response!['username'] as String,
+      username: response['username'] as String,
       password: response['password'] as String,
     );
   } else {
-    throw Exception('Unsupported result type ${response?['type']}');
+    throw Exception('Unsupported result type ${response['type']}');
   }
 }
 
@@ -165,9 +165,9 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
 
   return AuthorizationCredentialAppleID(
     authorizationCode: deeplink.queryParameters['code'],
-    email: user != null ? user['email'] as String? : null,
-    givenName: name != null ? name['firstName'] as String? : null,
-    familyName: name != null ? name['lastName'] as String? : null,
+    email: user?['email'] as String?,
+    givenName: name?['firstName'] as String?,
+    familyName: name?['lastName'] as String?,
     userIdentifier: null,
     identityToken: deeplink.queryParameters['id_token'],
     state: deeplink.queryParameters['state'],

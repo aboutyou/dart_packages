@@ -40,14 +40,18 @@ class SignInWithApple {
         );
       }
 
-      return parseAuthorizationCredentialPassword(
-        await channel.invokeMethod<Map<dynamic, dynamic>>(
-          'performAuthorizationRequest',
-          [
-            PasswordAuthorizationRequest(),
-          ].map((request) => request.toJson()).toList(),
-        ),
+      final response = await channel.invokeMethod<Map<dynamic, dynamic>>(
+        'performAuthorizationRequest',
+        [
+          PasswordAuthorizationRequest(),
+        ].map((request) => request.toJson()).toList(),
       );
+
+      if (response == null) {
+        throw Exception('getKeychainCredential: Received `null` response');
+      }
+
+      return parseAuthorizationCredentialPassword(response);
     } on PlatformException catch (exception) {
       throw SignInWithAppleException.fromPlatformException(exception);
     }
@@ -119,17 +123,23 @@ class SignInWithApple {
         );
       }
 
+      final response = await channel.invokeMethod<Map<dynamic, dynamic>>(
+        'performAuthorizationRequest',
+        [
+          AppleIDAuthorizationRequest(
+            scopes: scopes,
+            nonce: nonce,
+            state: state,
+          ).toJson(),
+        ],
+      );
+
+      if (response == null) {
+        throw Exception('getKeychainCredential: Received `null` response');
+      }
+
       return parseAuthorizationCredentialAppleID(
-        await channel.invokeMethod<Map<dynamic, dynamic>>(
-          'performAuthorizationRequest',
-          [
-            AppleIDAuthorizationRequest(
-              scopes: scopes,
-              nonce: nonce,
-              state: state,
-            ).toJson(),
-          ],
-        ),
+        response,
       );
     } on PlatformException catch (exception) {
       throw SignInWithAppleException.fromPlatformException(exception);
