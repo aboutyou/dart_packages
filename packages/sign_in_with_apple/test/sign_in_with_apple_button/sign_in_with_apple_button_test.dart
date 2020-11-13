@@ -240,7 +240,7 @@ Future<void> main() async {
 class TestSetup extends StatelessWidget {
   const TestSetup({
     Key? key,
-    @required required this.child,
+    required this.child,
     this.backgroundColor = Colors.white,
   }) : super(key: key);
 

@@ -9,7 +9,7 @@ Widget _fallbackBuilder(BuildContext context) => SizedBox.shrink();
 class SignInWithAppleBuilder extends StatefulWidget {
   SignInWithAppleBuilder({
     Key? key,
-    @required required this.builder,
+    required this.builder,
     this.fallbackBuilder = _fallbackBuilder,
   }) : super(key: key);
 

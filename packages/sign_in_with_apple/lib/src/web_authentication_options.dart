@@ -5,8 +5,8 @@ import 'package:meta/meta.dart';
 /// As described in https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms
 class WebAuthenticationOptions {
   const WebAuthenticationOptions({
-    @required required this.clientId,
-    @required required this.redirectUri,
+    required this.clientId,
+    required this.redirectUri,
   });
 
   /// The developer’s client identifier, as provided by WWDR.

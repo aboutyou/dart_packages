@@ -184,10 +184,10 @@ class SignInWithApple {
   }
 
   static Future<AuthorizationCredentialAppleID> _signInWithAppleAndroid({
-    @required required List<AppleIDAuthorizationScopes> scopes,
-    @required required WebAuthenticationOptions webAuthenticationOptions,
-    @required String? nonce,
-    @required String? state,
+    required List<AppleIDAuthorizationScopes> scopes,
+    required WebAuthenticationOptions webAuthenticationOptions,
+    required String? nonce,
+    required String? state,
   }) async {
     assert(Platform.isAndroid);
 

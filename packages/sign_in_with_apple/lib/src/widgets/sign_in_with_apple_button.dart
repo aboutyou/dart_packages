@@ -11,7 +11,7 @@ const _appleIconSizeScale = 28 / 44;
 class SignInWithAppleButton extends StatelessWidget {
   const SignInWithAppleButton({
     Key? key,
-    @required required this.onPressed,
+    required this.onPressed,
     this.text = 'Sign in with Apple',
     this.height = 44,
     this.style = SignInWithAppleButtonStyle.black,
