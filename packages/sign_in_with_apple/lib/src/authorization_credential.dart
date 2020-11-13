@@ -21,19 +21,11 @@ class AuthorizationCredentialAppleID {
     @required this.userIdentifier,
     @required this.givenName,
     @required this.familyName,
+    required this.authorizationCode,
     @required this.email,
-    @required String? authorizationCode,
     @required this.identityToken,
     @required this.state,
-  }) : authorizationCode = authorizationCode ?? '' {
-    if (authorizationCode == null) {
-      throw SignInWithAppleAuthorizationException(
-        code: AuthorizationErrorCode.invalidResponse,
-        message:
-            'AuthorizationCredentialAppleID: `authorizationCode` argument was null',
-      );
-    }
-  }
+  });
 
   /// An identifier associated with the authenticated user.
   ///
@@ -112,12 +104,22 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
   Map<dynamic, dynamic> response,
 ) {
   if (response['type'] == 'appleid') {
+    final authorizationCode = response['authorizationCode'] as String?;
+
+    if (authorizationCode == null) {
+      throw SignInWithAppleAuthorizationException(
+        code: AuthorizationErrorCode.invalidResponse,
+        message:
+            'parseAuthorizationCredentialAppleID: `authorizationCode` field was `null`',
+      );
+    }
+
     return AuthorizationCredentialAppleID(
       userIdentifier: response['userIdentifier'] as String?,
       givenName: response['givenName'] as String?,
       familyName: response['familyName'] as String?,
       email: response['email'] as String?,
-      authorizationCode: response['authorizationCode'] as String?,
+      authorizationCode: authorizationCode,
       identityToken: response['identityToken'] as String?,
       state: response['state'] as String?,
     );
@@ -163,8 +165,17 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
       : null;
   final name = user != null ? user['name'] as Map<String, dynamic>? : null;
 
+  final authorizationCode = deeplink.queryParameters['code'];
+  if (authorizationCode == null) {
+    throw SignInWithAppleAuthorizationException(
+      code: AuthorizationErrorCode.invalidResponse,
+      message:
+          'parseAuthorizationCredentialAppleIDFromDeeplink: No `code` query parameter set)',
+    );
+  }
+
   return AuthorizationCredentialAppleID(
-    authorizationCode: deeplink.queryParameters['code'],
+    authorizationCode: authorizationCode,
     email: user?['email'] as String?,
     givenName: name?['firstName'] as String?,
     familyName: name?['lastName'] as String?,
