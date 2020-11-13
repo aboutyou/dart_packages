@@ -44,8 +44,8 @@ enum AppleIDAuthorizationScopes {
 class AppleIDAuthorizationRequest implements AuthorizationRequest {
   const AppleIDAuthorizationRequest({
     this.scopes = const [],
-    required this.nonce,
-    required this.state,
+    this.nonce,
+    this.state,
   });
 
   /// A list of scopes that can be requested from the user.
