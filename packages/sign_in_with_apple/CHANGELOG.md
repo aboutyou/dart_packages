@@ -1,3 +1,7 @@
+### 3.0.0
+
+- Add `null`-safety
+
 ### 2.5.4
 
 - Reformat code with Flutter 1.20.4

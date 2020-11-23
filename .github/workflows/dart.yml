@@ -55,10 +55,8 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@c1bf65eb311fe29b5bc99d6e91c4498decde268a # v1.3.0
         with:
-          flutter-version: "1.24.0-3.0.pre"
+          flutter-version: "1.24.0-10.2.pre"
           channel: "dev"
-      - name: Upgrade Flutter to master channel # For now, until new version is released with font loading fix
-        run: flutter channel master && flutter upgrade
       - name: Install dependencies
         run: flutter packages get
         working-directory: packages/${{ matrix.package }}
@@ -69,7 +67,7 @@ jobs:
         run: flutter format --set-exit-if-changed .
         working-directory: packages/${{ matrix.package }}
       - name: Run tests
-        run: flutter test --coverage --enable-experiment=non-nullable
+        run: flutter test --coverage
         working-directory: packages/${{ matrix.package }}
       - name: Upload coverage to Codecov
         if: startsWith(matrix.os, 'macos')
