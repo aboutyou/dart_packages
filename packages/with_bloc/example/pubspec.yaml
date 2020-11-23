@@ -18,12 +18,13 @@ dependencies:
   meta: ^1.0.0
 
 dev_dependencies:
-  test: any
+  flutter_test:
+    sdk: flutter
 
   state_queue:
     path: ../../state_queue
+
+  test: any
+
   with_bloc:
     path: ./..
-
-  flutter_test:
-    sdk: flutter
