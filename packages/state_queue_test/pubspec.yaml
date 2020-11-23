@@ -1,27 +1,27 @@
 name: state_queue_test
 description: Testing utilities for `StateQueue`
-version: 1.0.0
+version: 2.0.0-nullsafety.0
 homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/state_queue_teste
 repository: https://github.com/aboutyou/dart_packages
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
-  flutter: ">=1.7.0 <2.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.24.0-3.0.pre <2.0.0"
 
 dependencies:
-  meta: ^1.0.0
-
-  pending_operations: ^1.0.1
-
-  state_queue: ^2.0.0
-
-  test: ^1.0.0
-
   flutter:
     sdk: flutter
 
-dev_dependencies:
-  pedantic: ^1.8.0+1
+  meta: ^1.3.0-nullsafety.4
 
+  pending_operations: ^2.0.0-nullsafety.0
+
+  state_queue: ^3.0.0-nullsafety.0
+
+  test: ^1.0.0
+
+dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  pedantic: ^1.10.0-nullsafety.2

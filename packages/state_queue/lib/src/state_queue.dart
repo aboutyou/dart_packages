@@ -12,7 +12,7 @@ abstract class _QueueEntry<T> {}
 class _UpdaterEntry<T> implements _QueueEntry<T> {
   _UpdaterEntry(
     this.updater, {
-    this.onDone,
+    required this.onDone,
   });
 
   final StateUpdater<T> updater;

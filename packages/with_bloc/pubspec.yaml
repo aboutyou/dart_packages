@@ -1,29 +1,26 @@
 name: with_bloc
 description: A widget to create and manage BLoCs implemented on top of ValueNotifier, such as StateQueue.
-version: 2.0.0
-authors:
-  - Timm Preetz <timm.preetz@aboutyou.com>
-  - Henri Beck <henri.beck@aboutyou.com>
+version: 3.0.0-nullsafety.0
 homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/with_bloc
 repository: https://github.com/aboutyou/dart_packages
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
-  flutter: ">=1.7.0 <2.0.0"
+  sdk: ">=2.12.0-0 <3.0.0"
+  flutter: ">=1.24.0-3.0.pre <2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  meta: ^1.0.0
+  meta: ^1.3.0-nullsafety.4
 
 dev_dependencies:
-  test: any
+  flutter_test:
+    sdk: flutter
 
-  pedantic: ^1.8.0+1
+  pedantic: ^1.10.0-nullsafety.2
 
   state_queue:
     path: ../state_queue
 
-  flutter_test:
-    sdk: flutter
+  test: any
