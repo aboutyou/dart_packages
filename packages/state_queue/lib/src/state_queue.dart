@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
@@ -189,6 +190,9 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   @protected
   void run(StateUpdater<T> updater) {
     if(_taskQueue.isClosed) {
+      developer.log('failed to [run] : queue is closed', 
+        stackTrace: StackTrace.current,
+      );
       return;
     }    
     
