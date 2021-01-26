@@ -188,8 +188,10 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// of the bloc can not be awaited properly.
   @protected
   void run(StateUpdater<T> updater) {
-    assert(!_taskQueue.isClosed);
-
+    if(_taskQueue.isClosed) {
+      return;
+    }    
+    
     final entry = _UpdaterEntry(
       updater,
       onDone: _pendingOperations.registerPendingOperation('UpdaterEntry'),
