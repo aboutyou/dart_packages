@@ -91,7 +91,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
       }
     }).forEach((nextState) {
       // don't push any more states after instance is disposed
-      if (!_taskQueue.isClosed && super.value != nextState) {
+      if (!isDisposed && super.value != nextState) {
         _setValue(nextState);
       }
     });
@@ -189,8 +189,8 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// of the bloc can not be awaited properly.
   @protected
   void run(StateUpdater<T> updater) {
-    if(_taskQueue.isClosed) {
-      developer.log('failed to [run] : queue is closed', 
+    if(isDisposed) {
+      developer.log('failed to [run] : StateQueue is disposed', 
         stackTrace: StackTrace.current,
       );
       return;
@@ -211,9 +211,19 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     super.dispose();
   }
 
+  @protected
+  bool get isDisposed => _taskQueue.isClosed;
+
   /// Returns a `Future` which completes once all currently queued tasks have completed
   @visibleForTesting
   Future<void> runQueuedTasksToCompletion() async {
+    if(isDisposed) {
+      developer.log('failed to [runQueuedTasksToCompletion] : StateQueue is disposed', 
+        stackTrace: StackTrace.current,
+      );
+      return;
+    }    
+
     final completer = Completer<void>();
 
     _taskQueue.sink.add(_CompletionNotifierEntry<T>(completer));
