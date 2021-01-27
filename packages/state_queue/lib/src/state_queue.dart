@@ -193,7 +193,6 @@ abstract class StateQueue<T> extends ValueNotifier<T>
       developer.log('failed to [run] : StateQueue is disposed', 
         stackTrace: StackTrace.current,
       );
-      return;
     }    
     
     final entry = _UpdaterEntry(
@@ -221,7 +220,6 @@ abstract class StateQueue<T> extends ValueNotifier<T>
       developer.log('failed to [runQueuedTasksToCompletion] : StateQueue is disposed', 
         stackTrace: StackTrace.current,
       );
-      return;
     }    
 
     final completer = Completer<void>();
