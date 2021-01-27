@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
