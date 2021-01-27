@@ -1,6 +1,6 @@
 name: state_queue
 description: A BLoC implementation for sequentially executed async state updates.
-version: 2.0.1
+version: 2.0.2
 
 homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/state_queue
 repository: https://github.com/aboutyou/dart_packages
