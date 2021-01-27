@@ -189,7 +189,6 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   @protected
   void run(StateUpdater<T> updater) {
     assert(!isDisposed);
-    
     final entry = _UpdaterEntry(
       updater,
       onDone: _pendingOperations.registerPendingOperation('UpdaterEntry'),
