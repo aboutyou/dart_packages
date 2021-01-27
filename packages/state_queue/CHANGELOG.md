@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Expose `isDisposed` to subclasses
+
 ## 2.0.0
 
 - Remove global `errorHandler` and use `Zone` error handling
