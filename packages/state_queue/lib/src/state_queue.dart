@@ -189,11 +189,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// of the bloc can not be awaited properly.
   @protected
   void run(StateUpdater<T> updater) {
-    if(isDisposed) {
-      developer.log('failed to [run] : StateQueue is disposed', 
-        stackTrace: StackTrace.current,
-      );
-    }    
+    assert(!isDisposed);
     
     final entry = _UpdaterEntry(
       updater,
@@ -216,11 +212,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// Returns a `Future` which completes once all currently queued tasks have completed
   @visibleForTesting
   Future<void> runQueuedTasksToCompletion() async {
-    if(isDisposed) {
-      developer.log('failed to [runQueuedTasksToCompletion] : StateQueue is disposed', 
-        stackTrace: StackTrace.current,
-      );
-    }    
+    assert(!isDisposed);
 
     final completer = Completer<void>();
 
