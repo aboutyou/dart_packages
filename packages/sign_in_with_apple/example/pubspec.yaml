@@ -4,16 +4,14 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.11.0-213.0.dev <2.12.0"
-  # For macOS make sure you're on Flutter master or dev channel and
-  # that `flutter config` shows `enable-macos-desktop: true`
-  flutter: ">=1.12.13+hotfix.8 <2.0.0"
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=2.0.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.12.0
+  http: ^0.13.0
 
 dev_dependencies:
   flutter_test:
