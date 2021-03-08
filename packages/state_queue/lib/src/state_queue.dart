@@ -12,7 +12,7 @@ abstract class _QueueEntry<T> {}
 class _UpdaterEntry<T> implements _QueueEntry<T> {
   _UpdaterEntry(
     this.updater, {
-    this.onDone,
+    required this.onDone,
   });
 
   final StateUpdater<T> updater;
@@ -81,9 +81,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
         } catch (error, stack) {
           Zone.current.handleUncaughtError(error, stack);
         } finally {
-          if (event.onDone != null) {
-            event.onDone();
-          }
+          event.onDone();
         }
       } else if (event is _CompletionNotifierEntry<T>) {
         event.completer.complete();

@@ -24,7 +24,7 @@ Future<void> main() async {
           ),
         );
 
-        final firstWidgetState = withBloc.currentState;
+        final firstWidgetState = withBloc.currentState!;
 
         final firstBloc = firstWidgetState.bloc;
 
@@ -46,7 +46,7 @@ Future<void> main() async {
           ),
         );
 
-        final firstAgainWidgetState = withBloc.currentState;
+        final firstAgainWidgetState = withBloc.currentState!;
 
         final firstAgainBloc = firstAgainWidgetState.bloc;
 
@@ -68,7 +68,7 @@ Future<void> main() async {
           ),
         );
 
-        final secondWidgetState = withBloc.currentState;
+        final secondWidgetState = withBloc.currentState!;
 
         final secondBloc = secondWidgetState.bloc;
 
