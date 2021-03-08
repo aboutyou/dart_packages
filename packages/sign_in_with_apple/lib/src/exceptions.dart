@@ -15,39 +15,39 @@ abstract class SignInWithAppleException implements Exception {
     switch (exception.code) {
       case 'not-supported':
         return SignInWithAppleNotSupportedException(
-          message: exception.message,
+          message: exception.message ?? 'no message provided',
         );
 
       /// Exceptions which indicate an [SignInWithAppleAuthorizationError]
       case 'authorization-error/unknown':
         return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.unknown,
-          message: exception.message,
+          message: exception.message ?? 'no message provided',
         );
       case 'authorization-error/canceled':
         return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.canceled,
-          message: exception.message,
+          message: exception.message ?? 'no message provided',
         );
       case 'authorization-error/invalidResponse':
         return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.invalidResponse,
-          message: exception.message,
+          message: exception.message ?? 'no message provided',
         );
       case 'authorization-error/notHandled':
         return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.notHandled,
-          message: exception.message,
+          message: exception.message ?? 'no message provided',
         );
       case 'authorization-error/failed':
         return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.failed,
-          message: exception.message,
+          message: exception.message ?? 'no message provided',
         );
 
       case 'credentials-error':
         return SignInWithAppleCredentialsException(
-          message: exception.message,
+          message: exception.message ?? 'no message provided',
         );
 
       default:
@@ -63,7 +63,7 @@ abstract class SignInWithAppleException implements Exception {
 class UnknownSignInWithAppleException extends PlatformException
     implements SignInWithAppleException {
   UnknownSignInWithAppleException({
-    @required PlatformException platformException,
+    required PlatformException platformException,
   }) : super(
           code: platformException.code,
           message: platformException.message,
@@ -78,8 +78,8 @@ class UnknownSignInWithAppleException extends PlatformException
 /// An [SignInWithAppleException] which will be thrown in case Sign in with Apple is not supported.
 class SignInWithAppleNotSupportedException implements SignInWithAppleException {
   const SignInWithAppleNotSupportedException({
-    @required this.message,
-  }) : assert(message != null);
+    required this.message,
+  });
 
   /// A message specifying more details about why Sign in with Apple is not supported
   final String message;
@@ -114,10 +114,9 @@ enum AuthorizationErrorCode {
 class SignInWithAppleAuthorizationException
     implements SignInWithAppleException {
   const SignInWithAppleAuthorizationException({
-    @required this.code,
-    @required this.message,
-  })  : assert(code != null),
-        assert(message != null);
+    required this.code,
+    required this.message,
+  });
 
   /// A more exact code of what actually went wrong
   final AuthorizationErrorCode code;
@@ -131,8 +130,8 @@ class SignInWithAppleAuthorizationException
 
 class SignInWithAppleCredentialsException implements SignInWithAppleException {
   const SignInWithAppleCredentialsException({
-    @required this.message,
-  }) : assert(message != null);
+    required this.message,
+  });
 
   /// The localized error message from the native code.
   final String message;

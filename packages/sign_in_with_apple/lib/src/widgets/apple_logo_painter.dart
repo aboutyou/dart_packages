@@ -9,8 +9,8 @@ import 'package:flutter/widgets.dart';
 class AppleLogoPainter extends CustomPainter {
   /// Creates an Apple Logo Painter with the provided [color]
   const AppleLogoPainter({
-    @required this.color,
-  }) : assert(color != null);
+    required this.color,
+  });
 
   /// The [Color] of the logo
   final Color color;
