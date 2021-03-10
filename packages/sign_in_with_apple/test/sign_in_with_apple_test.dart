@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -57,5 +58,28 @@ void main() {
       await SignInWithApple.getKeychainCredential(),
       isA<AuthorizationCredentialPassword>(),
     );
+  });
+
+  // How to mock EventChannel notification
+  // https://github.com/flutter/flutter/issues/38954
+  test('onCredentialRevokedNotification -> Trigger notification', () async {
+    var count = 0;
+    void increment() {
+      count++;
+    }
+
+    SignInWithApple.onCredentialRevokedNotification.listen((event) {
+      increment();
+    });
+
+    expect(count, 0);
+
+    await ServicesBinding.instance?.defaultBinaryMessenger
+        .handlePlatformMessage(
+            'com.aboutyou.dart_packages.sign_in_with_apple_events',
+            StandardMethodCodec().encodeSuccessEnvelope(null),
+            (data) {});
+
+    expect(count, 1);
   });
 }
