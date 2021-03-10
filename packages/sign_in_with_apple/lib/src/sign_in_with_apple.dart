@@ -16,14 +16,26 @@ import 'package:sign_in_with_apple/src/authorization_credential.dart'
 import 'package:sign_in_with_apple/src/credential_state.dart'
     show parseCredentialState;
 
-/// Wrapper class providing the methods to interact with Sign in with Apple.
 // ignore: avoid_classes_with_only_static_members
+/// Wrapper class providing the methods to interact with Sign in with Apple.
 class SignInWithApple {
   @visibleForTesting
   // ignore: public_member_api_docs
   static const channel = MethodChannel(
     'com.aboutyou.dart_packages.sign_in_with_apple',
   );
+
+  static const _eventChannel = EventChannel(
+    'com.aboutyou.dart_packages.sign_in_with_apple_events',
+  );
+
+  static Stream<void>? _onCredentialRevokedNotification;
+
+  /// Stream that sends an event when Apple ID credentials have been revoked.
+  static Stream<void> get onCredentialRevokedNotification {
+    _onCredentialRevokedNotification ??= _eventChannel.receiveBroadcastStream();
+    return _onCredentialRevokedNotification!;
+  }
 
   /// Returns the credentials stored in the Keychain for the website associated with the current app.
   ///
