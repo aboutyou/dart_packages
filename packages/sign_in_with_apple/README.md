@@ -72,7 +72,7 @@ If you have change your app's capabilities, you need to fetch the updated provis
 
 #### Create a Service ID
 
-Next go to https://developer.apple.com/account/resources/identifiers/list/serviceId and follow these steps:
+Used for website login only. Go to your apple developer page then ["Identifiers"](https://developer.apple.com/account/resources/identifiers/list) and follow these steps:
 
 - Click "Register an Services ID"
 - Select "Services IDs", click "Continue"
