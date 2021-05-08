@@ -1,0 +1,19 @@
+name: new_relic
+description: New Relic reporting for Dart (on the server)
+version: 0.1.0
+authors:
+  - Timm Preetz <timm.preetz@aboutyou.com>
+  - Henri Beck <henri.beck@aboutyou.com>
+homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/new_relic
+repository: https://github.com/aboutyou/dart_packages
+
+environment:
+  sdk: ">=2.8.0 <3.0.0"
+
+dependencies:
+  ffi: ^0.1.3
+
+dev_dependencies:
+  test: any
+
+  pedantic: ^1.8.0+1
