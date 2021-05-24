@@ -95,17 +95,19 @@ class SignInWithAppleButton extends StatelessWidget {
     // per Apple's guidelines
     final fontSize = height * 0.43;
 
-    final textWidget = Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        inherit: false,
-        fontSize: fontSize,
-        color: _contrastColor,
-        // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart#L16
-        fontFamily: '.SF Pro Text',
-        letterSpacing: -0.41,
-      ),
+    final textWidget = FittedBox(
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          inherit: false,
+          fontSize: fontSize,
+          color: _contrastColor,
+          // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart#L16
+          fontFamily: '.SF Pro Text',
+          letterSpacing: -0.41,
+        ),
+      )
     );
 
     final appleIcon = Container(
