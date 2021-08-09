@@ -8,7 +8,7 @@ import Flutter
 import UIKit
 #endif
 
-public enum SignInWithAppleError {
+public enum SignInWithAppleGenericError {
     // An error for the case we are running on a not supported platform
     //
     // We currently support macOS 10.15 or higher and iOS 13 or higher
@@ -20,27 +20,6 @@ public enum SignInWithAppleError {
     // An error in case a concrete argument inside the arguments of a FlutterMethodCall is missing
     // The second argument should be the identifier of the missing argument
     case missingArgument(FlutterMethodCall, String)
-    
-    // In case there was an error while getting the state of the credentials for a specific user identifier
-    // The first argument will be the localized error message
-    @available(iOS 13.0, macOS 10.15, *)
-    case credentialsError(String)
-    
-    // In case we receive an unexpected credentials state
-    @available(iOS 13.0, macOS 10.15, *)
-    case unexpectedCredentialsState(ASAuthorizationAppleIDProvider.CredentialState)
-    
-    // In case we get some unknown credential type in the successful authorization callback
-    //
-    // This contains the credential
-    @available(iOS 13.0, macOS 10.15, *)
-    case unknownCredentials(ASAuthorizationCredential)
-    
-    // In case there was an error while trying to perform an authorization request
-    //
-    // This contains the actual authorization error code and the localized error message
-    @available(iOS 13.0, macOS 10.15, *)
-    case authorizationError(ASAuthorizationError.Code, String)
     
     func toFlutterError() -> FlutterError {
         switch self {
@@ -58,6 +37,44 @@ public enum SignInWithAppleError {
                 message: "Unsupported platform version: \(platform)",
                 details: nil
             )
+        case .missingArguments(let call):
+            return FlutterError(
+                code: "missing-args",
+                message: "Missing arguments",
+                details: call.arguments
+            )
+        case .missingArgument(let call, let key):
+            return FlutterError(
+                code: "missing-arg",
+                message: "Argument '\(key)' is missing",
+                details: call.arguments
+            )
+        }
+    }
+}
+    
+
+@available(iOS 13.0, macOS 10.15, *)
+public enum SignInWithAppleError {
+    // In case there was an error while getting the state of the credentials for a specific user identifier
+    // The first argument will be the localized error message
+    case credentialsError(String)
+    
+    // In case we receive an unexpected credentials state
+    case unexpectedCredentialsState(ASAuthorizationAppleIDProvider.CredentialState)
+    
+    // In case we get some unknown credential type in the successful authorization callback
+    //
+    // This contains the credential
+    case unknownCredentials(ASAuthorizationCredential)
+    
+    // In case there was an error while trying to perform an authorization request
+    //
+    // This contains the actual authorization error code and the localized error message
+    case authorizationError(ASAuthorizationError.Code, String)
+    
+    func toFlutterError() -> FlutterError {
+        switch self {
         case .credentialsError(let message):
             return FlutterError(
                 code: "credentials-error",
@@ -98,18 +115,6 @@ public enum SignInWithAppleError {
                 code: errorCode,
                 message: message,
                 details: nil
-            )
-        case .missingArguments(let call):
-            return FlutterError(
-                code: "missing-args",
-                message: "Missing arguments",
-                details: call.arguments
-            )
-        case .missingArgument(let call, let key):
-            return FlutterError(
-                code: "missing-arg",
-                message: "Argument '\(key)' is missing",
-                details: call.arguments
             )
         }
     }

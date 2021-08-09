@@ -26,7 +26,7 @@ public class SignInWithAppleUnavailablePlugin: NSObject, FlutterPlugin {
         }
         
         result(
-            SignInWithAppleError.notSupported.toFlutterError()
+            SignInWithAppleGenericError.notSupported.toFlutterError()
         )
     }
 }
