@@ -1,23 +1,22 @@
 PODS:
-  - FlutterMacOS (2.2.2)
+  - FlutterMacOS (1.0.0)
   - sign_in_with_apple (0.0.1):
     - FlutterMacOS
 
 DEPENDENCIES:
+  - FlutterMacOS (from `Flutter/ephemeral`)
   - sign_in_with_apple (from `Flutter/ephemeral/.symlinks/plugins/sign_in_with_apple/macos`)
 
-SPEC REPOS:
-  trunk:
-    - FlutterMacOS
-
 EXTERNAL SOURCES:
+  FlutterMacOS:
+    :path: Flutter/ephemeral
   sign_in_with_apple:
     :path: Flutter/ephemeral/.symlinks/plugins/sign_in_with_apple/macos
 
 SPEC CHECKSUMS:
-  FlutterMacOS: d225dfc3bb9c0e8f83364ba05e7029358dc93fed
-  sign_in_with_apple: a9e97e744e8edc36aefc2723111f652102a7a727
+  FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
+  sign_in_with_apple: 67a80b53f8662437b595e206870d48b089d9b715
 
-PODFILE CHECKSUM: d8ba9b3e9e93c62c74a660b46c6fcb09f03991a7
+PODFILE CHECKSUM: 0d3963a09fc94f580682bd88480486da345dc3f0
 
 COCOAPODS: 1.10.1
