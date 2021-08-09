@@ -15,7 +15,7 @@ Flutter bridge to Sign in with Apple. Includes support for keychain entries as w
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'FlutterMacOS'
-  s.platform = :osx, '10.15'
+  s.platform = :osx, '10.11'
   s.osx.deployment_target = '10.15'
 
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
