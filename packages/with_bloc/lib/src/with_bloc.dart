@@ -43,7 +43,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     BuildContext context,
     BlocType bloc,
     StateType value,
-    Widget child,
+    Widget? child,
   ) builder;
 
   /// A [BlocType]-independent widget which is passed back to the [builder].
