@@ -292,9 +292,11 @@ packages:
   state_queue:
     dependency: "direct dev"
     description:
-      path: "../state_queue"
-      relative: true
-    source: path
+      path: "packages/state_queue"
+      ref: HEAD
+      resolved-ref: "7bc3cae0df6ea40a024b66d90b6092976b7661fa"
+      url: "git://github.com/swipelab/dart_packages.git"
+    source: git
     version: "2.0.0"
   stream_channel:
     dependency: transitive

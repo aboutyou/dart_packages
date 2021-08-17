@@ -8,9 +8,9 @@ import 'package:with_bloc/src/are_lists_equal.dart';
 class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     extends StatefulWidget {
   const WithBloc({
-    Key key,
-    @required this.createBloc,
-    @required this.builder,
+    Key? key,
+    required this.createBloc,
+    required this.builder,
     this.inputs = const <dynamic>[],
     this.child,
     this.onInputsChange,
@@ -53,7 +53,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   /// You will then get this [child] back in the [builder] method as the fourth argument.
   /// Doing this will optimize the building of widgets, because whenever the [BlocType] changes,
   /// it will not be recreated.
-  final Widget child;
+  final Widget? child;
 
   /// The parameters the BLoC depends upon.
   ///
@@ -96,7 +96,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     BlocType bloc, {
     List previousInputs,
     List newInputs,
-  }) onInputsChange;
+  })? onInputsChange;
 
   @override
   WithBlocState<BlocType, StateType> createState() =>
@@ -107,7 +107,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     extends State<WithBloc<BlocType, StateType>> {
   @visibleForTesting
-  BlocType bloc;
+  late BlocType bloc;
 
   @override
   void initState() {
@@ -129,7 +129,7 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
       /// The return value will decide over whether we will recreate the Bloc
       if (widget.onInputsChange != null) {
         /// For recreating the bloc, this function should return `false` so we invert this here
-        recreateBloc = !widget.onInputsChange(
+        recreateBloc = !widget.onInputsChange!(
           bloc,
           previousInputs: oldWidget.inputs,
           newInputs: widget.inputs,

@@ -26,7 +26,7 @@ Future<void> main() async {
 
         final firstWidgetState = withBloc.currentState;
 
-        final firstBloc = firstWidgetState.bloc;
+        final firstBloc = firstWidgetState!.bloc;
 
         await firstBloc.runQueuedTasksToCompletion();
 
@@ -48,7 +48,7 @@ Future<void> main() async {
 
         final firstAgainWidgetState = withBloc.currentState;
 
-        final firstAgainBloc = firstAgainWidgetState.bloc;
+        final firstAgainBloc = firstAgainWidgetState!.bloc;
 
         expect(
           firstBloc,
@@ -70,7 +70,7 @@ Future<void> main() async {
 
         final secondWidgetState = withBloc.currentState;
 
-        final secondBloc = secondWidgetState.bloc;
+        final secondBloc = secondWidgetState!.bloc;
 
         await secondBloc.runQueuedTasksToCompletion();
 

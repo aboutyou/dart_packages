@@ -5,12 +5,12 @@ class DisposableBloc extends StateQueue<int> {
     this.onDispose,
   }) : super(0);
 
-  final void Function() onDispose;
+  final void Function()? onDispose;
 
   @override
   void dispose() {
     super.dispose();
 
-    onDispose();
+    onDispose?.call();
   }
 }
