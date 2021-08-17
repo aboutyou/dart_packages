@@ -66,17 +66,17 @@ void main() {
     () async {
       final bloc = _TestBloc()..setState(5);
 
-      expect(bloc.pendingOperations.pendingCalls, 1);
+      expect(bloc.pendingOperations?.pendingCalls, 1);
 
       await bloc.runQueuedTasksToCompletion();
 
       /// Will be still `1` as the [Timer.run] inside the `PendingOperations` didn't run yet and so far has not marked the previous operation as done
-      expect(bloc.pendingOperations.pendingCalls, 1);
+      expect(bloc.pendingOperations?.pendingCalls, 1);
 
       /// Wait here to get the [Timer.run] callback be run
       await Future<void>.delayed(Duration.zero);
 
-      expect(bloc.pendingOperations.pendingCalls, 0);
+      expect(bloc.pendingOperations?.pendingCalls, 0);
     },
   );
 }

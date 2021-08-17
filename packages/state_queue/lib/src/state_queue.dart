@@ -17,7 +17,7 @@ class _UpdaterEntry<T> implements _QueueEntry<T> {
 
   final StateUpdater<T> updater;
 
-  final void Function() onDone;
+  final void Function()? onDone;
 }
 
 class _CompletionNotifierEntry<T> implements _QueueEntry<T> {
@@ -82,7 +82,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
           Zone.current.handleUncaughtError(error, stack);
         } finally {
           if (event.onDone != null) {
-            event.onDone();
+            event.onDone!();
           }
         }
       } else if (event is _CompletionNotifierEntry<T>) {
@@ -100,7 +100,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
 
   final _pendingOperations = PendingOperations();
 
-  PendingOperationsReader get pendingOperations => _pendingOperations;
+  PendingOperationsReader? get pendingOperations => _pendingOperations;
 
   set value(T value) {
     throw Exception('"value" must not be set directly. Use `run`.');
@@ -189,6 +189,10 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   @protected
   void run(StateUpdater<T> updater) {
     assert(!isDisposed);
+    if(isDisposed) {
+      return;
+    }
+
     final entry = _UpdaterEntry(
       updater,
       onDone: _pendingOperations.registerPendingOperation('UpdaterEntry'),
@@ -211,6 +215,9 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   @visibleForTesting
   Future<void> runQueuedTasksToCompletion() async {
     assert(!isDisposed);
+    if(isDisposed) {
+      return;
+    }
 
     final completer = Completer<void>();
 
