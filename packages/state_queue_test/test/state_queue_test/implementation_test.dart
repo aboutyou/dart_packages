@@ -50,7 +50,7 @@ void main() {
         // ignore: avoid_annotating_with_dynamic
         (dynamic e) =>
             e is TestFailure &&
-            e.message.contains('Which: shorter than expected'),
+            e.message?.contains('Which: shorter than expected') == true,
       ),
     );
   });
@@ -70,7 +70,7 @@ void main() {
         // ignore: avoid_annotating_with_dynamic
         (dynamic e) =>
             e is TestFailure &&
-            e.message.contains('Which: longer than expected'),
+            e.message!.contains('Which: longer than expected'),
       ),
     );
   });
@@ -90,7 +90,7 @@ void main() {
         // ignore: avoid_annotating_with_dynamic
         (dynamic e) =>
             e is TestFailure &&
-            e.message.contains('Which: was <1> instead of <7> at location [1]'),
+            e.message!.contains('Which: was <1> instead of <7> at location [1]'),
       ),
     );
   });

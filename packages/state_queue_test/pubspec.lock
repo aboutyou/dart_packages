@@ -213,7 +213,7 @@ packages:
       name: pending_operations
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.0"
   pool:
     dependency: transitive
     description:
@@ -292,9 +292,11 @@ packages:
   state_queue:
     dependency: "direct main"
     description:
-      name: state_queue
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/state_queue"
+      ref: HEAD
+      resolved-ref: "30bae2eb35a5e7ad9746e8697dc0f0e80bd6f3f1"
+      url: "git://github.com/swipelab/dart_packages.git"
+    source: git
     version: "2.0.0"
   stream_channel:
     dependency: transitive
@@ -389,4 +391,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.12.0 <3.0.0"
-  flutter: ">=1.7.0"
+  flutter: ">=2.0.0"

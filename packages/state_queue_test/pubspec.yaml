@@ -5,23 +5,26 @@ homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/state_q
 repository: https://github.com/aboutyou/dart_packages
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
-  flutter: ">=1.7.0 <2.0.0"
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=2.0.0 <3.0.0"
 
 dependencies:
+  
+  flutter:
+    sdk: flutter
   meta: ^1.0.0
 
-  pending_operations: ^1.0.1
+  pending_operations: ^2.0.0
 
-  state_queue: ^2.0.0
+  state_queue:
+    git:
+      url: git://github.com/swipelab/dart_packages.git
+      path: packages/state_queue
 
   test: ^1.0.0
 
-  flutter:
-    sdk: flutter
-
 dev_dependencies:
-  pedantic: ^1.8.0+1
-
+  
   flutter_test:
     sdk: flutter
+  pedantic: ^1.8.0+1
