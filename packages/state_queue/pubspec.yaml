@@ -17,7 +17,11 @@ dependencies:
 
   meta: ^1.0.0
 
-  pending_operations: ^2.0.0
+  pending_operations:
+    git:
+      url: git://github.com/swipelab/dart_packages.git
+      path: packages/pending_operations
+
 
 dev_dependencies:
   test: any
