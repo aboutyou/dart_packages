@@ -5,7 +5,6 @@ linter:
     - always_put_control_body_on_new_line
     - always_require_non_null_named_parameters
     - avoid_annotating_with_dynamic
-    - avoid_as
     - avoid_bool_literals_in_conditional_expressions
     - avoid_catches_without_on_clauses
     - avoid_catching_errors
