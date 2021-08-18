@@ -9,20 +9,16 @@ const _appleIconSizeScale = 28 / 44;
 ///
 /// https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple/overview/buttons/
 class SignInWithAppleButton extends StatelessWidget {
+  // ignore: public_member_api_docs
   const SignInWithAppleButton({
-    Key key,
-    @required this.onPressed,
+    Key? key,
+    required this.onPressed,
     this.text = 'Sign in with Apple',
     this.height = 44,
     this.style = SignInWithAppleButtonStyle.black,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     this.iconAlignment = IconAlignment.center,
-  })  : assert(text != null),
-        assert(height != null),
-        assert(style != null),
-        assert(borderRadius != null),
-        assert(iconAlignment != null),
-        super(key: key);
+  })  : super(key: key);
 
   /// The callback that is be called when the button is pressed.
   final VoidCallback onPressed;
@@ -63,9 +59,6 @@ class SignInWithAppleButton extends StatelessWidget {
       case SignInWithAppleButtonStyle.whiteOutlined:
         return Colors.white;
     }
-
-    assert(false, 'Unknown style: $style');
-    return null;
   }
 
   /// Returns the contrast color to the [_backgroundColor] derived from the current [style].
@@ -79,15 +72,12 @@ class SignInWithAppleButton extends StatelessWidget {
       case SignInWithAppleButtonStyle.whiteOutlined:
         return Colors.black;
     }
-
-    assert(false, 'Unknown style: $style');
-    return null;
   }
 
   /// The decoration which should be applied to the inner container inside the button
   ///
   /// This allows to customize the border of the button
-  Decoration get _decoration {
+  Decoration? get _decoration {
     switch (style) {
       case SignInWithAppleButtonStyle.black:
       case SignInWithAppleButtonStyle.white:
@@ -99,9 +89,6 @@ class SignInWithAppleButton extends StatelessWidget {
           borderRadius: borderRadius,
         );
     }
-
-    assert(false, 'Unknown style: $style');
-    return null;
   }
 
   @override

@@ -41,12 +41,12 @@ class SignInWithApple {
       }
 
       return parseAuthorizationCredentialPassword(
-        await channel.invokeMethod<Map<dynamic, dynamic>>(
+        (await channel.invokeMethod<Map<dynamic, dynamic>>(
           'performAuthorizationRequest',
           [
             PasswordAuthorizationRequest(),
           ].map((request) => request.toJson()).toList(),
-        ),
+        ))!,
       );
     } on PlatformException catch (exception) {
       throw SignInWithAppleException.fromPlatformException(exception);
@@ -76,24 +76,24 @@ class SignInWithApple {
   ///
   /// Throws an [SignInWithAppleNotSupportedException] in case Sign in with Apple is not available (e.g. iOS < 13, macOS < 10.15)
   static Future<AuthorizationCredentialAppleID> getAppleIDCredential({
-    @required List<AppleIDAuthorizationScopes> scopes,
+    required List<AppleIDAuthorizationScopes> scopes,
 
     /// Optional parameters for web-based authentication flows on non-Apple platforms
     ///
     /// This parameter is required on Android.
-    WebAuthenticationOptions webAuthenticationOptions,
+    WebAuthenticationOptions? webAuthenticationOptions,
 
     /// Optional string which, if set, will be be embedded in the resulting `identityToken` field on the [AuthorizationCredentialAppleID].
     ///
     /// This can be used to mitigate replay attacks by using a unique argument per sign-in attempt.
     ///
     /// Can be `null`, in which case no nonce will be passed to the request.
-    String nonce,
+    String? nonce,
 
     /// Data that’s returned to you unmodified in the corresponding [AuthorizationCredentialAppleID.state] after a successful authentication.
     ///
     /// Can be `null`, in which case no state will be passed to the request.
-    String state,
+    String? state,
   }) async {
     assert(scopes != null);
 
@@ -122,7 +122,7 @@ class SignInWithApple {
       }
 
       return parseAuthorizationCredentialAppleID(
-        await channel.invokeMethod<Map<dynamic, dynamic>>(
+        (await channel.invokeMethod<Map<dynamic, dynamic>>(
           'performAuthorizationRequest',
           [
             AppleIDAuthorizationRequest(
@@ -131,7 +131,7 @@ class SignInWithApple {
               state: state,
             ).toJson(),
           ],
-        ),
+        ))!,
       );
     } on PlatformException catch (exception) {
       throw SignInWithAppleException.fromPlatformException(exception);
@@ -151,8 +151,6 @@ class SignInWithApple {
   static Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
-    assert(userIdentifier != null);
-
     if (!Platform.isIOS &&
         !Platform.isMacOS &&
         Platform.environment['FLUTTER_TEST'] != 'true') {
@@ -163,10 +161,10 @@ class SignInWithApple {
 
     try {
       return parseCredentialState(
-        await channel.invokeMethod<String>(
+        (await channel.invokeMethod<String>(
           'getCredentialState',
           <String, String>{'userIdentifier': userIdentifier},
-        ),
+        ))!,
       );
     } on PlatformException catch (exception) {
       throw SignInWithAppleException.fromPlatformException(exception);
@@ -183,15 +181,15 @@ class SignInWithApple {
   /// - Android
   ///
   /// In case Sign in with Apple is not available, the returned Future completes with `false`.
-  static Future<bool> isAvailable() {
-    return channel.invokeMethod<bool>('isAvailable');
+  static Future<bool> isAvailable() async {
+    return (await channel.invokeMethod<bool>('isAvailable'))!;
   }
 
   static Future<AuthorizationCredentialAppleID> _signInWithAppleAndroid({
-    @required List<AppleIDAuthorizationScopes> scopes,
-    @required WebAuthenticationOptions webAuthenticationOptions,
-    @required String nonce,
-    @required String state,
+    required List<AppleIDAuthorizationScopes> scopes,
+    required WebAuthenticationOptions webAuthenticationOptions,
+    required String? nonce,
+    required String? state,
   }) async {
     assert(Platform.isAndroid);
 
@@ -211,9 +209,7 @@ class SignInWithApple {
                 case AppleIDAuthorizationScopes.fullName:
                   return 'name';
               }
-              return null;
             })
-            .where((scope) => scope != null)
             .join(' '),
         // Request `code`, which is also what `ASAuthorizationAppleIDCredential.authorizationCode` contains.
         // So the same handling can be used for Apple and 3rd party platforms

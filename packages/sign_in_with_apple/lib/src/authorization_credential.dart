@@ -18,13 +18,13 @@ import './authorization_request.dart';
 class AuthorizationCredentialAppleID {
   /// Creates an instance which contains the result of a successful Sign in with Apple flow.
   AuthorizationCredentialAppleID({
-    @required this.userIdentifier,
-    @required this.givenName,
-    @required this.familyName,
-    @required this.email,
-    @required this.authorizationCode,
-    @required this.identityToken,
-    @required this.state,
+    required this.userIdentifier,
+    required this.givenName,
+    required this.familyName,
+    required this.email,
+    required this.authorizationCode,
+    required this.identityToken,
+    required this.state,
   }) {
     if (authorizationCode == null) {
       throw SignInWithAppleAuthorizationException(
@@ -41,7 +41,7 @@ class AuthorizationCredentialAppleID {
   /// This will stay the same between sign ins, until the user deauthorizes your App.
   ///
   /// Can be `null`
-  final String userIdentifier;
+  final String? userIdentifier;
 
   /// The users given name, in case it was requested.
   /// You will need to provide the [AppleIDAuthorizationScopes.fullName] scope to the [AppleIDAuthorizationRequest] for requesting this information.
@@ -52,7 +52,7 @@ class AuthorizationCredentialAppleID {
   /// For more information see: https://forums.developer.apple.com/thread/121496
   ///
   /// Can be `null`
-  final String givenName;
+  final String? givenName;
 
   /// The users family name, in case it was requested.
   /// You will need to provide the [AppleIDAuthorizationScopes.fullName] scope to the [AppleIDAuthorizationRequest] for requesting this information.
@@ -63,7 +63,7 @@ class AuthorizationCredentialAppleID {
   /// For more information see: https://forums.developer.apple.com/thread/121496
   ///
   /// Can be `null`
-  final String familyName;
+  final String? familyName;
 
   /// The users email in case it was requested.
   /// You will need to provide the [AppleIDAuthorizationScopes.email] scope to the [AppleIDAuthorizationRequest] for requesting this information.
@@ -74,24 +74,24 @@ class AuthorizationCredentialAppleID {
   /// For more information see: https://forums.developer.apple.com/thread/121496
   ///
   /// Can be `null`
-  final String email;
+  final String? email;
 
   /// The verification code for the current authorization.
   ///
   /// This code should be used by your server component to validate the authorization with Apple within 5 minutes upon receiving it.
-  final String authorizationCode;
+  late String? authorizationCode;
 
   /// A JSON Web Token (JWT) that securely communicates information about the user to your app.
   ///
   /// Can be `null`.
-  final String identityToken;
+  final String? identityToken;
 
   /// The `state` parameter that was passed to the request.
   ///
   /// This data is not modified by Apple.
   ///
   /// Can be `null`
-  final String state;
+  final String? state;
 
   @override
   String toString() {
@@ -103,10 +103,9 @@ class AuthorizationCredentialAppleID {
 class AuthorizationCredentialPassword {
   /// Creates a new username/password combination, which is the result of a successful Keychain query.
   const AuthorizationCredentialPassword({
-    @required this.username,
-    @required this.password,
-  })  : assert(username != null),
-        assert(password != null);
+    required this.username,
+    required this.password,
+  });
 
   /// The username for the credential
   final String username;
@@ -171,7 +170,7 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
   }
 
   final user = deeplink.queryParameters.containsKey('user')
-      ? json.decode(deeplink.queryParameters['user']) as Map<String, dynamic>
+      ? json.decode(deeplink.queryParameters['user']!) as Map<String, dynamic>
       : null;
   final name = user != null ? user['name'] as Map<String, dynamic> : null;
 
