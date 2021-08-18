@@ -212,7 +212,7 @@ packages:
     description:
       path: "packages/pending_operations"
       ref: HEAD
-      resolved-ref: "3e7e8f8e76571fd17327b11ec6b7b2d620866aab"
+      resolved-ref: "3104b1c4084f5516af049a748841192d3c4de1c1"
       url: "git://github.com/swipelab/dart_packages.git"
     source: git
     version: "1.0.1"

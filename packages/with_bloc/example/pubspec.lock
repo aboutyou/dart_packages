@@ -210,10 +210,12 @@ packages:
   pending_operations:
     dependency: transitive
     description:
-      name: pending_operations
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0"
+      path: "packages/pending_operations"
+      ref: HEAD
+      resolved-ref: "3104b1c4084f5516af049a748841192d3c4de1c1"
+      url: "git://github.com/swipelab/dart_packages.git"
+    source: git
+    version: "1.0.1"
   pool:
     dependency: transitive
     description:

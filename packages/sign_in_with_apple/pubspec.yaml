@@ -5,17 +5,17 @@ homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/sign_in
 repository: https://github.com/aboutyou/dart_packages
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.8 <2.0.0"
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=2.0.0 <3.0.0"
 
 dependencies:
-  meta: ^1.0.0
+  meta: ^1.7.0
 
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  pedantic: "1.8.0+1"
+  pedantic: ^1.11.1
 
   flutter_test:
     sdk: flutter
@@ -30,3 +30,6 @@ flutter:
         pluginClass: SignInWithApplePlugin
       macos:
         pluginClass: SignInWithApplePlugin
+
+dependencies_overrides:
+  meta: ^1.7.0
