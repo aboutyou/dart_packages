@@ -39,6 +39,11 @@ abstract class SignInWithAppleException implements Exception {
           code: AuthorizationErrorCode.notHandled,
           message: exception.message ?? 'no message provided',
         );
+      case 'authorization-error/notInteractive':
+        return SignInWithAppleAuthorizationException(
+          code: AuthorizationErrorCode.notInteractive,
+          message: exception.message ?? 'no message provided',
+        );
       case 'authorization-error/failed':
         return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.failed,
@@ -103,6 +108,9 @@ enum AuthorizationErrorCode {
 
   /// The authorization request wasn’t handled.
   notHandled,
+
+  /// The authorization request isn’t interactive.
+  notInteractive,
 
   /// The authorization attempt failed for an unknown reason.
   unknown,
