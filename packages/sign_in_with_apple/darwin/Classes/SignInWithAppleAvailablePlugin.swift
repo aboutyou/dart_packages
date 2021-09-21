@@ -32,7 +32,7 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
             // Makes sure arguments exists and is a List
             guard let args = call.arguments as? [Any] else {
                 result(
-                    SignInWithAppleError.missingArguments(call).toFlutterError()
+                    SignInWithAppleGenericError.missingArguments(call).toFlutterError()
                 )
                 return
             }
@@ -52,14 +52,14 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
             // Makes sure arguments exists and is a Map
             guard let args = call.arguments as? [String: Any] else {
                 result(
-                    SignInWithAppleError.missingArguments(call).toFlutterError()
+                    SignInWithAppleGenericError.missingArguments(call).toFlutterError()
                 )
                 return
             }
 
             guard let userIdentifier = args["userIdentifier"] as? String else {
                 result(
-                    SignInWithAppleError.missingArgument(
+                    SignInWithAppleGenericError.missingArgument(
                         call,
                         "userIdentifier"
                     ).toFlutterError()
