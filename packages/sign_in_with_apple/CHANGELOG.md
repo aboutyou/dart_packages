@@ -1,3 +1,7 @@
+### 3.1.0
+
+- Add support for XCode 13
+
 ### 3.0.0
 
 - Add `null`-safety
