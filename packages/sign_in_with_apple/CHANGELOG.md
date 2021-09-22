@@ -1,16 +1,16 @@
-### 3.1.0
+## 3.1.0
 
 - Add support for XCode 13
 
-### 3.0.0
+## 3.0.0
 
 - Add `null`-safety
 
-### 2.5.4
+## 2.5.4
 
 - Reformat code with Flutter 1.20.4
 
-### 2.5.3
+## 2.5.3
 
 - Fixes an issue with the compilation if `compileSdkVersion 29` or higher is forced upon the package's build ([#126](https://github.com/aboutyou/dart_packages/pull/126))
 
