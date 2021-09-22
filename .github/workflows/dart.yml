@@ -73,3 +73,8 @@ jobs:
         working-directory: packages/${{ matrix.package }}/example
         env:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
+      - name: Build macOS
+        run: flutter build macos
+        working-directory: packages/${{ matrix.package }}/example
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
