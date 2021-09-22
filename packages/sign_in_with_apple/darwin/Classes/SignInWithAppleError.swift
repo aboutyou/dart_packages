@@ -96,39 +96,19 @@ public enum SignInWithAppleError {
         case .authorizationError(let code, let message):
             var errorCode = "authorization-error/unknown"
             
-            if #available(iOS 15.0, *) {
-                switch code {
-                case .unknown:
-                    errorCode = "authorization-error/unknown"
-                case .canceled:
-                    errorCode = "authorization-error/canceled"
-                case .invalidResponse:
-                    errorCode = "authorization-error/invalidResponse"
-                case .notHandled:
-                    errorCode = "authorization-error/notHandled"
-                case .failed:
-                    errorCode = "authorization-error/failed"
-                 // The not interactive case is only available since iOS 15.0
-                 case .notInteractive:
-                    errorCode = "authorization-error/notInteractive"
-                @unknown default:
-                    print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");
-                }
-            } else {
-                switch code {
-                case .unknown:
-                    errorCode = "authorization-error/unknown"
-                case .canceled:
-                    errorCode = "authorization-error/canceled"
-                case .invalidResponse:
-                    errorCode = "authorization-error/invalidResponse"
-                case .notHandled:
-                    errorCode = "authorization-error/notHandled"
-                case .failed:
-                    errorCode = "authorization-error/failed"
-                @unknown default:
-                    print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");
-                }
+            switch code {
+            case .unknown:
+                errorCode = "authorization-error/unknown"
+            case .canceled:
+                errorCode = "authorization-error/canceled"
+            case .invalidResponse:
+                errorCode = "authorization-error/invalidResponse"
+            case .notHandled:
+                errorCode = "authorization-error/notHandled"
+            case .failed:
+                errorCode = "authorization-error/failed"
+            @unknown default:
+                print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");
             }
             
             return FlutterError(
