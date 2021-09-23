@@ -42,4 +42,28 @@ void main() {
       '4rtppgbhgb@privaterelay.appleid.com',
     );
   });
+
+  test(
+    'parseAuthorizationCredentialAppleIDFromDeeplink: With user but only email',
+    () async {
+      final deeplink = Uri.parse(
+        'signinwithapple://callback?code=c7253d404c180400eaa4691aa9c8c07ff.0.nrqtw.OALT9--SjOoLRti_wvrF5Q&user=%7B%22email%22%3A%224rtppgbhgb%40privaterelay.appleid.com%22%7D',
+      );
+
+      final parsed = parseAuthorizationCredentialAppleIDFromDeeplink(deeplink);
+
+      expect(
+        parsed.authorizationCode,
+        'c7253d404c180400eaa4691aa9c8c07ff.0.nrqtw.OALT9--SjOoLRti_wvrF5Q',
+      );
+
+      expect(parsed.givenName, isNull);
+      expect(parsed.familyName, isNull);
+
+      expect(
+        parsed.email,
+        '4rtppgbhgb@privaterelay.appleid.com',
+      );
+    },
+  );
 }

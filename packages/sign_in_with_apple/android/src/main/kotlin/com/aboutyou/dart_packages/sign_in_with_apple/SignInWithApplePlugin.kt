@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.annotation.NonNull
 import androidx.browser.customtabs.CustomTabsIntent
-import io.flutter.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -16,23 +15,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import com.auth0.android.jwt.DecodeException
-import com.auth0.android.jwt.JWT
+import io.flutter.Log
 
 val TAG = "SignInWithApple"
-
-/**
- * A class representing an ongoing login attempt for Sign in with Apple.
- *
- * The [result] is the [Result] from the triggered [MethodCall].
- *
- * The [triggerMainActivityToHideChromeCustomTab] is a function which brings the actual app back to the foreground when the login attempt is finished.
- */
-class OnGoingLoginAttempt(
-  val result: Result,
-  val triggerMainActivityToHideChromeCustomTab: () -> Unit,
-  val nonce: String?
-) {}
 
 /** SignInWithApplePlugin */
 public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAware, ActivityResultListener {
@@ -40,7 +25,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 
   private var channel: MethodChannel? = null
 
-  private var binding: ActivityPluginBinding? = null
+  var binding: ActivityPluginBinding? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.aboutyou.dart_packages.sign_in_with_apple")
@@ -62,7 +47,8 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
   // depending on the user's project. onAttachedToEngine or registerWith must both be defined
   // in the same class.
   companion object {
-    var onGoingLoginAttempt: OnGoingLoginAttempt? = null
+    var lastAuthorizationRequestResult: Result? = null
+    var triggerMainActivityToHideChromeCustomTab : (() -> Unit)? = null
 
     @JvmStatic
     fun registerWith(registrar: Registrar) {
@@ -75,50 +61,40 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
     when (call.method) {
       "isAvailable" -> result.success(true)
       "performAuthorizationRequest" -> {
-        val activity = binding?.activity
-        if (activity == null) {
+        val _activity = binding?.activity
+
+        if (_activity == null) {
           result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
           return
         }
 
         val url: String? = call.argument("url")
+
         if (url == null) {
           result.error("MISSING_ARG", "Missing 'url' argument", call.arguments)
           return
         }
 
-        val uri = Uri.parse(url)
-        val onGoingLoginAttempt = onGoingLoginAttempt
-
-        if (onGoingLoginAttempt != null) {
-          onGoingLoginAttempt.result.error(
-            "NEW_REQUEST",
-            "A new request came in while this was still pending. The previous request (this one) was then cancelled.",
-            null
-          )
-          onGoingLoginAttempt.triggerMainActivityToHideChromeCustomTab()
+        lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
+        if (triggerMainActivityToHideChromeCustomTab != null) {
+          triggerMainActivityToHideChromeCustomTab!!()
         }
 
-        SignInWithApplePlugin.onGoingLoginAttempt = OnGoingLoginAttempt(
-          result,
-          {
-            val notificationIntent = activity.packageManager.getLaunchIntentForPackage(activity.packageName);
-            notificationIntent.setPackage(null)
-
-            // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
-            notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
-
-            activity.startActivity(notificationIntent)
-          },
-          uri.getQueryParameter("nonce")
-        )
+        lastAuthorizationRequestResult = result
+        triggerMainActivityToHideChromeCustomTab = {
+          val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
+          notificationIntent?.setPackage(null)
+          // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
+          notificationIntent?.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+          _activity.startActivity(notificationIntent)
+        }
 
         val builder = CustomTabsIntent.Builder();
         val customTabsIntent = builder.build();
         customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         customTabsIntent.intent.data = Uri.parse(url)
 
-        activity.startActivityForResult(
+        _activity.startActivityForResult(
           customTabsIntent.intent,
           CUSTOM_TABS_REQUEST_CODE,
           customTabsIntent.startAnimationBundle
@@ -150,12 +126,13 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
     if (requestCode == CUSTOM_TABS_REQUEST_CODE) {
-      val onGoingLoginAttempt = onGoingLoginAttempt
+      val _lastAuthorizationRequestResult = lastAuthorizationRequestResult
 
-      if (onGoingLoginAttempt != null) {
-        onGoingLoginAttempt.result.error("authorization-error/canceled", "The user closed the Custom Tab", null)
+      if (_lastAuthorizationRequestResult != null) {
+        _lastAuthorizationRequestResult.error("authorization-error/canceled", "The user closed the Custom Tab", null)
 
-        SignInWithApplePlugin.onGoingLoginAttempt = null
+        lastAuthorizationRequestResult = null
+        triggerMainActivityToHideChromeCustomTab = null
       }
     }
 
@@ -168,61 +145,31 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
  *
  * DO NOT rename this or it's package name as it's configured in the consumer's `AndroidManifest.xml`
  */
-public class SignInWithAppleCallback : Activity() {
-  private fun validateNonce(uri: Uri, expectedNonce: String?): Boolean {
-    val idToken = uri.getQueryParameter("id_token")
-    if (idToken == null) {
-      Log.e(TAG, "Missing id_token query parameter in signinwithapple callback")
-      return false
-    }
-
-    try {
-      val jwt = JWT(idToken)
-
-      if (jwt.getClaim("nonce_supported").asBoolean() == true) {
-        if (jwt.getClaim("nonce").asString() != expectedNonce) {
-          Log.e(TAG, "Expected that the JWT nonce matches the initially provided one, but they differed")
-          return false
-        }
-      }
-
-      return true
-    } catch ( exception: DecodeException) {
-      Log.e(TAG, "Error while decoding JWT id_token from uri")
-      return false
-    }
-  }
+public class SignInWithAppleCallback: Activity {
+  constructor() : super()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    val onGoingLoginAttempt = SignInWithApplePlugin.onGoingLoginAttempt
-    if (onGoingLoginAttempt == null) {
-      Log.e(TAG, "Received Sign in with Apple callback, but 'onGoingRequest' doesn't exist")
-      finish()
-      return
-    }
-
-    val uri = intent?.data
-    if (uri == null) {
-      Log.e(TAG, "Received Sign in with Apple callback, but no uri was provided on the intent")
-      finish()
-      return
-    }
-
-    if (!validateNonce(uri, onGoingLoginAttempt.nonce)) {
-      // Just log the occurrence, but don't affect any ongoing logins (so the app can't be spammed)
-      Log.e(TAG, "Received Sign in with Apple callback, but the nonce parameter validation failed")
-      finish()
-      return
-    }
-
     // Note: The order is important here, as we first need to send the data to Flutter and then close the custom tab
     // That way we can detect a manually closed tab in `SignInWithApplePlugin.onActivityResult` (by detecting that we're still waiting on data)
-    onGoingLoginAttempt.result.success(uri.toString())
-    onGoingLoginAttempt.triggerMainActivityToHideChromeCustomTab()
+    val lastAuthorizationRequestResult = SignInWithApplePlugin.lastAuthorizationRequestResult
+    if (lastAuthorizationRequestResult != null) {
+      lastAuthorizationRequestResult.success(intent?.data?.toString())
+      SignInWithApplePlugin.lastAuthorizationRequestResult = null
+    } else {
+      SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
 
-    SignInWithApplePlugin.onGoingLoginAttempt = null
+      Log.e(TAG, "Received Sign in with Apple callback, but 'lastAuthorizationRequestResult' function was `null`")
+    }
+
+    val triggerMainActivityToHideChromeCustomTab = SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab
+    if (triggerMainActivityToHideChromeCustomTab != null) {
+      triggerMainActivityToHideChromeCustomTab()
+      SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
+    } else {
+      Log.e(TAG, "Received Sign in with Apple callback, but 'triggerMainActivityToHideChromeCustomTab' function was `null`")
+    }
 
     finish()
   }

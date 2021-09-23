@@ -239,11 +239,10 @@ Future<void> main() async {
 
 class TestSetup extends StatelessWidget {
   const TestSetup({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.backgroundColor = Colors.white,
-  })  : assert(child != null),
-        super(key: key);
+  }) : super(key: key);
 
   final Widget child;
 

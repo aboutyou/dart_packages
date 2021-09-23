@@ -42,7 +42,7 @@ SignInWithAppleButton(
 
 Integrating Sign in with Apple goes beyond just adding this plugin to your `pubspec.yaml` and using the credential-receiving functions exposed by it.
 
-Once you receive the credentials, they need to the verified with Apple's servers (to ensure that they are valid and really concern the mentioned user) and then a new session should be derived from them in your system.
+Once you receive the credentials, they need to be verified with Apple's servers (to ensure that they are valid and really concern the mentioned user) and then a new session should be derived from them in your system.
 
 Your server should then daily verify the session with Apple (via a refresh token it obtained on the initial validation), and revoke the session in your system if the authorization has been withdrawn on Apple's side.
 
@@ -145,7 +145,7 @@ In case you are not yet using Android V2 Embedding, please first upgrade your ap
 
 #### Your App
 
-In your `AndroidManifest.xml` inside `<application>` add
+In your `android/app/src/main/AndroidManifest.xml` inside `<application>` add
 
 ```xml
 <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->

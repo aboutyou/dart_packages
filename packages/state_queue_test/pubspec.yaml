@@ -1,7 +1,7 @@
-name: state_queue
-description: A BLoC implementation for sequentially executed async state updates.
-version: 3.0.0
-homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/state_queue
+name: state_queue_test
+description: Testing utilities for `StateQueue`
+version: 2.0.0
+homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/state_queue_teste
 repository: https://github.com/aboutyou/dart_packages
 
 environment:
@@ -16,10 +16,12 @@ dependencies:
 
   pending_operations: ^2.0.0
 
+  state_queue: ^3.0.0
+
+  test: ^1.16.5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   pedantic: ^1.11.0
-
-  test: any
