@@ -72,6 +72,10 @@ If you have change your app's capabilities, you need to fetch the updated provis
 
 #### Create a Service ID
 
+The Service ID is only needed for a Web or Android integration. If you only intend to integrate iOS you can skip this step.
+
+Go to your apple developer page then ["Identifiers"](https://developer.apple.com/account/resources/identifiers/list) and follow these steps:
+
 Next go to https://developer.apple.com/account/resources/identifiers/list/serviceId and follow these steps:
 
 - Click "Register an Services ID"
