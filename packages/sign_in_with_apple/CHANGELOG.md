@@ -1,3 +1,7 @@
+## 3.2.0
+
+- Fix building macOS application with XCode 13 and macOS Big Sur
+
 ## 3.1.0
 
 - Add support for XCode 13
