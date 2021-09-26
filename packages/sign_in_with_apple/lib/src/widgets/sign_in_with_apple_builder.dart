@@ -3,11 +3,11 @@ import 'package:flutter/widgets.dart';
 
 import '../../sign_in_with_apple.dart';
 
-Widget _fallbackBuilder(BuildContext context) => SizedBox.shrink();
+Widget _fallbackBuilder(BuildContext context) => const SizedBox.shrink();
 
 /// A widget for conditionally rendering UI based on whether or not Sign in with Apple is available
 class SignInWithAppleBuilder extends StatefulWidget {
-  SignInWithAppleBuilder({
+  const SignInWithAppleBuilder({
     Key? key,
     required this.builder,
     this.fallbackBuilder = _fallbackBuilder,

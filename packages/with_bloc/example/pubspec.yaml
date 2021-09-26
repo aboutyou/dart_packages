@@ -1,9 +1,6 @@
 name: with_bloc_example
 description: An example
 version: 1.0.0
-authors:
-  - Timm Preetz <timm.preetz@aboutyou.com>
-  - Henri Beck <henri.beck@aboutyou.com>
 homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/with_bloc
 repository: https://github.com/aboutyou/dart_packages
 

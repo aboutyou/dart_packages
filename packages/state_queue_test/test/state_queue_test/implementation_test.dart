@@ -49,7 +49,7 @@ void main() {
       throwsA(
         // ignore: avoid_annotating_with_dynamic
         (dynamic e) =>
-            e is TestFailure && e.message.contains('shorter than expected'),
+            e is TestFailure && e.message!.contains('shorter than expected'),
       ),
     );
   });
@@ -60,7 +60,10 @@ void main() {
         await runBlocTest<_TestBloc, int>(
           build: () => _TestBloc(),
           act: (b) {
-            b..incr()..incr()..incr();
+            b
+              ..incr()
+              ..incr()
+              ..incr();
           },
           expect: <int>[0, 1],
         );
@@ -68,7 +71,7 @@ void main() {
       throwsA(
         // ignore: avoid_annotating_with_dynamic
         (dynamic e) =>
-            e is TestFailure && e.message.contains('longer than expected'),
+            e is TestFailure && e.message!.contains('longer than expected'),
       ),
     );
   });
@@ -88,7 +91,7 @@ void main() {
         // ignore: avoid_annotating_with_dynamic
         (dynamic e) =>
             e is TestFailure &&
-            e.message.contains('at location [1] is <1> instead of <7>'),
+            e.message!.contains('at location [1] is <1> instead of <7>'),
       ),
     );
   });

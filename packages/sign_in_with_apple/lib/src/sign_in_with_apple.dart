@@ -35,7 +35,7 @@ class SignInWithApple {
       if (!Platform.isIOS &&
           !Platform.isMacOS &&
           Platform.environment['FLUTTER_TEST'] != 'true') {
-        throw SignInWithAppleNotSupportedException(
+        throw const SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );
       }
@@ -43,7 +43,7 @@ class SignInWithApple {
       final response = await channel.invokeMethod<Map<dynamic, dynamic>>(
         'performAuthorizationRequest',
         [
-          PasswordAuthorizationRequest(),
+          const PasswordAuthorizationRequest(),
         ].map((request) => request.toJson()).toList(),
       );
 
@@ -118,7 +118,7 @@ class SignInWithApple {
       if (!Platform.isIOS &&
           !Platform.isMacOS &&
           Platform.environment['FLUTTER_TEST'] != 'true') {
-        throw SignInWithAppleNotSupportedException(
+        throw const SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );
       }
@@ -162,7 +162,7 @@ class SignInWithApple {
     if (!Platform.isIOS &&
         !Platform.isMacOS &&
         Platform.environment['FLUTTER_TEST'] != 'true') {
-      throw SignInWithAppleNotSupportedException(
+      throw const SignInWithAppleNotSupportedException(
         message: 'The current platform is not supported',
       );
     }
@@ -237,7 +237,7 @@ class SignInWithApple {
       );
 
       if (result == null) {
-        throw SignInWithAppleAuthorizationException(
+        throw const SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.invalidResponse,
           message: 'Did receive `null` URL from performAuthorizationRequest',
         );

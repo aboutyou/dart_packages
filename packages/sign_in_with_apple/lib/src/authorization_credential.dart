@@ -17,7 +17,7 @@ import './authorization_request.dart';
 @immutable
 class AuthorizationCredentialAppleID {
   /// Creates an instance which contains the result of a successful Sign in with Apple flow.
-  AuthorizationCredentialAppleID({
+  const AuthorizationCredentialAppleID({
     @required this.userIdentifier,
     @required this.givenName,
     @required this.familyName,
@@ -107,7 +107,7 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
     final authorizationCode = response['authorizationCode'] as String?;
 
     if (authorizationCode == null) {
-      throw SignInWithAppleAuthorizationException(
+      throw const SignInWithAppleAuthorizationException(
         code: AuthorizationErrorCode.invalidResponse,
         message:
             'parseAuthorizationCredentialAppleID: `authorizationCode` field was `null`',
@@ -152,7 +152,7 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
     ///
     /// https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms
     if (deeplink.queryParameters['error'] == 'user_cancelled_authorize') {
-      throw SignInWithAppleAuthorizationException(
+      throw const SignInWithAppleAuthorizationException(
         code: AuthorizationErrorCode.canceled,
         message: 'User canceled authorization',
       );
@@ -167,7 +167,7 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
 
   final authorizationCode = deeplink.queryParameters['code'];
   if (authorizationCode == null) {
-    throw SignInWithAppleAuthorizationException(
+    throw const SignInWithAppleAuthorizationException(
       code: AuthorizationErrorCode.invalidResponse,
       message:
           'parseAuthorizationCredentialAppleIDFromDeeplink: No `code` query parameter set)',

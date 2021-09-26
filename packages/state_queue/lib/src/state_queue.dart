@@ -100,6 +100,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
 
   PendingOperationsReader get pendingOperations => _pendingOperations;
 
+  @override
   set value(T value) {
     throw Exception('"value" must not be set directly. Use `run`.');
   }
@@ -195,6 +196,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     _taskQueue.sink.add(entry);
   }
 
+  @override
   @mustCallSuper
   void dispose() {
     _taskQueue.close();
