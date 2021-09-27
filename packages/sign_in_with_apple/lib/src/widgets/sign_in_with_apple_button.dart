@@ -116,7 +116,7 @@ class SignInWithAppleButton extends StatelessWidget {
         bottom: (4 / 44) * height,
       ),
       child: Center(
-        child: Container(
+        child: SizedBox(
           width: fontSize * (25 / 31),
           height: fontSize,
           child: CustomPaint(
@@ -152,7 +152,7 @@ class SignInWithAppleButton extends StatelessWidget {
         break;
     }
 
-    return Container(
+    return SizedBox(
       height: height,
       child: SizedBox.expand(
         child: CupertinoButton(
@@ -161,7 +161,7 @@ class SignInWithAppleButton extends StatelessWidget {
           color: _backgroundColor,
           child: Container(
             decoration: _decoration,
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
               horizontal: 16.0,
             ),
             height: height,

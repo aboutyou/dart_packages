@@ -45,12 +45,15 @@ class PendingOperations implements PendingOperationsReader {
         );
   }
 
+  @override
   Future<void> awaitEndOfKnownCalls() {
     return Future.wait([..._knownCallsHandled]);
   }
 
+  @override
   int get pendingCalls => _pendingCalls;
 
+  @override
   String ongoingOperationsDescription() {
     return _ongoingOperations.join('\n');
   }

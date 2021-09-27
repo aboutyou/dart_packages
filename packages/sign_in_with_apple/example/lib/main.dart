@@ -6,10 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -23,7 +25,7 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Example app: Sign in with Apple'),
         ),
         body: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Center(
             child: SignInWithAppleButton(
               onPressed: () async {
@@ -45,6 +47,7 @@ class _MyAppState extends State<MyApp> {
                   state: 'example-state',
                 );
 
+                // ignore: avoid_print
                 print(credential);
 
                 // This is the endpoint that will convert an authorization code obtained
@@ -71,6 +74,7 @@ class _MyAppState extends State<MyApp> {
 
                 // If we got this far, a session based on the Apple ID credential has been created in your system,
                 // and you can now set this as the app's session
+                // ignore: avoid_print
                 print(session);
               },
             ),

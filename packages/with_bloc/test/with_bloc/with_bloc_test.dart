@@ -17,7 +17,7 @@ Future<void> main() async {
           WithBloc<AsyncIncrementBloc, AsyncIncrementState>(
             key: withBloc,
             createBloc: (context) => AsyncIncrementBloc(),
-            inputs: <dynamic>[1],
+            inputs: const <dynamic>[1],
             builder: (context, bloc, state, child) {
               return Container();
             },
@@ -39,7 +39,7 @@ Future<void> main() async {
           WithBloc<AsyncIncrementBloc, AsyncIncrementState>(
             key: withBloc,
             createBloc: (context) => AsyncIncrementBloc(),
-            inputs: <dynamic>[1],
+            inputs: const <dynamic>[1],
             builder: (context, bloc, state, child) {
               return Container();
             },
@@ -61,7 +61,7 @@ Future<void> main() async {
           WithBloc<AsyncIncrementBloc, AsyncIncrementState>(
             key: withBloc,
             createBloc: (context) => AsyncIncrementBloc(),
-            inputs: <dynamic>[999],
+            inputs: const <dynamic>[999],
             builder: (context, bloc, state, child) {
               return Container();
             },
@@ -104,7 +104,7 @@ Future<void> main() async {
         await tester.pumpWidget(
           WithBloc<DisposableBloc, int>(
             createBloc: createBloc,
-            inputs: <dynamic>[1],
+            inputs: const <dynamic>[1],
             builder: (context, bloc, state, child) {
               return Container();
             },
@@ -119,7 +119,7 @@ Future<void> main() async {
         await tester.pumpWidget(
           WithBloc<DisposableBloc, int>(
             createBloc: createBloc,
-            inputs: <dynamic>[999],
+            inputs: const <dynamic>[999],
             builder: (context, bloc, state, child) {
               return Container();
             },

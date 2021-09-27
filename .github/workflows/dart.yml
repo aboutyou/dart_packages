@@ -29,9 +29,9 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: "12.x"
-      - uses: subosito/flutter-action@26bf50084a0c218b5b715a3641c36eac84fd2136 # v1.4.0
+      - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
-          flutter-version: "2.0.1"
+          flutter-version: "2.5.1"
       - name: Install dependencies
         run: flutter packages get
         working-directory: packages/${{ matrix.package }}
