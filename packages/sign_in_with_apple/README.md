@@ -24,6 +24,8 @@ SignInWithAppleButton(
       ],
     );
 
+    print(credential.authorizationCode);
+    print(credential.identityToken);
     print(credential);
 
     // Now send the credential (especially `credential.authorizationCode`) to your server to create a session
