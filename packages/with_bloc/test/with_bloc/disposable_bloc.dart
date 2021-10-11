@@ -2,7 +2,7 @@ import 'package:state_queue/state_queue.dart';
 
 class DisposableBloc extends StateQueue<int> {
   DisposableBloc({
-    this.onDispose,
+    required this.onDispose,
   }) : super(0);
 
   final void Function() onDispose;

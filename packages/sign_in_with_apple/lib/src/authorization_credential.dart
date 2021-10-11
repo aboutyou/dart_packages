@@ -17,31 +17,21 @@ import './authorization_request.dart';
 @immutable
 class AuthorizationCredentialAppleID {
   /// Creates an instance which contains the result of a successful Sign in with Apple flow.
-  AuthorizationCredentialAppleID({
+  const AuthorizationCredentialAppleID({
     @required this.userIdentifier,
     @required this.givenName,
     @required this.familyName,
+    required this.authorizationCode,
     @required this.email,
-    @required this.authorizationCode,
     @required this.identityToken,
     @required this.state,
-  }) {
-    if (authorizationCode == null) {
-      throw SignInWithAppleAuthorizationException(
-        code: AuthorizationErrorCode.invalidResponse,
-        message:
-            'AuthorizationCredentialAppleID: `authorizationCode` argument was null',
-      );
-    }
-  }
+  });
 
   /// An identifier associated with the authenticated user.
   ///
   /// This will always be provided on iOS and macOS systems. On Android, however, this will not be present.
   /// This will stay the same between sign ins, until the user deauthorizes your App.
-  ///
-  /// Can be `null`
-  final String userIdentifier;
+  final String? userIdentifier;
 
   /// The users given name, in case it was requested.
   /// You will need to provide the [AppleIDAuthorizationScopes.fullName] scope to the [AppleIDAuthorizationRequest] for requesting this information.
@@ -50,9 +40,7 @@ class AuthorizationCredentialAppleID {
   /// Upon further authorizations, you will only get the [userIdentifier],
   /// meaning you will need to store this data securely on your servers.
   /// For more information see: https://forums.developer.apple.com/thread/121496
-  ///
-  /// Can be `null`
-  final String givenName;
+  final String? givenName;
 
   /// The users family name, in case it was requested.
   /// You will need to provide the [AppleIDAuthorizationScopes.fullName] scope to the [AppleIDAuthorizationRequest] for requesting this information.
@@ -61,9 +49,7 @@ class AuthorizationCredentialAppleID {
   /// Upon further authorizations, you will only get the [userIdentifier],
   /// meaning you will need to store this data securely on your servers.
   /// For more information see: https://forums.developer.apple.com/thread/121496
-  ///
-  /// Can be `null`
-  final String familyName;
+  final String? familyName;
 
   /// The users email in case it was requested.
   /// You will need to provide the [AppleIDAuthorizationScopes.email] scope to the [AppleIDAuthorizationRequest] for requesting this information.
@@ -72,9 +58,7 @@ class AuthorizationCredentialAppleID {
   /// Upon further authorizations, you will only get the [userIdentifier],
   /// meaning you will need to store this data securely on your servers.
   /// For more information see: https://forums.developer.apple.com/thread/121496
-  ///
-  /// Can be `null`
-  final String email;
+  final String? email;
 
   /// The verification code for the current authorization.
   ///
@@ -82,20 +66,16 @@ class AuthorizationCredentialAppleID {
   final String authorizationCode;
 
   /// A JSON Web Token (JWT) that securely communicates information about the user to your app.
-  ///
-  /// Can be `null`.
-  final String identityToken;
+  final String? identityToken;
 
   /// The `state` parameter that was passed to the request.
   ///
   /// This data is not modified by Apple.
-  ///
-  /// Can be `null`
-  final String state;
+  final String? state;
 
   @override
   String toString() {
-    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, authorizationCode set? ${authorizationCode != null}, $state)';
+    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, $state)';
   }
 }
 
@@ -103,10 +83,9 @@ class AuthorizationCredentialAppleID {
 class AuthorizationCredentialPassword {
   /// Creates a new username/password combination, which is the result of a successful Keychain query.
   const AuthorizationCredentialPassword({
-    @required this.username,
-    @required this.password,
-  })  : assert(username != null),
-        assert(password != null);
+    required this.username,
+    required this.password,
+  });
 
   /// The username for the credential
   final String username;
@@ -125,14 +104,24 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
   Map<dynamic, dynamic> response,
 ) {
   if (response['type'] == 'appleid') {
+    final authorizationCode = response['authorizationCode'] as String?;
+
+    if (authorizationCode == null) {
+      throw const SignInWithAppleAuthorizationException(
+        code: AuthorizationErrorCode.invalidResponse,
+        message:
+            'parseAuthorizationCredentialAppleID: `authorizationCode` field was `null`',
+      );
+    }
+
     return AuthorizationCredentialAppleID(
-      userIdentifier: response['userIdentifier'] as String,
-      givenName: response['givenName'] as String,
-      familyName: response['familyName'] as String,
-      email: response['email'] as String,
-      authorizationCode: response['authorizationCode'] as String,
-      identityToken: response['identityToken'] as String,
-      state: response['state'] as String,
+      userIdentifier: response['userIdentifier'] as String?,
+      givenName: response['givenName'] as String?,
+      familyName: response['familyName'] as String?,
+      email: response['email'] as String?,
+      authorizationCode: authorizationCode,
+      identityToken: response['identityToken'] as String?,
+      state: response['state'] as String?,
     );
   } else {
     throw Exception('Unsupported result type ${response['type']}');
@@ -163,7 +152,7 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
     ///
     /// https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms
     if (deeplink.queryParameters['error'] == 'user_cancelled_authorize') {
-      throw SignInWithAppleAuthorizationException(
+      throw const SignInWithAppleAuthorizationException(
         code: AuthorizationErrorCode.canceled,
         message: 'User canceled authorization',
       );
@@ -171,15 +160,25 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
   }
 
   final user = deeplink.queryParameters.containsKey('user')
-      ? json.decode(deeplink.queryParameters['user']) as Map<String, dynamic>
+      ? json.decode(deeplink.queryParameters['user'] as String)
+          as Map<String, dynamic>
       : null;
-  final name = user != null ? user['name'] as Map<String, dynamic> : null;
+  final name = user != null ? user['name'] as Map<String, dynamic>? : null;
+
+  final authorizationCode = deeplink.queryParameters['code'];
+  if (authorizationCode == null) {
+    throw const SignInWithAppleAuthorizationException(
+      code: AuthorizationErrorCode.invalidResponse,
+      message:
+          'parseAuthorizationCredentialAppleIDFromDeeplink: No `code` query parameter set)',
+    );
+  }
 
   return AuthorizationCredentialAppleID(
-    authorizationCode: deeplink.queryParameters['code'],
-    email: user != null ? user['email'] as String : null,
-    givenName: name != null ? name['firstName'] as String : null,
-    familyName: name != null ? name['lastName'] as String : null,
+    authorizationCode: authorizationCode,
+    email: user?['email'] as String?,
+    givenName: name?['firstName'] as String?,
+    familyName: name?['lastName'] as String?,
     userIdentifier: null,
     identityToken: deeplink.queryParameters['id_token'],
     state: deeplink.queryParameters['state'],

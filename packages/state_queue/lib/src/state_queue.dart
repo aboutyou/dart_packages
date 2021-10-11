@@ -12,7 +12,7 @@ abstract class _QueueEntry<T> {}
 class _UpdaterEntry<T> implements _QueueEntry<T> {
   _UpdaterEntry(
     this.updater, {
-    this.onDone,
+    required this.onDone,
   });
 
   final StateUpdater<T> updater;
@@ -81,16 +81,14 @@ abstract class StateQueue<T> extends ValueNotifier<T>
         } catch (error, stack) {
           Zone.current.handleUncaughtError(error, stack);
         } finally {
-          if (event.onDone != null) {
-            event.onDone();
-          }
+          event.onDone();
         }
       } else if (event is _CompletionNotifierEntry<T>) {
         event.completer.complete();
       }
     }).forEach((nextState) {
       // don't push any more states after instance is disposed
-      if (!_taskQueue.isClosed && super.value != nextState) {
+      if (!isDisposed && super.value != nextState) {
         _setValue(nextState);
       }
     });
@@ -102,6 +100,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
 
   PendingOperationsReader get pendingOperations => _pendingOperations;
 
+  @override
   set value(T value) {
     throw Exception('"value" must not be set directly. Use `run`.');
   }
@@ -188,8 +187,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
   /// of the bloc can not be awaited properly.
   @protected
   void run(StateUpdater<T> updater) {
-    assert(!_taskQueue.isClosed);
-
+    assert(!isDisposed);
     final entry = _UpdaterEntry(
       updater,
       onDone: _pendingOperations.registerPendingOperation('UpdaterEntry'),
@@ -198,6 +196,7 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     _taskQueue.sink.add(entry);
   }
 
+  @override
   @mustCallSuper
   void dispose() {
     _taskQueue.close();
@@ -205,9 +204,14 @@ abstract class StateQueue<T> extends ValueNotifier<T>
     super.dispose();
   }
 
+  @protected
+  bool get isDisposed => _taskQueue.isClosed;
+
   /// Returns a `Future` which completes once all currently queued tasks have completed
   @visibleForTesting
   Future<void> runQueuedTasksToCompletion() async {
+    assert(!isDisposed);
+
     final completer = Completer<void>();
 
     _taskQueue.sink.add(_CompletionNotifierEntry<T>(completer));

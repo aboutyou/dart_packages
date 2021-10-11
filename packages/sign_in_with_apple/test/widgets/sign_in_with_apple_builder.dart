@@ -26,7 +26,7 @@ void main() {
       await tester.runAsync(() async {
         await tester.pumpWidget(
           SignInWithAppleBuilder(
-            builder: (context) => Container(
+            builder: (context) => const SizedBox(
               height: 20,
               width: 20,
             ),
@@ -64,9 +64,9 @@ void main() {
         await tester.pumpWidget(
           SignInWithAppleBuilder(
             builder: (context) => Builder(
-              builder: (context) => SizedBox.shrink(),
+              builder: (context) => const SizedBox.shrink(),
             ),
-            fallbackBuilder: (context) => Container(
+            fallbackBuilder: (context) => const SizedBox(
               height: 20,
               width: 20,
             ),

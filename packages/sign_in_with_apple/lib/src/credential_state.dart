@@ -25,7 +25,7 @@ enum CredentialState {
 /// The values are aligned with the native implementations.
 ///
 /// Throws a [PlatformException] in case of unsupported [credentialState] arguments.
-CredentialState parseCredentialState(String credentialState) {
+CredentialState parseCredentialState(String? credentialState) {
   switch (credentialState) {
     case 'authorized':
       return CredentialState.authorized;

@@ -20,7 +20,6 @@ public enum SignInWithAppleGenericError {
     // An error in case a concrete argument inside the arguments of a FlutterMethodCall is missing
     // The second argument should be the identifier of the missing argument
     case missingArgument(FlutterMethodCall, String)
-
     func toFlutterError() -> FlutterError {
         switch self {
         case .notSupported:
@@ -31,7 +30,6 @@ public enum SignInWithAppleGenericError {
             #elseif os(iOS)
                 platform = "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
             #endif
-
             return FlutterError(
                 code: "not-supported",
                 message: "Unsupported platform version: \(platform)",
@@ -52,7 +50,6 @@ public enum SignInWithAppleGenericError {
         }
     }
 }
-
 
 @available(iOS 13.0, macOS 10.15, *)
 public enum SignInWithAppleError {
@@ -107,6 +104,11 @@ public enum SignInWithAppleError {
                 errorCode = "authorization-error/notHandled"
             case .failed:
                 errorCode = "authorization-error/failed"
+#if os(iOS) && swift(>=5.5)
+            // new case since Xcode 13, but only on iOS SDK at the moment
+            case .notInteractive:
+                errorCode = "authorization-error/notInteractive"
+#endif
             @unknown default:
                 print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");
             }

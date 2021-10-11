@@ -27,7 +27,7 @@ Future<void> main() async {
         as TestWidgetsFlutterBinding;
 
     binding.window.devicePixelRatioTestValue = 3;
-    binding.window.physicalSizeTestValue = Size(300, 100) * 3;
+    binding.window.physicalSizeTestValue = const Size(300, 100) * 3;
   });
 
   group('Button Style', () {
@@ -142,7 +142,7 @@ Future<void> main() async {
         TestSetup(
           child: SignInWithAppleButton(
             onPressed: () {},
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(22.0),
             ),
           ),
@@ -239,11 +239,10 @@ Future<void> main() async {
 
 class TestSetup extends StatelessWidget {
   const TestSetup({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.backgroundColor = Colors.white,
-  })  : assert(child != null),
-        super(key: key);
+  }) : super(key: key);
 
   final Widget child;
 
@@ -253,7 +252,7 @@ class TestSetup extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoApp(
       builder: (context, _) => Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         color: backgroundColor,
         child: Column(
           children: <Widget>[
@@ -262,9 +261,9 @@ class TestSetup extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
         ),
       ),
-      theme: CupertinoThemeData().copyWith(
-        textTheme: CupertinoTextThemeData().copyWith(
-          textStyle: TextStyle(fontFamily: 'SF'),
+      theme: const CupertinoThemeData().copyWith(
+        textTheme: const CupertinoTextThemeData().copyWith(
+          textStyle: const TextStyle(fontFamily: 'SF'),
         ),
       ),
       debugShowCheckedModeBanner: false,

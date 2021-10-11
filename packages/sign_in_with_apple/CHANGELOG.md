@@ -1,3 +1,23 @@
+## 3.2.0
+
+- Fix building macOS application with XCode 13 and macOS Big Sur
+
+## 3.1.0
+
+- Add support for XCode 13
+
+## 3.0.0
+
+- Add `null`-safety
+
+## 2.5.4
+
+- Reformat code with Flutter 1.20.4
+
+## 2.5.3
+
+- Fixes an issue with the compilation if `compileSdkVersion 29` or higher is forced upon the package's build ([#126](https://github.com/aboutyou/dart_packages/pull/126))
+
 ## 2.5.2
 
 - Fix a bug where the authentication would crash on Android if only the `AppleIDAuthorizationScopes.email` was requested ([#117](https://github.com/aboutyou/dart_packages/pull/117))
@@ -9,7 +29,7 @@
 ## 2.5.0
 
 - Properly handle the cancellation of the user from the web flow
-  - Thanks to [@eduribas](https://github.com/eduribas) for contributing this fix 
+  - Thanks to [@eduribas](https://github.com/eduribas) for contributing this fix
 
 ## 2.4.0
 

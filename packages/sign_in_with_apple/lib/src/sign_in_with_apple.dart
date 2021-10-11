@@ -35,19 +35,23 @@ class SignInWithApple {
       if (!Platform.isIOS &&
           !Platform.isMacOS &&
           Platform.environment['FLUTTER_TEST'] != 'true') {
-        throw SignInWithAppleNotSupportedException(
+        throw const SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );
       }
 
-      return parseAuthorizationCredentialPassword(
-        await channel.invokeMethod<Map<dynamic, dynamic>>(
-          'performAuthorizationRequest',
-          [
-            PasswordAuthorizationRequest(),
-          ].map((request) => request.toJson()).toList(),
-        ),
+      final response = await channel.invokeMethod<Map<dynamic, dynamic>>(
+        'performAuthorizationRequest',
+        [
+          const PasswordAuthorizationRequest(),
+        ].map((request) => request.toJson()).toList(),
       );
+
+      if (response == null) {
+        throw Exception('getKeychainCredential: Received `null` response');
+      }
+
+      return parseAuthorizationCredentialPassword(response);
     } on PlatformException catch (exception) {
       throw SignInWithAppleException.fromPlatformException(exception);
     }
@@ -76,27 +80,25 @@ class SignInWithApple {
   ///
   /// Throws an [SignInWithAppleNotSupportedException] in case Sign in with Apple is not available (e.g. iOS < 13, macOS < 10.15)
   static Future<AuthorizationCredentialAppleID> getAppleIDCredential({
-    @required List<AppleIDAuthorizationScopes> scopes,
+    required List<AppleIDAuthorizationScopes> scopes,
 
     /// Optional parameters for web-based authentication flows on non-Apple platforms
     ///
     /// This parameter is required on Android.
-    WebAuthenticationOptions webAuthenticationOptions,
+    WebAuthenticationOptions? webAuthenticationOptions,
 
     /// Optional string which, if set, will be be embedded in the resulting `identityToken` field on the [AuthorizationCredentialAppleID].
     ///
     /// This can be used to mitigate replay attacks by using a unique argument per sign-in attempt.
     ///
     /// Can be `null`, in which case no nonce will be passed to the request.
-    String nonce,
+    String? nonce,
 
     /// Data that’s returned to you unmodified in the corresponding [AuthorizationCredentialAppleID.state] after a successful authentication.
     ///
     /// Can be `null`, in which case no state will be passed to the request.
-    String state,
+    String? state,
   }) async {
-    assert(scopes != null);
-
     if (Platform.isAndroid) {
       if (webAuthenticationOptions == null) {
         throw Exception(
@@ -116,22 +118,28 @@ class SignInWithApple {
       if (!Platform.isIOS &&
           !Platform.isMacOS &&
           Platform.environment['FLUTTER_TEST'] != 'true') {
-        throw SignInWithAppleNotSupportedException(
+        throw const SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );
       }
 
+      final response = await channel.invokeMethod<Map<dynamic, dynamic>>(
+        'performAuthorizationRequest',
+        [
+          AppleIDAuthorizationRequest(
+            scopes: scopes,
+            nonce: nonce,
+            state: state,
+          ).toJson(),
+        ],
+      );
+
+      if (response == null) {
+        throw Exception('getKeychainCredential: Received `null` response');
+      }
+
       return parseAuthorizationCredentialAppleID(
-        await channel.invokeMethod<Map<dynamic, dynamic>>(
-          'performAuthorizationRequest',
-          [
-            AppleIDAuthorizationRequest(
-              scopes: scopes,
-              nonce: nonce,
-              state: state,
-            ).toJson(),
-          ],
-        ),
+        response,
       );
     } on PlatformException catch (exception) {
       throw SignInWithAppleException.fromPlatformException(exception);
@@ -151,12 +159,10 @@ class SignInWithApple {
   static Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
-    assert(userIdentifier != null);
-
     if (!Platform.isIOS &&
         !Platform.isMacOS &&
         Platform.environment['FLUTTER_TEST'] != 'true') {
-      throw SignInWithAppleNotSupportedException(
+      throw const SignInWithAppleNotSupportedException(
         message: 'The current platform is not supported',
       );
     }
@@ -183,15 +189,15 @@ class SignInWithApple {
   /// - Android
   ///
   /// In case Sign in with Apple is not available, the returned Future completes with `false`.
-  static Future<bool> isAvailable() {
-    return channel.invokeMethod<bool>('isAvailable');
+  static Future<bool> isAvailable() async {
+    return (await channel.invokeMethod<bool>('isAvailable')) ?? false;
   }
 
   static Future<AuthorizationCredentialAppleID> _signInWithAppleAndroid({
-    @required List<AppleIDAuthorizationScopes> scopes,
-    @required WebAuthenticationOptions webAuthenticationOptions,
-    @required String nonce,
-    @required String state,
+    required List<AppleIDAuthorizationScopes> scopes,
+    required WebAuthenticationOptions webAuthenticationOptions,
+    required String? nonce,
+    required String? state,
   }) async {
     assert(Platform.isAndroid);
 
@@ -203,28 +209,22 @@ class SignInWithApple {
       queryParameters: <String, String>{
         'client_id': webAuthenticationOptions.clientId,
         'redirect_uri': webAuthenticationOptions.redirectUri.toString(),
-        'scope': scopes
-            .map((scope) {
-              switch (scope) {
-                case AppleIDAuthorizationScopes.email:
-                  return 'email';
-                case AppleIDAuthorizationScopes.fullName:
-                  return 'name';
-              }
-              return null;
-            })
-            .where((scope) => scope != null)
-            .join(' '),
+        'scope': scopes.map((scope) {
+          switch (scope) {
+            case AppleIDAuthorizationScopes.email:
+              return 'email';
+            case AppleIDAuthorizationScopes.fullName:
+              return 'name';
+          }
+        }).join(' '),
         // Request `code`, which is also what `ASAuthorizationAppleIDCredential.authorizationCode` contains.
         // So the same handling can be used for Apple and 3rd party platforms
         'response_type': 'code id_token',
         'response_mode': 'form_post',
 
-        if (nonce != null)
-          'nonce': nonce,
+        if (nonce != null) 'nonce': nonce,
 
-        if (state != null)
-          'state': state,
+        if (state != null) 'state': state,
       },
     ).toString();
 
@@ -235,6 +235,13 @@ class SignInWithApple {
           'url': uri,
         },
       );
+
+      if (result == null) {
+        throw const SignInWithAppleAuthorizationException(
+          code: AuthorizationErrorCode.invalidResponse,
+          message: 'Did receive `null` URL from performAuthorizationRequest',
+        );
+      }
 
       return parseAuthorizationCredentialAppleIDFromDeeplink(Uri.parse(result));
     } on PlatformException catch (exception) {

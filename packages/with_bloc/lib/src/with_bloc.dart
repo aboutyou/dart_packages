@@ -8,16 +8,13 @@ import 'package:with_bloc/src/are_lists_equal.dart';
 class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     extends StatefulWidget {
   const WithBloc({
-    Key key,
-    @required this.createBloc,
-    @required this.builder,
+    Key? key,
+    required this.createBloc,
+    required this.builder,
     this.inputs = const <dynamic>[],
     this.child,
     this.onInputsChange,
-  })  : assert(createBloc != null),
-        assert(builder != null),
-        assert(inputs != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// A function which creates the [BlocType] instance
   ///
@@ -43,7 +40,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     BuildContext context,
     BlocType bloc,
     StateType value,
-    Widget child,
+    Widget? child,
   ) builder;
 
   /// A [BlocType]-independent widget which is passed back to the [builder].
@@ -53,7 +50,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
   /// You will then get this [child] back in the [builder] method as the fourth argument.
   /// Doing this will optimize the building of widgets, because whenever the [BlocType] changes,
   /// it will not be recreated.
-  final Widget child;
+  final Widget? child;
 
   /// The parameters the BLoC depends upon.
   ///
@@ -64,8 +61,6 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 
   /// This callback will be called when ever the [inputs] change.
   /// This will receive the current [BlocType], the previous [inputs] and the new [inputs].
-  ///
-  /// Can be `null`.
   ///
   /// Use this callback to update the BLoC (e.g. call some method) instead of the default behavior of creating a new BLoC instance.
   ///
@@ -96,7 +91,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
     BlocType bloc, {
     List previousInputs,
     List newInputs,
-  }) onInputsChange;
+  })? onInputsChange;
 
   @override
   WithBlocState<BlocType, StateType> createState() =>
@@ -107,7 +102,7 @@ class WithBloc<BlocType extends ValueNotifier<StateType>, StateType>
 class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
     extends State<WithBloc<BlocType, StateType>> {
   @visibleForTesting
-  BlocType bloc;
+  late BlocType bloc;
 
   @override
   void initState() {
@@ -127,9 +122,10 @@ class WithBlocState<BlocType extends ValueNotifier<StateType>, StateType>
       /// If a [widget.onInputsChange] callback has been provided, call it will the inputs
       ///
       /// The return value will decide over whether we will recreate the Bloc
-      if (widget.onInputsChange != null) {
+      final onInputsChange = widget.onInputsChange;
+      if (onInputsChange != null) {
         /// For recreating the bloc, this function should return `false` so we invert this here
-        recreateBloc = !widget.onInputsChange(
+        recreateBloc = !onInputsChange(
           bloc,
           previousInputs: oldWidget.inputs,
           newInputs: widget.inputs,

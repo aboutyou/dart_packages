@@ -3,10 +3,12 @@ import 'package:with_bloc/src/are_lists_equal.dart';
 
 /// Class whose instances are always equal to each other.
 class _Equatable {
+  @override
   bool operator ==(Object obj) {
     return obj is _Equatable;
   }
 
+  @override
   int get hashCode => 1;
 }
 
