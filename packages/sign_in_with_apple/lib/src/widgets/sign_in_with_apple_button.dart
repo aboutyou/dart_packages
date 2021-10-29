@@ -11,7 +11,7 @@ const _appleIconSizeScale = 28 / 44;
 class SignInWithAppleButton extends StatelessWidget {
   const SignInWithAppleButton({
     Key? key,
-    required this.onPressed,
+    this.onPressed,
     this.text = 'Sign in with Apple',
     this.height = 44,
     this.style = SignInWithAppleButtonStyle.black,
@@ -20,7 +20,9 @@ class SignInWithAppleButton extends StatelessWidget {
   }) : super(key: key);
 
   /// The callback that is be called when the button is pressed.
-  final VoidCallback onPressed;
+  ///
+  /// If this is set to null, the button will be disabled.
+  final VoidCallback? onPressed;
 
   /// The text to display next to the Apple logo.
   ///
