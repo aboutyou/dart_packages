@@ -1,14 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'sign_in_with_apple_platform_interface.dart';
 
-const MethodChannel _channel = MethodChannel('com.aboutyou.dart_packages.sign_in_with_apple');
+const MethodChannel _channel =
+    MethodChannel('com.aboutyou.dart_packages.sign_in_with_apple');
 
 /// An implementation of [SignInWithApplePlatform] that uses method channels.
 class MethodChannelSignInWithApple extends SignInWithApplePlatform {
+  @visibleForTesting
+  MethodChannel get channel => _channel;
+
   @override
   Future<bool> isAvailable() async {
     return (await _channel.invokeMethod<bool>('isAvailable')) ?? false;
@@ -51,7 +56,9 @@ class MethodChannelSignInWithApple extends SignInWithApplePlatform {
     }
 
     try {
-      if (!Platform.isIOS && !Platform.isMacOS && Platform.environment['FLUTTER_TEST'] != 'true') {
+      if (!Platform.isIOS &&
+          !Platform.isMacOS &&
+          Platform.environment['FLUTTER_TEST'] != 'true') {
         throw const SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );
@@ -84,7 +91,9 @@ class MethodChannelSignInWithApple extends SignInWithApplePlatform {
   Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
-    if (!Platform.isIOS && !Platform.isMacOS && Platform.environment['FLUTTER_TEST'] != 'true') {
+    if (!Platform.isIOS &&
+        !Platform.isMacOS &&
+        Platform.environment['FLUTTER_TEST'] != 'true') {
       throw const SignInWithAppleNotSupportedException(
         message: 'The current platform is not supported',
       );
@@ -105,7 +114,9 @@ class MethodChannelSignInWithApple extends SignInWithApplePlatform {
   @override
   Future<AuthorizationCredentialPassword> getKeychainCredential() async {
     try {
-      if (!Platform.isIOS && !Platform.isMacOS && Platform.environment['FLUTTER_TEST'] != 'true') {
+      if (!Platform.isIOS &&
+          !Platform.isMacOS &&
+          Platform.environment['FLUTTER_TEST'] != 'true') {
         throw const SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );

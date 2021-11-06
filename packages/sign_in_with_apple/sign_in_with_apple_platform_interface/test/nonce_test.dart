@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:sign_in_with_apple_platform_interface/sign_in_with_apple_platform_interface.dart';
 
 void main() {
   test('Generates a nonce with the provided length', () {

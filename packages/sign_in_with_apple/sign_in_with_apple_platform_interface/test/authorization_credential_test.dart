@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sign_in_with_apple/src/authorization_credential.dart';
+import 'package:sign_in_with_apple_platform_interface/sign_in_with_apple_platform_interface.dart';
 
 void main() {
   test('parseAuthorizationCredentialAppleIDFromDeeplink: Only Code', () async {

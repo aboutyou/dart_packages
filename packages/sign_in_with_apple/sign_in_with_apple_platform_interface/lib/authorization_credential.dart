@@ -109,7 +109,8 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleID(
     if (authorizationCode == null) {
       throw const SignInWithAppleAuthorizationException(
         code: AuthorizationErrorCode.invalidResponse,
-        message: 'parseAuthorizationCredentialAppleID: `authorizationCode` field was `null`',
+        message:
+            'parseAuthorizationCredentialAppleID: `authorizationCode` field was `null`',
       );
     }
 
@@ -159,7 +160,8 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
   }
 
   final user = deeplink.queryParameters.containsKey('user')
-      ? json.decode(deeplink.queryParameters['user'] as String) as Map<String, dynamic>
+      ? json.decode(deeplink.queryParameters['user'] as String)
+          as Map<String, dynamic>
       : null;
   final name = user != null ? user['name'] as Map<String, dynamic>? : null;
 
@@ -167,7 +169,8 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
   if (authorizationCode == null) {
     throw const SignInWithAppleAuthorizationException(
       code: AuthorizationErrorCode.invalidResponse,
-      message: 'parseAuthorizationCredentialAppleIDFromDeeplink: No `code` query parameter set)',
+      message:
+          'parseAuthorizationCredentialAppleIDFromDeeplink: No `code` query parameter set)',
     );
   }
 
