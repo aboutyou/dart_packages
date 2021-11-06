@@ -18,6 +18,9 @@ dependencies:
   sign_in_with_apple_platform_interface:
     path: ../sign_in_with_apple_platform_interface # TODO(tp): This must be changed to the published package
 
+  sign_in_with_apple_web:
+    path: ../sign_in_with_apple_web # TODO(tp): This must be changed to the published package `^1.0.0`
+
 dev_dependencies:
   flutter_lints: ^1.0.4
   flutter_test:
@@ -33,3 +36,5 @@ flutter:
         pluginClass: SignInWithApplePlugin
       macos:
         pluginClass: SignInWithApplePlugin
+      web:
+        default_package: sign_in_with_apple_web

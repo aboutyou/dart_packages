@@ -1,4 +1,4 @@
-platform :osx, '10.11'  # macOS 10.15 is the minimum supported for signInWithApple, however we can still build this app on older versions.
+platform :osx, '10.11'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'

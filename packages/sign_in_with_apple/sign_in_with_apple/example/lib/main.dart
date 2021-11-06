@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -63,7 +64,9 @@ class _MyAppState extends State<MyApp> {
                     if (credential.familyName != null)
                       'lastName': credential.familyName!,
                     'useBundleId':
-                        Platform.isIOS || Platform.isMacOS ? 'true' : 'false',
+                        !kIsWeb && (Platform.isIOS || Platform.isMacOS)
+                            ? 'true'
+                            : 'false',
                     if (credential.state != null) 'state': credential.state!,
                   },
                 );
