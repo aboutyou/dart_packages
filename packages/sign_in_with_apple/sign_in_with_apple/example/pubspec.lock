@@ -155,7 +155,7 @@ packages:
       path: "../../sign_in_with_apple_web"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   sky_engine:
     dependency: transitive
     description: flutter
