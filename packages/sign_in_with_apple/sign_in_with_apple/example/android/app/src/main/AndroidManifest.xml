@@ -1,8 +1,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.example">
-   <application
-        android:label="example"
-        android:icon="@mipmap/ic_launcher">
+        package="com.aboutyou.dart_packages.sign_in_with_apple_example">
+     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
+          calls FlutterMain.startInitialization(this); in its onCreate method.
+          In most cases you can leave this as-is, but you if you want to provide
+          additional functionality it is fine to subclass or reimplement
+          FlutterApplication and put your custom class here. -->
+     <application
+         android:name="io.flutter.app.FlutterApplication"
+         android:label="sign_in_with_apple_example"
+         android:icon="@mipmap/ic_launcher">
+
+        <!-- Set up the Sign in with Apple activity, such that it's callable from the browser-redirect -->
+        <activity
+            android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
+            android:exported="true"
+        >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="signinwithapple" />
+                <data android:path="callback" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
