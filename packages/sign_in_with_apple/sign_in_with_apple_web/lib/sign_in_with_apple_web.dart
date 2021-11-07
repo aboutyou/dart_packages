@@ -2,7 +2,6 @@
 library sign_in_with_apple_web;
 
 import 'dart:async';
-import 'dart:html' as html;
 
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:js/js.dart';
@@ -33,7 +32,7 @@ class SignInWithApplePlugin extends SignInWithApplePlatform {
     try {
       final options = SignInWithAppleInitOptions(
         clientId: webAuthenticationOptions!.clientId,
-        redirectURI: 'https://${html.window.location.host}/',
+        redirectURI: webAuthenticationOptions.redirectUri.toString(),
         scope: [
           for (final scope in scopes)
             if (scope == AppleIDAuthorizationScopes.email)

@@ -38,10 +38,16 @@ class _MyAppState extends State<MyApp> {
                   webAuthenticationOptions: WebAuthenticationOptions(
                     // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
                     clientId:
-                        'com.aboutyou.dart_packages.sign_in_with_apple.example',
-                    redirectUri: Uri.parse(
-                      'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
-                    ),
+                        'de.lunaone.flutter.signinwithappleexample.service',
+
+                    redirectUri:
+                        // For web your redirect URI needs to be the host of the "current page",
+                        // while for Android you will be using the API server that redirects back into your app via a deep link
+                        kIsWeb
+                            ? Uri.parse('https://${html.window.location.host}/')
+                            : Uri.parse(
+                                'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
+                              ),
                   ),
                   // TODO: Remove these if you have no need for them
                   nonce: 'example-nonce',
