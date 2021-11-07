@@ -105,9 +105,9 @@ packages:
   sign_in_with_apple_platform_interface:
     dependency: "direct main"
     description:
-      path: "../sign_in_with_apple_platform_interface"
-      relative: true
-    source: path
+      name: sign_in_with_apple_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.0"
   sky_engine:
     dependency: transitive
