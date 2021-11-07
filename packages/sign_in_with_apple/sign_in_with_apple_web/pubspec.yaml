@@ -1,7 +1,7 @@
 name: sign_in_with_apple_web
 description: Web support for Sign in with Apple
 repository: https://github.com/aboutyou/dart_packages/tree/master/packages/sign_in_with_apple/sign_in_with_apple_web
-version: 1.0.0
+version: 1.0.1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

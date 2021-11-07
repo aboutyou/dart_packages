@@ -13,13 +13,21 @@ dependencies:
 
   http: ^0.13.0
 
+  sign_in_with_apple:
+    path: ../
+
 dev_dependencies:
   flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
 
-  sign_in_with_apple:
-    path: ../
+# Use the latest packages from the repo for the example
+dependency_overrides:
+  sign_in_with_apple_platform_interface:
+    path: ../../sign_in_with_apple_platform_interface
+
+  sign_in_with_apple_web:
+    path: ../../sign_in_with_apple_web
 
 flutter:
   uses-material-design: true

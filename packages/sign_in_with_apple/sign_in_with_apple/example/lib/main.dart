@@ -1,4 +1,7 @@
 import 'dart:io';
+// Needed because we can't import `dart:html` into a mobile app,
+// while on the flip-side access to `dart:io` throws at runtime (hence the `kIsWeb` check below)
+import 'html_shim.dart' if (dart.library.html) 'dart:html' show window;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +47,7 @@ class _MyAppState extends State<MyApp> {
                         // For web your redirect URI needs to be the host of the "current page",
                         // while for Android you will be using the API server that redirects back into your app via a deep link
                         kIsWeb
-                            ? Uri.parse('https://${html.window.location.host}/')
+                            ? Uri.parse('https://${window.location.host}/')
                             : Uri.parse(
                                 'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
                               ),

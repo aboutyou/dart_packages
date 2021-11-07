@@ -58,9 +58,13 @@ class SignInWithApplePlugin extends SignInWithApplePlatform {
         userIdentifier: null,
       );
     } catch (e) {
-      // TODO: Currently we can't cast this further, as the type is lost
-      //       But we should be able to map this into a better error through JS, so that we can at least get the error code
-      throw SignInWithAppleCredentialsException(message: '$e');
+      // error per https://developer.apple.com/documentation/sign_in_with_apple/signinerrori
+      final errorProp = getProperty(e, 'error');
+      final errorCode = errorProp is String ? errorProp : 'UNKNOWN_SIWA_ERROR';
+
+      throw SignInWithAppleCredentialsException(
+        message: 'Authentication failed with $errorCode',
+      );
     }
   }
 }

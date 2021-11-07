@@ -136,21 +136,21 @@ packages:
     source: hosted
     version: "2.0.2"
   sign_in_with_apple:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
     version: "3.3.0"
   sign_in_with_apple_platform_interface:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: sign_in_with_apple_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../../sign_in_with_apple_platform_interface"
+      relative: true
+    source: path
     version: "1.0.0"
   sign_in_with_apple_web:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "../../sign_in_with_apple_web"
       relative: true

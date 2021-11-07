@@ -124,9 +124,9 @@ packages:
   sign_in_with_apple_web:
     dependency: "direct main"
     description:
-      path: "../sign_in_with_apple_web"
-      relative: true
-    source: path
+      name: sign_in_with_apple_web
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.0"
   sky_engine:
     dependency: transitive
