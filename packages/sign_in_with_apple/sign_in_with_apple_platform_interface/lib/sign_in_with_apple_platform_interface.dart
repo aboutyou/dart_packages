@@ -17,7 +17,7 @@ import 'method_channel_sign_in_with_apple.dart';
 
 /// The interface that implementations of `sign_in_with_apple` must implement.
 ///
-/// Platform implementations should extend this class rather than implement it as `url_launcher`
+/// Platform implementations should extend this class rather than implement it as `sign_in_with_apple`
 /// does not consider newly added methods to be breaking changes. Extending this class
 /// (using `extends`) ensures that the subclass will get the default implementation, while
 /// platform implementations that `implements` this interface will be broken by newly added
