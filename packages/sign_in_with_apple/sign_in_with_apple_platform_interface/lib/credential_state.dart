@@ -1,7 +1,5 @@
 import 'package:flutter/services.dart';
 
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
 /// State of a credential of a particular user.
 ///
 /// The user identifier that is needed for requesting this information comes from the [AuthorizationCredentialAppleID].

@@ -20,6 +20,7 @@ jobs:
           [
             pending_operations,
             sign_in_with_apple/sign_in_with_apple,
+            sign_in_with_apple/sign_in_with_apple_platform_interface,
             state_queue_test,
             state_queue,
             with_bloc,
