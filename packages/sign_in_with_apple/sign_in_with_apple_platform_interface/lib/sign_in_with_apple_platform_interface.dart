@@ -100,7 +100,8 @@ abstract class SignInWithApplePlatform extends PlatformInterface {
     String? state,
   }) async {
     throw UnimplementedError(
-        'getAppleIDCredential() has not been implemented.');
+      'getAppleIDCredential() has not been implemented.',
+    );
   }
 
   /// Returns the credentials state for a given user.
@@ -126,6 +127,7 @@ abstract class SignInWithApplePlatform extends PlatformInterface {
   /// Throws a [SignInWithAppleException] exception when no credentials have been found in the Keychain.
   Future<AuthorizationCredentialPassword> getKeychainCredential() async {
     throw UnimplementedError(
-        'getKeychainCredential() has not been implemented.');
+      'getKeychainCredential() has not been implemented.',
+    );
   }
 }

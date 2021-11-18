@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
-import 'package:sign_in_with_apple_platform_interface/sign_in_with_apple_platform_interface.dart';
 import './authorization_request.dart';
+import './exceptions.dart';
 
 /// Authorization details from a successful Sign in with Apple flow.
 ///
