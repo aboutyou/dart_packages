@@ -1,5 +1,9 @@
 import 'dart:io';
+// Needed because we can't import `dart:html` into a mobile app,
+// while on the flip-side access to `dart:io` throws at runtime (hence the `kIsWeb` check below)
+import 'html_shim.dart' if (dart.library.html) 'dart:html' show window;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,10 +41,16 @@ class _MyAppState extends State<MyApp> {
                   webAuthenticationOptions: WebAuthenticationOptions(
                     // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
                     clientId:
-                        'com.aboutyou.dart_packages.sign_in_with_apple.example',
-                    redirectUri: Uri.parse(
-                      'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
-                    ),
+                        'de.lunaone.flutter.signinwithappleexample.service',
+
+                    redirectUri:
+                        // For web your redirect URI needs to be the host of the "current page",
+                        // while for Android you will be using the API server that redirects back into your app via a deep link
+                        kIsWeb
+                            ? Uri.parse('https://${window.location.host}/')
+                            : Uri.parse(
+                                'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
+                              ),
                   ),
                   // TODO: Remove these if you have no need for them
                   nonce: 'example-nonce',
@@ -63,7 +73,9 @@ class _MyAppState extends State<MyApp> {
                     if (credential.familyName != null)
                       'lastName': credential.familyName!,
                     'useBundleId':
-                        Platform.isIOS || Platform.isMacOS ? 'true' : 'false',
+                        !kIsWeb && (Platform.isIOS || Platform.isMacOS)
+                            ? 'true'
+                            : 'false',
                     if (credential.state != null) 'state': credential.state!,
                   },
                 );

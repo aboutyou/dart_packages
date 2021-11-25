@@ -137,6 +137,19 @@ You can find out if you are already using the new embedding by looking into your
 
 In case you are not yet using Android V2 Embedding, please first upgrade your app using the following guide: https://github.com/flutter/flutter/wiki/Upgrading-pre-1.12-Android-projects
 
+### Web
+
+For web support you need to add the follow script import to your `index.html`'s `<head>` tag:
+
+```html
+<script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+```
+
+(We haven't found a way to only laod this on demand, as the script seemingly inits itself on page load.)
+
+Then in the service's configuration in Apple's developer portal add the domains that host your page both in `Domains and Subdomains` as well as `Returns URLs`.  
+The former is needed so you can open the flow from the web page, while the latter is used to post the final credentials back from the pop-up to the opening page. (If you omit this, the flow will just silently be stuck in the last step.)
+
 #### Example App
 
 - Open the `example` folder inside this package in an editor of your choice

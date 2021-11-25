@@ -1,0 +1,29 @@
+name: sign_in_with_apple_web
+description: Platform plugin offering web support for Sign in with Apple plugin for Flutter.
+repository: https://github.com/aboutyou/dart_packages/tree/master/packages/sign_in_with_apple/sign_in_with_apple_web
+version: 1.0.1
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=2.0.0"
+
+flutter:
+  plugin:
+    platforms:
+      web:
+        pluginClass: SignInWithApplePlugin
+        fileName: sign_in_with_apple_web.dart
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_web_plugins:
+    sdk: flutter
+
+  sign_in_with_apple_platform_interface: ^1.0.0
+
+  js: ^0.6.3
+
+dev_dependencies:
+  flutter_lints: ^1.0.4

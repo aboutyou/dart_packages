@@ -133,3 +133,22 @@ jobs:
         working-directory: packages/${{ matrix.package }}/example
         env:
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
+
+  build-web:
+    name: Build ${{ matrix.package }} Web on ${{ matrix.os }} and Flutter ${{ matrix.flutter }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-18.04]
+        package:
+          [sign_in_with_apple/sign_in_with_apple]
+        flutter:
+          ["2.5.3"]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
+        with:
+          flutter-version: ${{ matrix.flutter }}
+      - name: Build Web
+        run: flutter build web
+        working-directory: packages/${{ matrix.package }}/example
