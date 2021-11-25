@@ -31,7 +31,7 @@ class SignInWithApple {
 
   /// Requests an Apple ID credential.
   ///
-  /// Shows the native UI on Apple's platform and a Chrome Custom Tab on Android.
+  /// Shows the native UI on Apple's platform, a Chrome Custom Tab on Android, and a popup on Websites.
   ///
   /// The returned [AuthorizationCredentialAppleID]'s `authorizationCode` should then be used to validate the token with Apple's servers and
   /// create a session in your system.
@@ -56,7 +56,7 @@ class SignInWithApple {
 
     /// Optional parameters for web-based authentication flows on non-Apple platforms
     ///
-    /// This parameter is required on Android.
+    /// This parameter is required on Android and on the Web.
     WebAuthenticationOptions? webAuthenticationOptions,
 
     /// Optional string which, if set, will be be embedded in the resulting `identityToken` field on the [AuthorizationCredentialAppleID].

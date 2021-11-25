@@ -149,6 +149,6 @@ jobs:
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
           flutter-version: ${{ matrix.flutter }}
-      - name: Build Android
+      - name: Build Web
         run: flutter build web
         working-directory: packages/${{ matrix.package }}/example
