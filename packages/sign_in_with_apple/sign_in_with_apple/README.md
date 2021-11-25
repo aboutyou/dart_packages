@@ -11,6 +11,7 @@ Supports login via an Apple ID, as well as retrieving credentials saved in the u
 - iOS
 - macOS
 - Android
+- Web
 
 ## Example Usage
 
