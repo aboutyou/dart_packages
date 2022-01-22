@@ -10,6 +10,12 @@ class _TestBloc extends StateQueue<int> {
       yield state + 1;
     });
   }
+
+  void decr() {
+    run((state) async* {
+      yield state - 1;
+    });
+  }
 }
 
 void main() {
@@ -95,4 +101,18 @@ void main() {
       ),
     );
   });
+
+  blocTest<_TestBloc, int>(
+    'Increment state when incr is called',
+    build: () => _TestBloc(),
+    act: (bloc) => bloc..incr(),
+    expect: <int>[0, 1],
+  );
+
+  blocTest<_TestBloc, int>(
+    'Decrement state when decr is called',
+    build: () => _TestBloc(),
+    act: (bloc) => bloc..decr(),
+    expect: <int>[0, -1],
+  );
 }
