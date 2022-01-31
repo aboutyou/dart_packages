@@ -233,9 +233,9 @@ The setup for macOS is mostly similar to iOS. As usual for Flutter development f
   - Additionally there should be no warning on that screen. (For example your Mac must be registered for local development. (If not, you'll see a "one click fix" button to do so.))
 - In the terminal navigate back to the root of the `example` folder and `flutter run` on your test device
 
-### Enable For Developer Accounts
+### Enable Without Xcode (And Additionally For Developer Accounts)
 
-If you want to enable capability using an Apple developer account, you need to add or create a `com.apple.developer.applesignin` entitlement - either through Xcode (see below) or by editing (or creating and adding to Xcode) `ios/Runner/Runner.entitlements` file.
+If you want to enable capability without using Xcode (or for an Apple developer account), you need to add or create a `com.apple.developer.applesignin` entitlement - either through Xcode (see below) or by editing (or creating and adding to Xcode) `ios/Runner/Runner.entitlements` file.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
