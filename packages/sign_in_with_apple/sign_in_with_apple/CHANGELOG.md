@@ -1,3 +1,7 @@
+## 3.3.0+1
+
+- Adjust overriding of `onActivityResult()` in `SignInWithApplePlugin.kt`.
+
 ## 3.3.0
 
 - Switch to `sign_in_with_apple_platform_interface` in conjunction with the addition of web support
