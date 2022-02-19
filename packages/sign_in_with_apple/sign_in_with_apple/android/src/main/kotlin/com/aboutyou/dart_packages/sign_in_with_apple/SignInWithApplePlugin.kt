@@ -124,7 +124,7 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
     binding = null
   }
 
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent): Boolean {
     if (requestCode == CUSTOM_TABS_REQUEST_CODE) {
       val _lastAuthorizationRequestResult = lastAuthorizationRequestResult
 
