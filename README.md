@@ -1,6 +1,8 @@
 # Dart & Flutter packages
 
-Dart and Flutter plugins maintained and used by [ABOUT YOU](https://corporate.aboutyou.de/en/).
+Dart and Flutter plugins maintained and used by [ABOUT YOU](https://aboutyou.tech/).
+
+We're hiring! Feel free to check out our open [positions](https://aboutyou.tech/jobs/).
 
 ## Plugins
 
