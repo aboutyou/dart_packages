@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:state_queue/state_queue.dart';
 import 'package:test/test.dart' as test;

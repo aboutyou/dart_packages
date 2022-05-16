@@ -57,7 +57,7 @@ void main() {
     );
     expect(
       error,
-      isA<IntegerDivisionByZeroException>(),
+      isA<UnsupportedError>(),
     );
   });
 
