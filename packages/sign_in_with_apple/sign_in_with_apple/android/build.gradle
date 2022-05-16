@@ -2,7 +2,7 @@ group 'com.aboutyou.dart_packages.sign_in_with_apple'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.5.31'
+    ext.kotlin_version = '1.6.0'
     repositories {
         google()
         mavenCentral()
