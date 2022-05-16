@@ -1,3 +1,7 @@
+## 4.0.0
+
+- Upgrade Kotlin version to `1.6.0`
+
 ## 3.3.0
 
 - Switch to `sign_in_with_apple_platform_interface` in conjunction with the addition of web support
