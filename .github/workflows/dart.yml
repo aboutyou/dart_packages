@@ -62,7 +62,7 @@ jobs:
         package:
           [sign_in_with_apple/sign_in_with_apple]
         xcode:
-          ["12.5.1", "13.0"]
+          ["12.5.1", "13.0", "13.3.1"]
         flutter:
           ["2.8.1", "2.10.2"]
     steps:
@@ -113,7 +113,7 @@ jobs:
         package:
           [sign_in_with_apple/sign_in_with_apple]
         xcode:
-          ["12.5.1", "13.0"]
+          ["12.5.1", "13.0", "13.3.1"]
         flutter:
           ["2.8.1", "2.10.2"]
     steps:
