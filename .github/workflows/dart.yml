@@ -58,7 +58,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11]
+        os: [macos-12]
         package:
           [sign_in_with_apple/sign_in_with_apple]
         xcode:
@@ -109,7 +109,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11]
+        os: [macos-12]
         package:
           [sign_in_with_apple/sign_in_with_apple]
         xcode:
