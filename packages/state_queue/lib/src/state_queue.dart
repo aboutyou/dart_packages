@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
-import 'package:meta/meta.dart';
 import 'package:pending_operations/pending_operations.dart';
 
 typedef StateUpdater<T> = Stream<T> Function(T state);
