@@ -107,15 +107,10 @@ public enum SignInWithAppleError {
                 errorCode = "authorization-error/notHandled"
             case .failed:
                 errorCode = "authorization-error/failed"
-#if os(iOS) && swift(>=5.5) || os(macOS) && swift(>=5.6)
+#if os(iOS) && swift(>=5.5) || os(macOS) && swift(>=5.5.1)
             // new case since Xcode 13, arrived earlier in iOS
             case .notInteractive:
                 errorCode = "authorization-error/notInteractive"
-#endif
-#if os(macOS) && swift(>=5.6)
-            // new case since Xcode 13.3 (?), but only on macOS SDK at the moment
-            case .transferred:
-                errorCode = "authorization-error/transferred"
 #endif
             @unknown default:
                 print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");

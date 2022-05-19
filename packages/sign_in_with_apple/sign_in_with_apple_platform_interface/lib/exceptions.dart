@@ -44,11 +44,6 @@ abstract class SignInWithAppleException implements Exception {
           code: AuthorizationErrorCode.notInteractive,
           message: exception.message ?? 'no message provided',
         );
-      case 'authorization-error/transferred':
-        return SignInWithAppleAuthorizationException(
-          code: AuthorizationErrorCode.transferred,
-          message: exception.message ?? 'no message provided',
-        );
       case 'authorization-error/failed':
         return SignInWithAppleAuthorizationException(
           code: AuthorizationErrorCode.failed,
@@ -116,9 +111,6 @@ enum AuthorizationErrorCode {
 
   /// The authorization request isn’t interactive.
   notInteractive,
-
-  /// The app has been transferred to a different team, and you need to migrate the user’s identifier.
-  transferred,
 
   /// The authorization attempt failed for an unknown reason.
   unknown,
