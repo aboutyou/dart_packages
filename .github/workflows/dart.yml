@@ -6,6 +6,10 @@ on:
       - master
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Test ${{ matrix.package }} on ${{ matrix.os }}
@@ -85,6 +89,7 @@ jobs:
         run: flutter build ios --no-codesign
         working-directory: packages/${{ matrix.package }}/example
         env:
+          OTHER_SWIFT_FLAGS: "-warnings-as-errors"
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
   build-android:
@@ -147,6 +152,7 @@ jobs:
         run: flutter build macos
         working-directory: packages/${{ matrix.package }}/example
         env:
+          OTHER_SWIFT_FLAGS: "-warnings-as-errors"
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
   build-web:
