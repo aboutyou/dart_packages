@@ -82,6 +82,8 @@ jobs:
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
           flutter-version: ${{ matrix.flutter }}
+      - name: Flutter doctor (version check)
+        run: flutter doctor
       - name: Build iOS
         run: flutter build ios --no-codesign
         working-directory: packages/${{ matrix.package }}/example
@@ -142,6 +144,8 @@ jobs:
           flutter-version: ${{ matrix.flutter }}
       - name: Enable macOS Desktop Integration
         run: flutter config --enable-macos-desktop
+      - name: Flutter doctor (version check)
+        run: flutter doctor
       - name: Build macOS
         run: flutter build macos
         working-directory: packages/${{ matrix.package }}/example
