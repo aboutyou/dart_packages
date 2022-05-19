@@ -109,6 +109,7 @@ public enum SignInWithAppleError {
                 errorCode = "authorization-error/failed"
 #if os(iOS) && swift(>=5.5) || os(macOS) && swift(>=5.5.1)
             // new case since Xcode 13, arrived earlier in iOS
+            // use https://swiftly.dev/swift-versions to match Swift to Xcode versions (as this is in practice driven by the OS SDK, not Swift version)
             case .notInteractive:
                 errorCode = "authorization-error/notInteractive"
 #endif
