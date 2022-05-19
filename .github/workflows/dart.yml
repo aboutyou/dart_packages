@@ -109,13 +109,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12]
+        os: [macos-11, macos-12]
         package:
           [sign_in_with_apple/sign_in_with_apple]
         xcode:
           ["12.5.1", "13.0", "13.3.1"]
         flutter:
           ["2.8.1", "2.10.2"]
+        exclude:
+        - os: macos-11
+          xcode: 13.3.1
+        - os: macos-12
+          xcode: 12.5.1
+        - os: macos-12
+          xcode: 13.0
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
