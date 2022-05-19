@@ -54,43 +54,43 @@ jobs:
           name: ${{ matrix.package }}
           fail_ci_if_error: false
 
-  # build-ios:
-  #   name: Build ${{ matrix.package }} iOS on ${{ matrix.os }} with Xcode ${{ matrix.xcode }} and Flutter ${{ matrix.flutter }}
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [macos-11, macos-12]
-  #       package:
-  #         [sign_in_with_apple/sign_in_with_apple]
-  #       xcode:
-  #         ["12.5.1", "13.0", "13.3.1"]
-  #       flutter:
-  #         ["2.8.1", "2.10.2"]
-  #       exclude:
-  #       - os: macos-11
-  #         xcode: 13.3.1
-  #       - os: macos-12
-  #         xcode: 12.5.1
-  #       - os: macos-12
-  #         xcode: 13.0
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - uses: actions/setup-java@v1
-  #       with:
-  #         java-version: "12.x"
-  #     - name: Xcode select
-  #       run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
-  #     - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
-  #       with:
-  #         flutter-version: ${{ matrix.flutter }}
-  #     - name: Flutter doctor (version check)
-  #       run: flutter doctor
-  #     - name: Build iOS
-  #       run: flutter build ios --no-codesign
-  #       working-directory: packages/${{ matrix.package }}/example
-  #       env:
-  #         OTHER_SWIFT_FLAGS: "-warnings-as-errors"
-  #         DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
+  build-ios:
+    name: Build ${{ matrix.package }} iOS on ${{ matrix.os }} with Xcode ${{ matrix.xcode }} and Flutter ${{ matrix.flutter }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-11, macos-12]
+        package:
+          [sign_in_with_apple/sign_in_with_apple]
+        xcode:
+          ["12.5.1", "13.0", "13.3.1"]
+        flutter:
+          ["2.8.1", "2.10.2"]
+        exclude:
+        - os: macos-11
+          xcode: 13.3.1
+        - os: macos-12
+          xcode: 12.5.1
+        - os: macos-12
+          xcode: 13.0
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - name: Xcode select
+        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+      - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
+        with:
+          flutter-version: ${{ matrix.flutter }}
+      - name: Flutter doctor (version check)
+        run: flutter doctor
+      - name: Build iOS
+        run: flutter build ios --no-codesign
+        working-directory: packages/${{ matrix.package }}/example
+        env:
+          OTHER_SWIFT_FLAGS: "-warnings-as-errors"
+          DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
   build-android:
     name: Build ${{ matrix.package }} Android on ${{ matrix.os }} and Flutter ${{ matrix.flutter }}
