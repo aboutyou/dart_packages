@@ -58,7 +58,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12]
+        os: [macos-11, macos-12]
         package:
           [sign_in_with_apple/sign_in_with_apple]
         xcode:
