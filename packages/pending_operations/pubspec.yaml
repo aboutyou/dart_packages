@@ -17,4 +17,4 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  test: any
+  test: any 
