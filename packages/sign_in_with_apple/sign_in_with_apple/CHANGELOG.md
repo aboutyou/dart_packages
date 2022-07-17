@@ -1,3 +1,7 @@
+## 4.1.0
+
+- Add support for `transferred` credential state (XCode 13.3.1 support) 
+
 ## 4.0.0
 
 - Upgrade Kotlin version to `1.6.0`
