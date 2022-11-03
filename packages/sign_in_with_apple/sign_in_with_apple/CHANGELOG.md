@@ -1,6 +1,10 @@
+## 4.2.0
+
+- Remove `jcenter` repository for the Android package
+
 ## 4.1.0
 
-- Add support for `transferred` credential state (XCode 13.3.1 support) 
+- Add support for `transferred` credential state (Xcode 13.3.1 support) 
 
 ## 4.0.0
 
@@ -12,11 +16,11 @@
 
 ## 3.2.0
 
-- Fix building macOS application with XCode 13 and macOS Big Sur
+- Fix building macOS application with Xcode 13 and macOS Big Sur
 
 ## 3.1.0
 
-- Add support for XCode 13
+- Add support for Xcode 13
 
 ## 3.0.0
 
