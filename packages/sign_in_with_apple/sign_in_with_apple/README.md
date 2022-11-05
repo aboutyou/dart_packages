@@ -182,7 +182,8 @@ In your `android/app/src/main/AndroidManifest.xml` inside `<application>` add
 </activity>
 ```
 
-On the Sign in with Apple callback on your sever (specified in `WebAuthenticationOptions.redirectUri`), redirect safely back to your Android app using the following URL:
+#### Server
+On the "Sign in with Apple" callback on your server (specified in `WebAuthenticationOptions.redirectUri`), redirect safely back to your Android app using the following URL:
 
 ```
 intent://callback?${PARAMETERS FROM CALLBACK BODY}#Intent;package=YOUR.PACKAGE.IDENTIFIER;scheme=signinwithapple;end
@@ -191,6 +192,52 @@ intent://callback?${PARAMETERS FROM CALLBACK BODY}#Intent;package=YOUR.PACKAGE.I
 The `PARAMETERS FROM CALLBACK BODY` should be filled with the urlencoded body you receive on the endpoint from Apple's server, and the `package` parameter should be changed to match your app's package identifier (as published on the Google Play Store). Leave the `callback` path and `signinwithapple` scheme untouched.
 
 Furthermore, when handling the incoming credentials on the client, make sure to only overwrite the current (guest) session of the user once your own server have validated the incoming `code` parameter, such that your app is not susceptible to malicious incoming links (e.g. logging out the current user).
+
+##### Setting up Google Cloud Functions as server
+A quick and easy way to set up the server side, is to deploy a Google Cloud Function. Please refer to the [Firebase Cloud Functions](https://firebase.google.com/docs/functions/) documentation to add functions to your project.
+
+Once set up, you can create and deploy the following function:
+
+```TypeScript
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import * as express from "express";
+import * as bodyParser from "body-parser";
+import {Request, Response} from "firebase-functions";
+
+admin.initializeApp();
+
+const pkg = "YOUR_PACKAGE_HERE";
+const app = express();
+
+app.use(bodyParser.urlencoded({extended: false}));
+
+// Make all files in 'public' available
+// https://expressjs.com/en/starter/static-files.html
+app.use(express.static("public"));
+
+// The callback route used for Android, which will send
+// the callback parameters from Apple into the Android app.
+// This is done using a deeplink, which will cause
+// the Chrome Custom Tab to be dismissed
+// and providing the parameters from Apple back to the app.
+app.post("/", (request: Request, response: Response) => {
+  const body = new URLSearchParams(request.body).toString();
+  const scheme = "signinwithapple";
+  const redirect =
+      `intent://callback?${body}#Intent;package=${pkg};scheme=${scheme};end`;
+  // console.log(`Redirecting to ${redirect}`);
+  response.redirect(307, redirect);
+});
+
+exports.sign_in_with_apple = functions.https.onRequest(app);
+```
+
+Make sure the `WebAuthenticationOptions.redirectUri` config points to the deployed function, eg: 
+```
+https://us-central1-XXXXXXXXX.cloudfunctions.net/sign_in_with_apple
+```
+
 
 ### iOS
 
