@@ -24,6 +24,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onGenerateRoute: ((settings) {
+        // This is also invoked for incoming deep links
+
+        // ignore: avoid_print
+        print('onGenerateRoute: $settings');
+
+        return null;
+      }),
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Example app: Sign in with Apple'),

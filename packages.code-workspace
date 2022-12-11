@@ -1,0 +1,37 @@
+{
+  "folders": [
+    {
+      "path": "packages/pending_operations"
+    },
+    {
+      "path": "packages/sign_in_with_apple/sign_in_with_apple_platform_interface"
+    },
+    {
+      "path": "packages/sign_in_with_apple/sign_in_with_apple"
+    },
+    {
+      "path": "packages/sign_in_with_apple/sign_in_with_apple_web"
+    },
+    {
+      "path": "packages/state_queue"
+    },
+    {
+      "path": "packages/state_queue_test"
+    },
+    {
+      "path": "packages/with_bloc"
+    },
+    {
+      "path": ".github"
+    }
+  ],
+  "settings": {
+    "dart.lineLength": 80,
+    "search.exclude": {
+      "**/.fvm": true,
+    },
+    "files.exclude": {
+      "**/.fvm": true
+    }
+  }
+}

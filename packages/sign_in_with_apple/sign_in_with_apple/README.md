@@ -138,6 +138,13 @@ You can find out if you are already using the new embedding by looking into your
 
 In case you are not yet using Android V2 Embedding, please first upgrade your app using the following guide: https://github.com/flutter/flutter/wiki/Upgrading-pre-1.12-Android-projects
 
+#### `launchMode`
+
+To ensure that deep links from the login web page (shown in a Chrome Custom Tab) back to the app still work, your app must use `launchMode` `singleTask` or `singleTop`
+  - When using `singleTask` the Chrome Custom Tab persists across app switches from within Android's app switcher, but will be dismissed when the app is launched anew from the home screen icon / app gallery
+  - With launch mode `singleTop` the Chrome Custom Tab stays present both after using the app switcher or launching the app anew via its icon
+  - If you change your app's `launchMode` be sure to test any other third-party integrations that might be affected by this (e.g. deep links)
+
 ### Web
 
 For web support you need to add the follow script import to your `index.html`'s `<head>` tag:
