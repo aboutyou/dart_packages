@@ -91,7 +91,6 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 
         val builder = CustomTabsIntent.Builder();
         val customTabsIntent = builder.build();
-        customTabsIntent.intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         customTabsIntent.intent.data = Uri.parse(url)
 
         _activity.startActivityForResult(

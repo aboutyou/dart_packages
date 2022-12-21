@@ -1,3 +1,8 @@
+## 4.3.0
+
+- Android: Fixes an issue where the Chrome Custom Tab would disappear when the user "left" the app (e.g. using the app switcher) ([#162](https://github.com/aboutyou/dart_packages/issues/162))
+  - Beware that your app's `launchMode` affects the specific behavior of the Chrome Custom Tab. For more information see the README.
+
 ## 4.2.0
 
 - Remove `jcenter` repository for the Android package

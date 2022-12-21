@@ -91,3 +91,5 @@ ios/vendor
 android/vendor
 
 **/coverage/lcov.info
+
+.fvm/
