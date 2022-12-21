@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.13.0
+  http: ^0.13.5
 
   sign_in_with_apple:
     path: ../
