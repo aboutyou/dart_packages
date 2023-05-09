@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,9 +21,7 @@ Future<void> main() async {
   await fontLoader.load();
 
   setUp(() {
-    final binding = TestWidgetsFlutterBinding.ensureInitialized()
-        // ignore: avoid_as
-        as TestWidgetsFlutterBinding;
+    final binding = TestWidgetsFlutterBinding.ensureInitialized();
 
     binding.window.devicePixelRatioTestValue = 3;
     binding.window.physicalSizeTestValue = const Size(300, 100) * 3;
