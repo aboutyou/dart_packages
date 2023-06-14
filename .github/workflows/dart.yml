@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04, macos-10.15]
+        os: [ubuntu-22.04, macos-13]
         package:
           [
             pending_operations,
@@ -33,7 +33,7 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
-          flutter-version: "2.8.1"
+          flutter-version: "3.7.12"
       - name: Install dependencies
         run: flutter packages get
         working-directory: packages/${{ matrix.package }}
@@ -59,20 +59,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, macos-12]
+        os: [macos-12, macos-13]
         package:
           [sign_in_with_apple/sign_in_with_apple]
         xcode:
-          ["12.5.1", "13.0", "13.3.1"]
+          ["13.4.1", "14.2"]
         flutter:
-          ["2.8.1", "2.10.2"]
+          ["3.7.6", "3.7.12"]
         exclude:
-        - os: macos-11
-          xcode: 13.3.1
-        - os: macos-12
-          xcode: 12.5.1
-        - os: macos-12
-          xcode: 13.0
+          - os: macos-13
+            xcode: 13.4.1
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -97,17 +93,17 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04]
+        os: [ubuntu-22.04]
         package:
           [sign_in_with_apple/sign_in_with_apple]
         flutter:
-          ["2.8.1", "2.10.2"]
+          ["3.7.6", "3.7.12"]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v2
         with:
           distribution: 'zulu' # OpenJDK
-          java-version: '11' # Specific (older) version needed for Gradle wrapper
+          java-version: '17'
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
           flutter-version: ${{ matrix.flutter }}
@@ -120,20 +116,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-11, macos-12]
+        os: [macos-12, macos-13]
         package:
           [sign_in_with_apple/sign_in_with_apple]
         xcode:
-          ["12.5.1", "13.0", "13.3.1"]
+          ["13.4.1", "14.2"]
         flutter:
-          ["2.8.1", "2.10.2"]
+          ["3.7.6", "3.7.12"]
         exclude:
-        - os: macos-11
-          xcode: 13.3.1
-        - os: macos-12
-          xcode: 12.5.1
-        - os: macos-12
-          xcode: 13.0
+          - os: macos-13
+            xcode: 13.4.1
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -160,11 +152,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-18.04]
+        os: [ubuntu-22.04]
         package:
           [sign_in_with_apple/sign_in_with_apple]
         flutter:
-          ["2.8.1", "2.10.2"]
+          ["3.7.6", "3.7.12"]
     steps:
       - uses: actions/checkout@v1
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
