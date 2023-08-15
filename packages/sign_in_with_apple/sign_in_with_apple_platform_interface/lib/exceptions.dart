@@ -133,7 +133,7 @@ class SignInWithAppleAuthorizationException
   final String message;
 
   @override
-  String toString() => 'SignInWithAppleAuthorizationError($code, $message)';
+  String toString() => 'SignInWithAppleAuthorizationException($code, $message)';
 }
 
 class SignInWithAppleCredentialsException implements SignInWithAppleException {
