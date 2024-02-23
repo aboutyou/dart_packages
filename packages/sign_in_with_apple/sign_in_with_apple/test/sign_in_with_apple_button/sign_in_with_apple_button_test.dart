@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -236,10 +238,10 @@ Future<void> main() async {
 
 class TestSetup extends StatelessWidget {
   const TestSetup({
-    Key? key,
+    super.key,
     required this.child,
     this.backgroundColor = Colors.white,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -252,10 +254,10 @@ class TestSetup extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         color: backgroundColor,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             child,
           ],
-          mainAxisAlignment: MainAxisAlignment.center,
         ),
       ),
       theme: const CupertinoThemeData().copyWith(

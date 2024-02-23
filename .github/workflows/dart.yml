@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-13]
+        os: [ubuntu-22.04, macos-14]
         package:
           [
             pending_operations,
@@ -33,7 +33,7 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
-          flutter-version: "3.7.12"
+          flutter-version: "3.19.1"
       - name: Install dependencies
         run: flutter packages get
         working-directory: packages/${{ matrix.package }}
@@ -41,7 +41,7 @@ jobs:
         run: flutter analyze
         working-directory: packages/${{ matrix.package }}
       - name: Format
-        run: flutter format --set-exit-if-changed .
+        run: dart format --set-exit-if-changed .
         working-directory: packages/${{ matrix.package }}
       - name: Run tests
         run: flutter test --coverage
@@ -59,16 +59,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12, macos-13]
-        package:
-          [sign_in_with_apple/sign_in_with_apple]
-        xcode:
-          ["13.4.1", "14.2"]
-        flutter:
-          ["3.7.6", "3.7.12"]
+        os: [macos-13, macos-14]
+        package: [sign_in_with_apple/sign_in_with_apple]
+        xcode: ["14.3.1", "15.2"]
+        flutter: ["3.19.1"]
         exclude:
           - os: macos-13
-            xcode: 13.4.1
+            xcode: 14.3.1
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -94,16 +91,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        package:
-          [sign_in_with_apple/sign_in_with_apple]
-        flutter:
-          ["3.7.6", "3.7.12"]
+        package: [sign_in_with_apple/sign_in_with_apple]
+        flutter: ["3.19.1"]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v2
         with:
-          distribution: 'zulu' # OpenJDK
-          java-version: '17'
+          distribution: "zulu" # OpenJDK
+          java-version: "17"
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
           flutter-version: ${{ matrix.flutter }}
@@ -116,16 +111,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-12, macos-13]
-        package:
-          [sign_in_with_apple/sign_in_with_apple]
-        xcode:
-          ["13.4.1", "14.2"]
-        flutter:
-          ["3.7.6", "3.7.12"]
+        os: [macos-13, macos-14]
+        package: [sign_in_with_apple/sign_in_with_apple]
+        xcode: ["14.3.1", "15.2"]
+        flutter: ["3.19.1"]
         exclude:
           - os: macos-13
-            xcode: 13.4.1
+            xcode: 14.3.1
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -153,10 +145,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        package:
-          [sign_in_with_apple/sign_in_with_apple]
-        flutter:
-          ["3.7.6", "3.7.12"]
+        package: [sign_in_with_apple/sign_in_with_apple]
+        flutter: ["3.19.1"]
     steps:
       - uses: actions/checkout@v1
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3

@@ -1,23 +1,24 @@
 import 'dart:io';
-// Needed because we can't import `dart:html` into a mobile app,
-// while on the flip-side access to `dart:io` throws at runtime (hence the `kIsWeb` check below)
-import 'html_shim.dart' if (dart.library.html) 'dart:html' show window;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
+// Needed because we can't import `web` into a mobile app,
+// while on the flip-side access to `dart:io` throws at runtime (hence the `kIsWeb` check below)
+import 'html_shim.dart' if (dart.library.js_interop) 'package:web/web.dart'
+    show window;
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -50,10 +51,11 @@ class _MyAppState extends State<MyApp> {
                     // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
                     clientId:
                         'de.lunaone.flutter.signinwithappleexample.service',
-
                     redirectUri:
                         // For web your redirect URI needs to be the host of the "current page",
                         // while for Android you will be using the API server that redirects back into your app via a deep link
+                        // NOTE(tp): For package local development use (as described in `Development.md`)
+                        // Uri.parse('https://siwa-flutter-plugin.dev/')
                         kIsWeb
                             ? Uri.parse('https://${window.location.host}/')
                             : Uri.parse(

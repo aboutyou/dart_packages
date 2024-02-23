@@ -10,14 +10,14 @@ const _appleIconSizeScale = 28 / 44;
 /// https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple/overview/buttons/
 class SignInWithAppleButton extends StatelessWidget {
   const SignInWithAppleButton({
-    Key? key,
+    super.key,
     required this.onPressed,
     this.text = 'Sign in with Apple',
     this.height = 44,
     this.style = SignInWithAppleButtonStyle.black,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
     this.iconAlignment = IconAlignment.center,
-  }) : super(key: key);
+  });
 
   /// The callback that is be called when the button is pressed.
   final VoidCallback onPressed;
@@ -159,6 +159,7 @@ class SignInWithAppleButton extends StatelessWidget {
           borderRadius: borderRadius,
           padding: EdgeInsets.zero,
           color: _backgroundColor,
+          onPressed: onPressed,
           child: Container(
             decoration: _decoration,
             padding: const EdgeInsets.symmetric(
@@ -166,11 +167,10 @@ class SignInWithAppleButton extends StatelessWidget {
             ),
             height: height,
             child: Row(
-              children: children,
               mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
             ),
           ),
-          onPressed: onPressed,
         ),
       ),
     );
