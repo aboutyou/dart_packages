@@ -1,3 +1,8 @@
+## 6.0.0
+
+- Migrate to package:web
+- Bump minimum Flutter version to 3.19.1
+
 ## 5.0.0
 
 - Support Gradle 8 ([@davidmartos96](https://github.com/davidmartos96) in [#375](https://github.com/aboutyou/dart_packages/pull/375))

@@ -7,10 +7,10 @@ Widget _fallbackBuilder(BuildContext context) => const SizedBox.shrink();
 /// A widget for conditionally rendering UI based on whether or not Sign in with Apple is available
 class SignInWithAppleBuilder extends StatefulWidget {
   const SignInWithAppleBuilder({
-    Key? key,
+    super.key,
     required this.builder,
     this.fallbackBuilder = _fallbackBuilder,
-  }) : super(key: key);
+  });
 
   /// A [WidgetBuilder] which will be executed in case Sign in with Apple is available
   final WidgetBuilder builder;
@@ -21,7 +21,7 @@ class SignInWithAppleBuilder extends StatefulWidget {
   final WidgetBuilder fallbackBuilder;
 
   @override
-  _SignInWithAppleBuilderState createState() => _SignInWithAppleBuilderState();
+  State<SignInWithAppleBuilder> createState() => _SignInWithAppleBuilderState();
 }
 
 class _SignInWithAppleBuilderState extends State<SignInWithAppleBuilder> {
