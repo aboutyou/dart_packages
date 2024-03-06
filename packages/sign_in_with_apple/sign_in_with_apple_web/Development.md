@@ -28,3 +28,5 @@ sudo nano /etc/hosts
 # Now you can finally visit your example page in the browse by executing
 open "https://siwa-flutter-plugin.dev/"
 ```
+
+When using the Glitch example server, the redirect URL parameter must also be set to `https://siwa-flutter-plugin.dev/` for testing the web version.

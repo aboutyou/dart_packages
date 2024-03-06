@@ -1,3 +1,13 @@
+## 6.0.0
+
+- Migrate to package:web
+- Bump minimum Flutter version to 3.19.1
+
+## 5.0.0
+
+- Support Gradle 8 ([@davidmartos96](https://github.com/davidmartos96) in [#375](https://github.com/aboutyou/dart_packages/pull/375))
+  - Now requires at least Flutter [3.7.6](https://github.com/flutter/flutter/wiki/Hotfixes-to-the-Stable-Channel#376-mar-01-2023), which is needed to find the Java SDKs shipped with [Android Studio Arctic Fox](https://android-developers.googleblog.com/2021/07/android-studio-arctic-fox-202031-stable.html), which has been used in testing
+
 ## 4.3.0
 
 - Android: Fixes an issue where the Chrome Custom Tab would disappear when the user "left" the app (e.g. using the app switcher) ([#162](https://github.com/aboutyou/dart_packages/issues/162))

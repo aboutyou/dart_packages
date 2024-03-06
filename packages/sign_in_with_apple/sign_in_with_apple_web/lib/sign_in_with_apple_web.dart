@@ -2,10 +2,9 @@
 library sign_in_with_apple_web;
 
 import 'dart:async';
+import 'dart:js_interop';
 
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
-import 'package:js/js.dart';
-import 'package:js/js_util.dart';
 import 'package:sign_in_with_apple_platform_interface/sign_in_with_apple_platform_interface.dart';
 
 /// The web implementation of [SignInWithApplePlatform].
@@ -46,11 +45,11 @@ class SignInWithApplePlugin extends SignInWithApplePlatform {
       );
 
       init(options);
-      final response = await promiseToFuture<SignInResponseI>(signIn());
+      final response = await signIn().toDart;
 
       return AuthorizationCredentialAppleID(
         authorizationCode: response.authorization.code,
-        identityToken: response.authorization.id_token,
+        identityToken: response.authorization.idToken,
         state: response.authorization.state,
         email: response.user?.email,
         givenName: response.user?.name?.firstName,
@@ -59,7 +58,7 @@ class SignInWithApplePlugin extends SignInWithApplePlatform {
       );
     } catch (e) {
       // error per https://developer.apple.com/documentation/sign_in_with_apple/signinerrori
-      final errorProp = getProperty(e, 'error');
+      final errorProp = (e as SignInErrorI).error;
       final errorCode = errorProp is String ? errorProp : 'UNKNOWN_SIWA_ERROR';
 
       throw SignInWithAppleCredentialsException(
@@ -69,9 +68,7 @@ class SignInWithApplePlugin extends SignInWithApplePlatform {
   }
 }
 
-@JS()
-@anonymous
-class SignInWithAppleInitOptions {
+extension type SignInWithAppleInitOptions._(JSObject _) implements JSObject {
   external String? get clientId;
   external String? get scope;
   external String? get redirectURI;
@@ -91,43 +88,39 @@ class SignInWithAppleInitOptions {
 }
 
 @JS('console.log')
-external void log(Object o);
+external void log(JSAny? o);
 
 @JS('AppleID.auth.init')
 external void init(SignInWithAppleInitOptions options);
 
 @JS('AppleID.auth.signIn')
-external Object /* like Future<SignInResponseI> */ signIn();
+external JSPromise<SignInResponseI> signIn();
 
 /// Sign in with Apple authorization response
 ///
 /// Spec: https://developer.apple.com/documentation/sign_in_with_apple/signinresponsei
-@JS()
-@anonymous
-class SignInResponseI {
+extension type SignInResponseI._(JSObject _) implements JSObject {
   external AuthorizationI get authorization;
   external UserI? get user;
 }
 
-@JS()
-@anonymous
-class AuthorizationI {
+extension type SignInErrorI._(JSObject _) implements JSObject {
+  external String? error;
+}
+
+extension type AuthorizationI._(JSObject _) implements JSObject {
   external String get code;
-  // ignore: non_constant_identifier_names
-  external String get id_token;
+  @JS('id_token')
+  external String get idToken;
   external String get state;
 }
 
-@JS()
-@anonymous
-class UserI {
+extension type UserI._(JSObject _) implements JSObject {
   external String get email;
   external NameI? get name;
 }
 
-@JS()
-@anonymous
-class NameI {
+extension type NameI._(JSObject _) implements JSObject {
   external String get firstName;
   external String get lastName;
 }

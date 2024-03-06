@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Migrate to package:web
+
 ## 1.0.1
 
 - Include error code from Apple JS in authentication exception when available.
