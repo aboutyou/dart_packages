@@ -1,3 +1,7 @@
+## 6.1.0
+
+- Android: Bump Kotlin version to 1.7.10 (Flutter 3.19.1 default)
+
 ## 6.0.0
 
 - Migrate to package:web
