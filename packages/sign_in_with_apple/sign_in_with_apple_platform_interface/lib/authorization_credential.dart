@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:meta/meta.dart';
+
 import './authorization_request.dart';
 import './exceptions.dart';
 
@@ -75,7 +76,7 @@ class AuthorizationCredentialAppleID {
 
   @override
   String toString() {
-    return 'AuthorizationAppleID($userIdentifier, $givenName, $familyName, $email, $state)';
+    return 'AuthorizationCredentialAppleID($userIdentifier, $givenName, $familyName, $email, [identityToken set: ${identityToken != null}], $state)';
   }
 }
 
@@ -95,7 +96,7 @@ class AuthorizationCredentialPassword {
 
   @override
   String toString() {
-    return 'AuthorizationCredential($username, [REDACTED PASSWORD])';
+    return 'AuthorizationCredentialPassword($username, [REDACTED password])';
   }
 }
 
