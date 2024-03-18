@@ -2,7 +2,7 @@ group 'com.aboutyou.dart_packages.sign_in_with_apple'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.6.0'
+    ext.kotlin_version = '1.7.10'
     repositories {
         google()
         mavenCentral()
@@ -25,7 +25,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 34
 
     // Conditional for compatibility with AGP <4.2.
     if (project.android.hasProperty("namespace")) {
