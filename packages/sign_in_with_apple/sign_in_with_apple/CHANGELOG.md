@@ -1,5 +1,8 @@
 ## 6.1.0
 
+- Set min Flutter SDK to 3.19.0
+- Upgrade `sign_in_with_apple_platform_interface` to `1.1.0`
+- Upgrade `sign_in_with_apple_web` to `2.1.0`
 - Android: Bump Kotlin version to 1.7.10 (Flutter 3.19.1 default)
 - Android: Bump `compileSdkVersion` to 34 (Flutter 3.19.1 default)
 

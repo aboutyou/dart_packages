@@ -166,7 +166,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "6.0.0"
+    version: "6.1.0"
   sign_in_with_apple_platform_interface:
     dependency: "direct overridden"
     description:
