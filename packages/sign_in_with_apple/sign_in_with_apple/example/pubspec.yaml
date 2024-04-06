@@ -17,6 +17,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  http: ^1.2.0
+
   sign_in_with_apple:
     # When depending on this package from a real application you should use:
     #   sign_in_with_apple: ^x.y.z
