@@ -4,8 +4,8 @@ repository: https://github.com/aboutyou/dart_packages/tree/master/packages/sign_
 version: 1.0.0
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=2.0.0"
+  sdk: ^3.3.0
+  flutter: ">=3.19.0"
 
 dependencies:
   flutter:
