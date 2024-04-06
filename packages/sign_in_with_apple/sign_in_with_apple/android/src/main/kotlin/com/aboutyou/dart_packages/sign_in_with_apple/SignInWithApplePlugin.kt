@@ -26,6 +26,12 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 
   var binding: ActivityPluginBinding? = null
 
+  // Static variables on our plugin class
+  companion object {
+    var lastAuthorizationRequestResult: Result? = null
+    var triggerMainActivityToHideChromeCustomTab : (() -> Unit)? = null
+  }
+
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.aboutyou.dart_packages.sign_in_with_apple")
     channel.setMethodCallHandler(this)
