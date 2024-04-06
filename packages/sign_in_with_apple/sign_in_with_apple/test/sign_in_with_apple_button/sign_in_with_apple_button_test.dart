@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sign_in_with_apple/src/widgets/sign_in_with_apple_button.dart';
+import 'package:sign_in_with_apple/widgets/sign_in_with_apple_button.dart';
 
 // The tests are only run on macOS system, on other systems they will be skipped
 // On other systems small differences can lead to failing goldens (e.g. text rendering)

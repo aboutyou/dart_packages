@@ -68,7 +68,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_web_plugins:
-    dependency: transitive
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -121,7 +121,7 @@ packages:
     source: hosted
     version: "0.8.0"
   meta:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: meta
       sha256: d584fa6707a52763a52446f02cc621b077888fb63b93bbcb1143a7be5a0c0c04
@@ -137,29 +137,13 @@ packages:
     source: hosted
     version: "1.9.0"
   plugin_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: plugin_platform_interface
       sha256: f843e0027496f0d841166707029237a0bef39cfc0c79b93b1bb1a10beae73244
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
-  sign_in_with_apple_platform_interface:
-    dependency: "direct main"
-    description:
-      name: sign_in_with_apple_platform_interface
-      sha256: c2ef2ce6273fce0c61acd7e9ff5be7181e33d7aa2b66508b39418b786cca2119
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
-  sign_in_with_apple_web:
-    dependency: "direct main"
-    description:
-      name: sign_in_with_apple_web
-      sha256: c009e9beeb6c376e86aaa154fcc8b4e075d4bad90c56286b9668a51cdb6129ea
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -230,5 +214,5 @@ packages:
     source: hosted
     version: "13.0.0"
 sdks:
-  dart: ">=3.3.0 <4.0.0"
-  flutter: ">=3.19.0"
+  dart: ">=3.3.3 <4.0.0"
+  flutter: ">=3.3.0"
