@@ -1,3 +1,9 @@
+## 6.1.0
+
+- Set min Flutter SDK to 3.19.0
+- Upgrade `sign_in_with_apple_platform_interface` to `1.1.0`
+- Upgrade `sign_in_with_apple_web` to `2.1.0`
+
 ## 6.0.0
 
 - Migrate to package:web
