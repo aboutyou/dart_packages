@@ -68,7 +68,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_web_plugins:
-    dependency: transitive
+    dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -253,5 +253,5 @@ packages:
     source: hosted
     version: "0.5.1"
 sdks:
-  dart: ">=3.3.3 <4.0.0"
+  dart: ">=3.3.0 <4.0.0"
   flutter: ">=3.19.0"

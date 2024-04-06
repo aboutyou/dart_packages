@@ -21,10 +21,10 @@ import 'web_authentication_options.dart';
 /// The web implementation of [SignInWithApplePlatform].
 ///
 /// This class implements the `package:sign_in_with_apple` functionality for the web.
-class SignInWithApplePlugin extends SignInWithApplePlatform {
+class SignInWithAppleWeb extends SignInWithApplePlatform {
   /// Registers this class as the default instance of [SignInWithApplePlatform].
   static void registerWith(Registrar registrar) {
-    SignInWithApplePlatform.instance = SignInWithApplePlugin();
+    SignInWithApplePlatform.instance = SignInWithAppleWeb();
   }
 
   @override
