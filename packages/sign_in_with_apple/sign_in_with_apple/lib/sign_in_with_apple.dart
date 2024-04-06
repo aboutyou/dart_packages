@@ -1,5 +1,3 @@
-
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -11,19 +9,30 @@ import 'sign_in_with_apple_method_channel.dart';
 import 'sign_in_with_apple_platform_interface.dart';
 import 'web_authentication_options.dart';
 
-export 'authorization_credential.dart' show AuthorizationCredentialAppleID, AuthorizationCredentialPassword;
-export 'authorization_request.dart' show AuthorizationRequest, AppleIDAuthorizationRequest, AppleIDAuthorizationScopes, PasswordAuthorizationRequest;
-export 'credential_state.dart'  show CredentialState;
-export 'exceptions.dart' show SignInWithAppleAuthorizationException, SignInWithAppleCredentialsException, SignInWithAppleException, SignInWithAppleNotSupportedException, UnknownSignInWithAppleException, AuthorizationErrorCode;
+export 'authorization_credential.dart'
+    show AuthorizationCredentialAppleID, AuthorizationCredentialPassword;
+export 'authorization_request.dart'
+    show
+        AuthorizationRequest,
+        AppleIDAuthorizationRequest,
+        AppleIDAuthorizationScopes,
+        PasswordAuthorizationRequest;
+export 'credential_state.dart' show CredentialState;
+export 'exceptions.dart'
+    show
+        SignInWithAppleAuthorizationException,
+        SignInWithAppleCredentialsException,
+        SignInWithAppleException,
+        SignInWithAppleNotSupportedException,
+        UnknownSignInWithAppleException,
+        AuthorizationErrorCode;
 export 'nonce.dart' show generateNonce;
 export 'web_authentication_options.dart' show WebAuthenticationOptions;
 
 export './widgets/apple_logo_painter.dart' show AppleLogoPainter;
-export './widgets/sign_in_with_apple_builder.dart'
-    show SignInWithAppleBuilder;
+export './widgets/sign_in_with_apple_builder.dart' show SignInWithAppleBuilder;
 export './widgets/sign_in_with_apple_button.dart'
     show SignInWithAppleButton, SignInWithAppleButtonStyle, IconAlignment;
-
 
 /// Wrapper class providing the methods to interact with Sign in with Apple.
 // ignore: avoid_classes_with_only_static_members

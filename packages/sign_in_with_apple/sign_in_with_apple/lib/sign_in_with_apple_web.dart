@@ -17,7 +17,6 @@ import 'exceptions.dart';
 import 'sign_in_with_apple_platform_interface.dart';
 import 'web_authentication_options.dart';
 
-
 /// The web implementation of [SignInWithApplePlatform].
 ///
 /// This class implements the `package:sign_in_with_apple` functionality for the web.
@@ -135,4 +134,3 @@ extension type NameI._(JSObject _) implements JSObject {
   external String get firstName;
   external String get lastName;
 }
-
