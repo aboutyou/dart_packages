@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -7,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_in_with_apple/widgets/sign_in_with_apple_button.dart';
+
+setupView(WidgetTester tester) {
+  tester.view.devicePixelRatio = 3;
+  tester.view.physicalSize = const Size(300, 100) * 3;
+}
 
 // The tests are only run on macOS system, on other systems they will be skipped
 // On other systems small differences can lead to failing goldens (e.g. text rendering)
@@ -22,17 +25,12 @@ Future<void> main() async {
   final fontLoader = FontLoader('.SF Pro Text')..addFont(fontData);
   await fontLoader.load();
 
-  setUp(() {
-    final binding = TestWidgetsFlutterBinding.ensureInitialized();
-
-    binding.window.devicePixelRatioTestValue = 3;
-    binding.window.physicalSizeTestValue = const Size(300, 100) * 3;
-  });
-
   group('Button Style', () {
     testWidgets(
       'Black',
       (tester) async {
+        setupView(tester);
+
         await tester.pumpWidget(
           TestSetup(
             child: SignInWithAppleButton(
@@ -53,6 +51,8 @@ Future<void> main() async {
     testWidgets(
       'White',
       (tester) async {
+        setupView(tester);
+
         await tester.pumpWidget(
           TestSetup(
             backgroundColor: Colors.black,
@@ -74,6 +74,8 @@ Future<void> main() async {
     testWidgets(
       'White Outlined',
       (tester) async {
+        setupView(tester);
+
         await tester.pumpWidget(
           TestSetup(
             child: SignInWithAppleButton(
@@ -96,6 +98,8 @@ Future<void> main() async {
     testWidgets(
       'Left aligned icon',
       (tester) async {
+        setupView(tester);
+
         await tester.pumpWidget(
           TestSetup(
             child: SignInWithAppleButton(
@@ -116,6 +120,8 @@ Future<void> main() async {
     testWidgets(
       'Center aligned Icon',
       (tester) async {
+        setupView(tester);
+
         await tester.pumpWidget(
           TestSetup(
             child: SignInWithAppleButton(
@@ -137,6 +143,8 @@ Future<void> main() async {
   testWidgets(
     'Allows to customize the border radius of the button',
     (tester) async {
+      setupView(tester);
+
       await tester.pumpWidget(
         TestSetup(
           child: SignInWithAppleButton(
@@ -159,6 +167,8 @@ Future<void> main() async {
   testWidgets(
     'Allows to customize the height of the button',
     (tester) async {
+      setupView(tester);
+
       await tester.pumpWidget(
         TestSetup(
           child: SignInWithAppleButton(
@@ -188,6 +198,8 @@ Future<void> main() async {
   testWidgets(
     'Allows customizing of the text',
     (tester) async {
+      setupView(tester);
+
       await tester.pumpWidget(
         TestSetup(
           child: SignInWithAppleButton(
@@ -213,6 +225,8 @@ Future<void> main() async {
   testWidgets(
     'Calls the onPressed callback when the button is pressed',
     (tester) async {
+      setupView(tester);
+
       var callCount = 0;
 
       await tester.pumpWidget(
