@@ -51,6 +51,12 @@ Your server should then daily verify the session with Apple (via a refresh token
 
 Before you can start integrating (or even testing) Sign in with Apple you need a [paid membership to the Apple Developer Program](https://developer.apple.com/programs/). Sign in with Apple is one of the restricted services which is not available for free with just an Apple ID ([source](https://developer.apple.com/programs/whats-included/)).
 
+#### Apple Mail Relay
+
+Since the users are able to use the private email relay, it is necessary to add a SPF record to the domains used to send emails, please read more here : https://developer.apple.com/help/account/configure-app-capabilities/configure-private-email-relay-service/
+Without it your service will not be able to send emails to the user that choose to use Apple's private relay, and the email will not be delivered.
+
+
 ### Setup
 
 #### Register an App ID
