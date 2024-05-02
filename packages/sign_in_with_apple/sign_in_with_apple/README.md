@@ -56,7 +56,6 @@ Before you can start integrating (or even testing) Sign in with Apple you need a
 Since the users can use the private email relay, it is necessary to add an SPF record to the domains used to send emails, please read more here: https://developer.apple.com/help/account/configure-app-capabilities/configure-private-email-relay-service/
 Without it, your service will not be able to send emails to users who choose to use Apple's private relay, and the emails will not be delivered.
 
-
 ### Setup
 
 #### Register an App ID
