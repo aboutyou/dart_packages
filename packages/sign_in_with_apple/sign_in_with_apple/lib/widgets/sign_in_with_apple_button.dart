@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sign_in_with_apple/src/widgets/apple_logo_painter.dart';
+import 'package:sign_in_with_apple/widgets/apple_logo_painter.dart';
 
 /// The scale based on the height of the button
 const _appleIconSizeScale = 28 / 44;

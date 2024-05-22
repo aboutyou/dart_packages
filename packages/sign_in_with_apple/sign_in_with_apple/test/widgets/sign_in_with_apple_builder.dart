@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,7 +5,8 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 void main() {
   setUp(() {
-    SignInWithApple.channel.setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SignInWithApple.channel, null);
   });
 
   testWidgets(
@@ -15,7 +14,8 @@ void main() {
     (tester) async {
       var calls = 0;
 
-      SignInWithApple.channel.setMockMethodCallHandler((call) async {
+      tester.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(SignInWithApple.channel, (call) async {
         calls++;
 
         if (call.method == 'isAvailable') {
@@ -52,7 +52,8 @@ void main() {
     (tester) async {
       var calls = 0;
 
-      SignInWithApple.channel.setMockMethodCallHandler((call) async {
+      tester.binding.defaultBinaryMessenger
+          .setMockMethodCallHandler(SignInWithApple.channel, (call) async {
         calls++;
 
         if (call.method == 'isAvailable') {

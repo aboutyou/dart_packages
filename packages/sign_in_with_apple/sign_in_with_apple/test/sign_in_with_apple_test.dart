@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
@@ -7,11 +5,13 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   tearDown(() {
-    SignInWithApple.channel.setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SignInWithApple.channel, null);
   });
 
   test('performAuthorizationRequest -> Apple ID', () async {
-    SignInWithApple.channel.setMockMethodCallHandler((methodCall) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SignInWithApple.channel, (methodCall) async {
       if (methodCall.method == 'performAuthorizationRequest') {
         return <dynamic, dynamic>{
           'type': 'appleid',
@@ -43,7 +43,8 @@ void main() {
   });
 
   test('performAuthorizationRequest -> Username/Password', () async {
-    SignInWithApple.channel.setMockMethodCallHandler((methodCall) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(SignInWithApple.channel, (methodCall) async {
       if (methodCall.method == 'performAuthorizationRequest') {
         return <dynamic, dynamic>{
           'type': 'password',
