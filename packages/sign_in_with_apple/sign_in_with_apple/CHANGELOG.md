@@ -1,3 +1,7 @@
+## 6.1.1
+
+- Removes references to Flutter v1 android embedding classes.
+
 ## 6.1.0
 
 - Set min Flutter SDK to 3.19.0
