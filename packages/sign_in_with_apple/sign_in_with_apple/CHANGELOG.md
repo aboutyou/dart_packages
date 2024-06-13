@@ -1,6 +1,10 @@
+## 6.1.2
+
+- Switch to modern Gradle setup (https://docs.flutter.dev/release/breaking-changes/flutter-gradle-plugin-apply) for the example app
+
 ## 6.1.1
 
-- Removes references to Flutter v1 android embedding classes.
+- Removes references to Flutter v1 Android embedding classes.
 
 ## 6.1.0
 
