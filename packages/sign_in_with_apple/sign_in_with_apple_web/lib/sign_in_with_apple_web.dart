@@ -112,11 +112,11 @@ extension type AuthorizationI._(JSObject _) implements JSObject {
   external String get code;
   @JS('id_token')
   external String get idToken;
-  external String get state;
+  external String? get state;
 }
 
 extension type UserI._(JSObject _) implements JSObject {
-  external String get email;
+  external String? get email;
   external NameI? get name;
 }
 
