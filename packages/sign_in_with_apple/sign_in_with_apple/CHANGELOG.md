@@ -1,6 +1,7 @@
 ## 6.1.2
 
 - Switch to modern Gradle setup (https://docs.flutter.dev/release/breaking-changes/flutter-gradle-plugin-apply) for the example app
+- Fix JS types in some scenarios (omitting `email` or `state` parameters) [#432](https://github.com/aboutyou/dart_packages/pull/432)
 
 ## 6.1.1
 
