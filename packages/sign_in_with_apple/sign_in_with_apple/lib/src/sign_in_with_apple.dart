@@ -20,7 +20,7 @@ class SignInWithApple {
   ///
   /// Sign in with Apple is available on:
   /// - iOS 13 and higher
-  /// - macOS 10.15 and higher
+  /// - macOS 10.14 and higher
   /// - Android
   /// - Web
   ///
@@ -50,7 +50,7 @@ class SignInWithApple {
   /// A specialized [SignInWithAppleAuthorizationException] is thrown in case of authorization errors, which contains
   /// further information about the failure.
   ///
-  /// Throws an [SignInWithAppleNotSupportedException] in case Sign in with Apple is not available (e.g. iOS < 13, macOS < 10.15)
+  /// Throws an [SignInWithAppleNotSupportedException] in case Sign in with Apple is not available (e.g. iOS < 13, macOS < 10.14)
   static Future<AuthorizationCredentialAppleID> getAppleIDCredential({
     required List<AppleIDAuthorizationScopes> scopes,
 

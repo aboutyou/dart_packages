@@ -8,7 +8,7 @@ import Flutter
 
 let methodChannelName = "com.aboutyou.dart_packages.sign_in_with_apple"
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 10.14, *)
 public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
     var _lastSignInWithAppleAuthorizationController: SignInWithAppleAuthorizationController?
 
@@ -103,7 +103,7 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
     }
 }
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 10.14, *)
 class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControllerDelegate {
     var callback: FlutterResult
     

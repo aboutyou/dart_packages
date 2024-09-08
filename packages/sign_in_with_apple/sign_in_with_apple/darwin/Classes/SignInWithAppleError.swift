@@ -11,7 +11,7 @@ import UIKit
 public enum SignInWithAppleGenericError {
     // An error for the case we are running on a not supported platform
     //
-    // We currently support macOS 10.15 or higher and iOS 13 or higher
+    // We currently support macOS 10.14 or higher and iOS 13 or higher
     case notSupported
     
     // An error in case the arguments of a FlutterMethodCall are missing or don't have the proper type
@@ -54,7 +54,7 @@ public enum SignInWithAppleGenericError {
 }
     
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 10.14, *)
 public enum SignInWithAppleError {
     // In case there was an error while getting the state of the credentials for a specific user identifier
     // The first argument will be the localized error message
