@@ -20,7 +20,7 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "isAvailable":
-            if #available(macOS 10.15, *) {
+            if #available(iOS 13.0, macOS 10.15, *) {
                 result(true)
             } else {
                 result(false)
@@ -34,7 +34,7 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
             }
 
             // Only proceed if macOS 10.15 or newer is available
-            if #available(macOS 10.15, *) {
+            if #available(iOS 13.0, macOS 10.15, *) {
                 let signInController = SignInWithAppleAuthorizationController(result)
                 // Safely cast to avoid errors on macOS 10.14
                 _lastSignInWithAppleAuthorizationController = signInController
@@ -52,7 +52,7 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
                 return
             }
 
-            if #available(macOS 10.15, *) {
+            if #available(iOS 13.0, macOS 10.15, *) {
                 let appleIDProvider = ASAuthorizationAppleIDProvider()
                 appleIDProvider.getCredentialState(forUserID: userIdentifier) { credentialState, error in
                     if let error = error {
