@@ -4,14 +4,13 @@ import AuthenticationServices
 import FlutterMacOS
 #elseif os(iOS)
 import Flutter
-// UIKit is only available on iOS and we need it for UIDevice
 import UIKit
 #endif
 
 public enum SignInWithAppleGenericError {
     // An error for the case we are running on a not supported platform
     //
-    // We currently support macOS 10.15 or higher and iOS 13 or higher
+    // We currently support macOS 10.14 or higher and iOS 13 or higher
     case notSupported
     
     // An error in case the arguments of a FlutterMethodCall are missing or don't have the proper type
@@ -52,26 +51,25 @@ public enum SignInWithAppleGenericError {
         }
     }
 }
-    
 
-@available(iOS 13.0, macOS 10.15, *)
+@available(iOS 13.0, macOS 10.14, *)
 public enum SignInWithAppleError {
     // In case there was an error while getting the state of the credentials for a specific user identifier
     // The first argument will be the localized error message
     case credentialsError(String)
     
     // In case we receive an unexpected credentials state
-    case unexpectedCredentialsState(ASAuthorizationAppleIDProvider.CredentialState)
+    case unexpectedCredentialsState(Any)  // Changed type from ASAuthorizationAppleIDProvider.CredentialState to Any for macOS 10.14 compatibility
     
     // In case we get some unknown credential type in the successful authorization callback
     //
     // This contains the credential
-    case unknownCredentials(ASAuthorizationCredential)
+    case unknownCredentials(Any) // Changed type from ASAuthorizationCredential to Any for macOS 10.14 compatibility
     
     // In case there was an error while trying to perform an authorization request
     //
     // This contains the actual authorization error code and the localized error message
-    case authorizationError(ASAuthorizationError.Code, String)
+    case authorizationError(Any, String) // Changed type from ASAuthorizationError.Code to Any for macOS 10.14 compatibility
     
     func toFlutterError() -> FlutterError {
         switch self {
@@ -81,45 +79,72 @@ public enum SignInWithAppleError {
                 message: message,
                 details: nil
             )
+        
         case .unexpectedCredentialsState(let credentialState):
+            // Check if credentialState is of type ASAuthorizationAppleIDProvider.CredentialState
+            if #available(macOS 10.15, *) {
+                if let credentialState = credentialState as? ASAuthorizationAppleIDProvider.CredentialState {
+                    return FlutterError(
+                        code: "unexpected-credentials-state",
+                        message: "Unexpected credential state: \(credentialState)",
+                        details: nil
+                    )
+                }
+            }
             return FlutterError(
                 code: "unexpected-credentials-state",
-                message: "Unexpected credential state: \(credentialState)",
+                message: "Credential state not available for macOS < 10.15",
                 details: nil
             )
+        
         case .unknownCredentials(let credential):
+            if #available(macOS 10.15, *) {
+                if let credential = credential as? ASAuthorizationCredential {
+                    return FlutterError(
+                        code: "unknown-credentials",
+                        message: "Unexpected credentials: \(credential)",
+                        details: nil
+                    )
+                }
+            }
             return FlutterError(
                 code: "unknown-credentials",
-                message: "Unexpected credentials: \(credential)",
+                message: "Unknown credentials not available for macOS < 10.15",
                 details: nil
             )
+        
         case .authorizationError(let code, let message):
-            var errorCode = "authorization-error/unknown"
-            
-            switch code {
-            case .unknown:
-                errorCode = "authorization-error/unknown"
-            case .canceled:
-                errorCode = "authorization-error/canceled"
-            case .invalidResponse:
-                errorCode = "authorization-error/invalidResponse"
-            case .notHandled:
-                errorCode = "authorization-error/notHandled"
-            case .failed:
-                errorCode = "authorization-error/failed"
-#if (os(iOS) && swift(>=5.5)) || (os(macOS) && swift(>=5.5.1))
-            // new case since Xcode 13, arrived earlier in iOS
-            // use https://swiftly.dev/swift-versions to match Swift to Xcode versions (as this is in practice driven by the OS SDK, not Swift version)
-            case .notInteractive:
-                errorCode = "authorization-error/notInteractive"
-#endif
-            @unknown default:
-                print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");
+            if #available(macOS 10.15, *) {
+                if let code = code as? ASAuthorizationError.Code {
+                    var errorCode = "authorization-error/unknown"
+                    switch code {
+                    case .unknown:
+                        errorCode = "authorization-error/unknown"
+                    case .canceled:
+                        errorCode = "authorization-error/canceled"
+                    case .invalidResponse:
+                        errorCode = "authorization-error/invalidResponse"
+                    case .notHandled:
+                        errorCode = "authorization-error/notHandled"
+                    case .failed:
+                        errorCode = "authorization-error/failed"
+                    #if (os(iOS) && swift(>=5.5)) || (os(macOS) && swift(>=5.5.1))
+                    case .notInteractive:
+                        errorCode = "authorization-error/notInteractive"
+                    #endif
+                    @unknown default:
+                        print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)")
+                    }
+                    return FlutterError(
+                        code: errorCode,
+                        message: message,
+                        details: nil
+                    )
+                }
             }
-            
             return FlutterError(
-                code: errorCode,
-                message: message,
+                code: "authorization-error/unsupported",
+                message: "Authorization error not available for macOS < 10.15",
                 details: nil
             )
         }
