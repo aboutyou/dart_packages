@@ -1,3 +1,7 @@
+## 6.1.3
+
+- Support Xcode 16 (in addition to all previously supported versions)
+
 ## 6.1.2
 
 - Switch to modern Gradle setup (https://docs.flutter.dev/release/breaking-changes/flutter-gradle-plugin-apply) for the example app
