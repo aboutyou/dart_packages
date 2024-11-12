@@ -160,7 +160,8 @@ AuthorizationCredentialAppleID parseAuthorizationCredentialAppleIDFromDeeplink(
     }
   }
 
-  final user = deeplink.queryParameters.containsKey('user')
+  final user = deeplink.queryParameters.containsKey('user') &&
+          deeplink.queryParameters['user']?.isNotEmpty == true
       ? json.decode(deeplink.queryParameters['user'] as String)
           as Map<String, dynamic>
       : null;
