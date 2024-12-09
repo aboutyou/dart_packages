@@ -1,3 +1,7 @@
+## 6.1.4
+
+- Bump `sign_in_with_apple_web` dependency to _actually_ include fix from [#432](https://github.com/aboutyou/dart_packages/pull/432)
+
 ## 6.1.3
 
 - Support Xcode 16 (in addition to all previously supported versions)
