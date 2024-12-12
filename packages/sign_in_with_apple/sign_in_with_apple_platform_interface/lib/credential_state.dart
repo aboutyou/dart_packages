@@ -16,6 +16,16 @@ enum CredentialState {
 
   /// The user wasn't found.
   notFound,
+
+  /// The user was transferred to a different team
+  transferred,
+}
+
+extension CredentialStateApproved on CredentialState {
+  bool get isApproved {
+    return this == CredentialState.authorized ||
+        this == CredentialState.transferred;
+  }
 }
 
 /// Parses the string represenation of a [CredentialState] to its enum value.
@@ -33,6 +43,9 @@ CredentialState parseCredentialState(String? credentialState) {
 
     case 'notFound':
       return CredentialState.notFound;
+
+    case 'transferred':
+      return CredentialState.transferred;
 
     default:
       throw PlatformException(
