@@ -1,3 +1,7 @@
+## NEXT
+
+- Adds credentialExport and credentialImport to AuthorizationErrorCode
+
 ## 1.1.0
 
 - Use proper type name in toString
