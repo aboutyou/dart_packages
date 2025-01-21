@@ -59,6 +59,11 @@ abstract class SignInWithAppleException implements Exception {
           code: AuthorizationErrorCode.credentialExport,
           message: exception.message ?? 'no message provided',
         );
+      case 'authorization-error/matchedExcludedCredential':
+        return SignInWithAppleAuthorizationException(
+          code: AuthorizationErrorCode.credentialExport,
+          message: exception.message ?? 'no message provided',
+        );
 
       case 'credentials-error':
         return SignInWithAppleCredentialsException(
@@ -130,6 +135,9 @@ enum AuthorizationErrorCode {
 
   /// The credential import request failed.
   credentialImport,
+
+  /// This error should only be returned when specifying @c excludedCredentials on a public key credential registration request.
+  matchedExcludedCredential,
 }
 
 /// A [SignInWithAppleException] indicating something went wrong while authenticating.
