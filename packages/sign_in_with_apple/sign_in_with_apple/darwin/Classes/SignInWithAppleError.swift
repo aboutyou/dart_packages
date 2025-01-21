@@ -107,15 +107,21 @@ public enum SignInWithAppleError {
                 errorCode = "authorization-error/notHandled"
             case .failed:
                 errorCode = "authorization-error/failed"
-#if (os(iOS) && swift(>=5.5)) || (os(macOS) && swift(>=5.5.1))
+#if compiler(>=5.5)
             // new case since Xcode 13, arrived earlier in iOS
-            // use https://swiftly.dev/swift-versions to match Swift to Xcode versions (as this is in practice driven by the OS SDK, not Swift version)
+            // use https://xcodereleases.com/ to match Swift to Xcode versions (as this is in practice driven by the OS SDK, not Swift version)
             case .notInteractive:
                 errorCode = "authorization-error/notInteractive"
 #endif
 #if compiler(>=6.0)
             case .matchedExcludedCredential:
                 errorCode = "authorization-error/matchedExcludedCredential"
+#endif
+#if compiler(>=6.0.3)
+            case .credentialImport:
+                errorCode = "authorization-error/credentialImport"
+            case .credentialExport:
+                errorCode = "authorization-error/credentialExport"
 #endif
             @unknown default:
                 print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");
