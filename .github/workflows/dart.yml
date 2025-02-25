@@ -68,11 +68,15 @@ jobs:
             xcode: 15.2
           - os: macos-13
             xcode: 16.1
+          - os: macos-13
+            xcode: 16.2
           - os: macos-14
             xcode: 14.3.1
           - os: macos-14
             xcode: 16.1
             flutter: 3.19.1
+          - os: macos-14
+            xcode: 16.2
           - os: macos-15
             xcode: 15.2
           - os: macos-15
