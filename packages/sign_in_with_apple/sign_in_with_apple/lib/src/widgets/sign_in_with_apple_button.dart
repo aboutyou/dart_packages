@@ -13,6 +13,7 @@ class SignInWithAppleButton extends StatelessWidget {
     super.key,
     required this.onPressed,
     this.text = 'Sign in with Apple',
+    this.textWidget,
     this.height = 44,
     this.style = SignInWithAppleButtonStyle.black,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
@@ -48,6 +49,11 @@ class SignInWithAppleButton extends StatelessWidget {
   ///
   /// This defaults to [IconAlignment.center].
   final IconAlignment iconAlignment;
+
+  /// The text widget to display next to the Apple logo.
+  ///
+  /// If this is set, the [text] parameter will be ignored.
+  final Widget? textWidget;
 
   /// Returns the background color of the button based on the current [style].
   Color get _backgroundColor {
@@ -95,18 +101,20 @@ class SignInWithAppleButton extends StatelessWidget {
     // per Apple's guidelines
     final fontSize = height * 0.43;
 
-    final textWidget = Text(
-      text,
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        inherit: false,
-        fontSize: fontSize,
-        color: _contrastColor,
-        // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart#L16
-        fontFamily: '.SF Pro Text',
-        letterSpacing: -0.41,
-      ),
-    );
+    // The text widget to display next to the Apple logo
+    final textWidget = this.textWidget ??
+        Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            inherit: false,
+            fontSize: fontSize,
+            color: _contrastColor,
+            // defaults styles aligned with https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/cupertino/text_theme.dart#L16
+            fontFamily: '.SF Pro Text',
+            letterSpacing: -0.41,
+          ),
+        );
 
     final appleIcon = Container(
       width: _appleIconSizeScale * height,
