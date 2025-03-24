@@ -20,7 +20,7 @@ class SignInWithAppleButton extends StatelessWidget {
   });
 
   /// The callback that is be called when the button is pressed.
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// The text to display next to the Apple logo.
   ///
