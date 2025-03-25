@@ -30,66 +30,47 @@ Future<void> main() async {
   });
 
   group('Button Style', () {
-    testWidgets(
-      'Black',
-      (tester) async {
-        await tester.pumpWidget(
-          TestSetup(
-            child: SignInWithAppleButton(
-              onPressed: () {},
-              style: SignInWithAppleButtonStyle.black,
+    setUp(() {
+      TestWidgetsFlutterBinding.ensureInitialized()
+          .window
+          .physicalSizeTestValue = const Size(300, 175) * 3;
+    });
+
+    for (final style in SignInWithAppleButtonStyle.values) {
+      testWidgets(
+        style.name,
+        (tester) async {
+          await tester.pumpWidget(
+            TestSetup(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const DebugLabel('Enabled:'),
+                  const SizedBox(height: 5),
+                  SignInWithAppleButton(
+                    onPressed: () {},
+                    style: style,
+                  ),
+                  const SizedBox(height: 20),
+                  const DebugLabel('Disabled:'),
+                  const SizedBox(height: 5),
+                  SignInWithAppleButton(
+                    onPressed: null,
+                    style: style,
+                  ),
+                ],
+              ),
             ),
-          ),
-        );
+          );
 
-        await expectLater(
-          find.byType(CupertinoApp),
-          matchesGoldenFile('goldens/black_button.png'),
-        );
-      },
-      skip: !Platform.isMacOS,
-    );
-
-    testWidgets(
-      'White',
-      (tester) async {
-        await tester.pumpWidget(
-          TestSetup(
-            backgroundColor: Colors.black,
-            child: SignInWithAppleButton(
-              onPressed: () {},
-              style: SignInWithAppleButtonStyle.white,
-            ),
-          ),
-        );
-
-        await expectLater(
-          find.byType(CupertinoApp),
-          matchesGoldenFile('goldens/white_button.png'),
-        );
-      },
-      skip: !Platform.isMacOS,
-    );
-
-    testWidgets(
-      'White Outlined',
-      (tester) async {
-        await tester.pumpWidget(
-          TestSetup(
-            child: SignInWithAppleButton(
-              onPressed: () {},
-              style: SignInWithAppleButtonStyle.whiteOutlined,
-            ),
-          ),
-        );
-
-        await expectLater(
-          find.byType(CupertinoApp),
-          matchesGoldenFile('goldens/white_outlined_button.png'),
-        );
-      },
-      skip: !Platform.isMacOS,
-    );
+          await expectLater(
+            find.byType(CupertinoApp),
+            matchesGoldenFile('goldens/${style.name}_button.png'),
+          );
+        },
+        skip: !Platform.isMacOS,
+      );
+    }
   });
 
   group('Icon Alignment', () {
@@ -281,4 +262,24 @@ Uri _resolvePathInTestDirectory(String path) {
   }
 
   return cwd.uri.resolve(path);
+}
+
+class DebugLabel extends StatelessWidget {
+  const DebugLabel(
+    this.text, {
+    super.key,
+  });
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        color: Colors.black,
+        fontFamily: '.SF Pro Text',
+      ),
+    );
+  }
 }
