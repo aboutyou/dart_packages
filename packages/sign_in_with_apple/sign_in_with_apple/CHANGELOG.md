@@ -1,4 +1,4 @@
-## 6.2.0
+## 7.0.0
 
 - Extend `AuthorizationErrorCode` cases
   - Fix warnings when compiling in Swift 6 mode

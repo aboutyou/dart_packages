@@ -1,3 +1,7 @@
+## 3.0.0
+
+- Upgrade `sign_in_with_apple_platform_interface` to `2.0.0`
+
 ## 2.1.0
 
 - Set min Flutter SDK to 3.19.0

@@ -1,4 +1,4 @@
-## 1.2.0
+## 2.0.0
 
 - Adds `credentialExport`, `credentialImport`, and `matchedExcludedCredential` cases to `AuthorizationErrorCode`
 
