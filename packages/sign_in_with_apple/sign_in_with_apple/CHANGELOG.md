@@ -1,8 +1,11 @@
+## 7.0.1
+
+- Allow `null` for `SignInWithAppleButton`'s `onPressed` handler to disable it
+
 ## 7.0.0
 
 - Extend `AuthorizationErrorCode` cases
   - Fix warnings when compiling in Swift 6 mode
-- Allow `null` for `SignInWithAppleButton`'s `onPressed` handler to disable it
 
 ## 6.1.4
 
