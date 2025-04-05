@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Adds `credentialExport`, `credentialImport`, and `matchedExcludedCredential` cases to `AuthorizationErrorCode`
+
 ## 1.1.0
 
 - Use proper type name in toString

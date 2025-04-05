@@ -1,3 +1,12 @@
+## 7.0.1
+
+- Allow `null` for `SignInWithAppleButton`'s `onPressed` handler to disable it
+
+## 7.0.0
+
+- Extend `AuthorizationErrorCode` cases
+  - Fix warnings when compiling in Swift 6 mode
+
 ## 6.1.4
 
 - Bump `sign_in_with_apple_web` dependency to _actually_ include fix from [#432](https://github.com/aboutyou/dart_packages/pull/432)
