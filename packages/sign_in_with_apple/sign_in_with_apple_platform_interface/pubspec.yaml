@@ -1,7 +1,7 @@
 name: sign_in_with_apple_platform_interface
 description: A common platform interface for the sign_in_with_apple plugin.
 repository: https://github.com/aboutyou/dart_packages/tree/master/packages/sign_in_with_apple/sign_in_with_apple_platform_interface
-version: 1.1.0
+version: 1.2.0
 
 environment:
   sdk: ^3.3.0

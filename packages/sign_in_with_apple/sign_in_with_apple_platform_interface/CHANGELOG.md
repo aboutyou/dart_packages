@@ -1,6 +1,6 @@
-## NEXT
+## 1.2.0
 
-- Adds credentialExport and credentialImport to AuthorizationErrorCode
+- Adds `credentialExport`, `credentialImport`, and `matchedExcludedCredential` cases to `AuthorizationErrorCode`
 
 ## 1.1.0
 
