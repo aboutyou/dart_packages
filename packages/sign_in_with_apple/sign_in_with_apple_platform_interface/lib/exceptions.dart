@@ -61,7 +61,7 @@ abstract class SignInWithAppleException implements Exception {
         );
       case 'authorization-error/matchedExcludedCredential':
         return SignInWithAppleAuthorizationException(
-          code: AuthorizationErrorCode.credentialExport,
+          code: AuthorizationErrorCode.matchedExcludedCredential,
           message: exception.message ?? 'no message provided',
         );
 
