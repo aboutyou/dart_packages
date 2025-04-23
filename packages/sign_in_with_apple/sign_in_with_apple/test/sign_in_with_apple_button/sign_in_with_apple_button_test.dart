@@ -192,6 +192,31 @@ Future<void> main() async {
   );
 
   testWidgets(
+    'Allows providing a custom text widget',
+    (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            textWidget: const Text('Apple Login'),
+          ),
+        ),
+      );
+
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/custom_text_widget.png'),
+      );
+
+      expect(
+        find.text('Apple Login'),
+        findsOneWidget,
+      );
+    },
+    skip: !Platform.isMacOS,
+  );
+
+  testWidgets(
     'Calls the onPressed callback when the button is pressed',
     (tester) async {
       var callCount = 0;
