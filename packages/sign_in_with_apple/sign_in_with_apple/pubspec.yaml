@@ -39,7 +39,9 @@ flutter:
         pluginClass: SignInWithApplePlugin
       ios:
         pluginClass: SignInWithApplePlugin
+        sharedDarwinSource: true
       macos:
         pluginClass: SignInWithApplePlugin
+        sharedDarwinSource: true
       web:
         default_package: sign_in_with_apple_web

@@ -2,21 +2,22 @@ PODS:
   - Flutter (1.0.0)
   - sign_in_with_apple (0.0.1):
     - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
+  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/darwin`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   sign_in_with_apple:
-    :path: ".symlinks/plugins/sign_in_with_apple/ios"
+    :path: ".symlinks/plugins/sign_in_with_apple/darwin"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
+  sign_in_with_apple: 5e34677a4e74c5f42760f41b3bbe05343e84d171
 
-PODFILE CHECKSUM: 1e1f157c1a20c6bac7abde50f6d1e11fbeac5303
+PODFILE CHECKSUM: 2a1d7c6b4fac3acca2a809d948e8788e4b6aa979
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.16.2
