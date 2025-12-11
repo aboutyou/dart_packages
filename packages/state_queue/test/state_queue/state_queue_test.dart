@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:state_queue/state_queue.dart';
-import 'package:pedantic/pedantic.dart';
 import 'package:test/test.dart';
 
 class _TestBloc extends StateQueue<int> {

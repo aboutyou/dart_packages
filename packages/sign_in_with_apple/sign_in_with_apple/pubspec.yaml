@@ -5,7 +5,7 @@ homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/sign_in
 repository: https://github.com/aboutyou/dart_packages
 
 environment:
-  sdk: ^3.3.0
+  sdk: ^3.9.0
   flutter: ">=3.35.0"
 
 dependencies:
