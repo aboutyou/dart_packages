@@ -16,7 +16,7 @@ class SignInWithAppleButton extends StatelessWidget {
     this.height = 44,
     this.style = SignInWithAppleButtonStyle.black,
     this.borderRadius = const BorderRadius.all(Radius.circular(8.0)),
-    this.iconAlignment = IconAlignment.center,
+    this.iconAlignment = SignInWithAppleIconAlignment.center,
   });
 
   /// The callback that is be called when the button is pressed.
@@ -46,8 +46,8 @@ class SignInWithAppleButton extends StatelessWidget {
 
   /// The alignment of the Apple logo inside the button.
   ///
-  /// This defaults to [IconAlignment.center].
-  final IconAlignment iconAlignment;
+  /// This defaults to [SignInWithAppleIconAlignment.center].
+  final SignInWithAppleIconAlignment iconAlignment;
 
   /// Returns the background color of the button based on the current [style].
   Color get _backgroundColor {
@@ -131,7 +131,7 @@ class SignInWithAppleButton extends StatelessWidget {
     var children = <Widget>[];
 
     switch (iconAlignment) {
-      case IconAlignment.center:
+      case SignInWithAppleIconAlignment.center:
         children = [
           appleIcon,
           Flexible(
@@ -139,7 +139,7 @@ class SignInWithAppleButton extends StatelessWidget {
           ),
         ];
         break;
-      case IconAlignment.left:
+      case SignInWithAppleIconAlignment.left:
         children = [
           appleIcon,
           Expanded(
@@ -198,7 +198,7 @@ enum SignInWithAppleButtonStyle {
 }
 
 /// This controls the alignment of the Apple Logo on the [SignInWithAppleButton]
-enum IconAlignment {
+enum SignInWithAppleIconAlignment {
   /// The icon will be centered together with the text
   ///
   /// ![Center Icon Alignment](https://raw.githubusercontent.com/aboutyou/dart_packages/master/packages/sign_in_with_apple/test/sign_in_with_apple_button/goldens/center_aligned_icon.png)

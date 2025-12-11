@@ -81,7 +81,7 @@ Future<void> main() async {
           TestSetup(
             child: SignInWithAppleButton(
               onPressed: () {},
-              iconAlignment: IconAlignment.left,
+              iconAlignment: SignInWithAppleIconAlignment.left,
             ),
           ),
         );
@@ -101,7 +101,7 @@ Future<void> main() async {
           TestSetup(
             child: SignInWithAppleButton(
               onPressed: () {},
-              iconAlignment: IconAlignment.center,
+              iconAlignment: SignInWithAppleIconAlignment.center,
             ),
           ),
         );
