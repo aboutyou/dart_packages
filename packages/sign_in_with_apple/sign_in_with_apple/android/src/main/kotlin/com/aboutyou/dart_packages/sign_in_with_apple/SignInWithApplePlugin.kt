@@ -46,43 +46,45 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
     when (call.method) {
       "isAvailable" -> result.success(true)
       "performAuthorizationRequest" -> {
-        val _activity = binding?.activity
+        synchronized(authorizationLock) {
+          val _activity = binding?.activity
 
-        if (_activity == null) {
-          result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
-          return
+          if (_activity == null) {
+            result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
+            return
+          }
+
+          val url: String? = call.argument("url")
+
+          if (url == null) {
+            result.error("MISSING_ARG", "Missing 'url' argument", call.arguments)
+            return
+          }
+
+          lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
+          if (triggerMainActivityToHideChromeCustomTab != null) {
+            triggerMainActivityToHideChromeCustomTab!!()
+          }
+
+          lastAuthorizationRequestResult = result
+          triggerMainActivityToHideChromeCustomTab = {
+            val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
+            notificationIntent?.setPackage(null)
+            // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
+            notificationIntent?.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+            _activity.startActivity(notificationIntent)
+          }
+
+          val builder = CustomTabsIntent.Builder();
+          val customTabsIntent = builder.build();
+          customTabsIntent.intent.data = Uri.parse(url)
+
+          _activity.startActivityForResult(
+            customTabsIntent.intent,
+            CUSTOM_TABS_REQUEST_CODE,
+            customTabsIntent.startAnimationBundle
+          )
         }
-
-        val url: String? = call.argument("url")
-
-        if (url == null) {
-          result.error("MISSING_ARG", "Missing 'url' argument", call.arguments)
-          return
-        }
-
-        lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
-        if (triggerMainActivityToHideChromeCustomTab != null) {
-          triggerMainActivityToHideChromeCustomTab!!()
-        }
-
-        lastAuthorizationRequestResult = result
-        triggerMainActivityToHideChromeCustomTab = {
-          val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
-          notificationIntent?.setPackage(null)
-          // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
-          notificationIntent?.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
-          _activity.startActivity(notificationIntent)
-        }
-
-        val builder = CustomTabsIntent.Builder();
-        val customTabsIntent = builder.build();
-        customTabsIntent.intent.data = Uri.parse(url)
-
-        _activity.startActivityForResult(
-          customTabsIntent.intent,
-          CUSTOM_TABS_REQUEST_CODE,
-          customTabsIntent.startAnimationBundle
-        )
       }
       else -> {
         result.notImplemented()
