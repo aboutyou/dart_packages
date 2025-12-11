@@ -123,6 +123,13 @@ public enum SignInWithAppleError {
             case .credentialExport:
                 errorCode = "authorization-error/credentialExport"
 #endif
+#if compiler(>=6.2)
+            case .preferSignInWithApple:
+                errorCode = "authorization-error/preferSignInWithApple"
+            case .deviceNotConfiguredForPasskeyCreation:
+                errorCode = "authorization-error/deviceNotConfiguredForPasskeyCreation"
+#endif
+
             @unknown default:
                 print("[SignInWithApplePlugin]: Unknown authorization error code: \(code)");
             }
