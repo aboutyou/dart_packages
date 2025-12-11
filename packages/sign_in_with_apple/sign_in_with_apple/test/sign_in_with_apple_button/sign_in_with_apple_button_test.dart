@@ -32,164 +32,120 @@ Future<void> main() async {
   group('Button Style', () {
     setUp(() {
       TestWidgetsFlutterBinding.ensureInitialized()
-          .window
-          .physicalSizeTestValue = const Size(300, 175) * 3;
+              .window
+              .physicalSizeTestValue =
+          const Size(300, 175) * 3;
     });
 
     for (final style in SignInWithAppleButtonStyle.values) {
-      testWidgets(
-        style.name,
-        (tester) async {
-          await tester.pumpWidget(
-            TestSetup(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const DebugLabel('Enabled:'),
-                  const SizedBox(height: 5),
-                  SignInWithAppleButton(
-                    onPressed: () {},
-                    style: style,
-                  ),
-                  const SizedBox(height: 20),
-                  const DebugLabel('Disabled:'),
-                  const SizedBox(height: 5),
-                  SignInWithAppleButton(
-                    onPressed: null,
-                    style: style,
-                  ),
-                ],
-              ),
+      testWidgets(style.name, (tester) async {
+        await tester.pumpWidget(
+          TestSetup(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const DebugLabel('Enabled:'),
+                const SizedBox(height: 5),
+                SignInWithAppleButton(onPressed: () {}, style: style),
+                const SizedBox(height: 20),
+                const DebugLabel('Disabled:'),
+                const SizedBox(height: 5),
+                SignInWithAppleButton(onPressed: null, style: style),
+              ],
             ),
-          );
+          ),
+        );
 
-          await expectLater(
-            find.byType(CupertinoApp),
-            matchesGoldenFile('goldens/${style.name}_button.png'),
-          );
-        },
-        skip: !Platform.isMacOS,
-      );
+        await expectLater(
+          find.byType(CupertinoApp),
+          matchesGoldenFile('goldens/${style.name}_button.png'),
+        );
+      }, skip: !Platform.isMacOS);
     }
   });
 
   group('Icon Alignment', () {
-    testWidgets(
-      'Left aligned icon',
-      (tester) async {
-        await tester.pumpWidget(
-          TestSetup(
-            child: SignInWithAppleButton(
-              onPressed: () {},
-              iconAlignment: SignInWithAppleIconAlignment.left,
-            ),
+    testWidgets('Left aligned icon', (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            iconAlignment: SignInWithAppleIconAlignment.left,
           ),
-        );
+        ),
+      );
 
-        await expectLater(
-          find.byType(CupertinoApp),
-          matchesGoldenFile('goldens/left_aligned_icon.png'),
-        );
-      },
-      skip: !Platform.isMacOS,
-    );
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/left_aligned_icon.png'),
+      );
+    }, skip: !Platform.isMacOS);
 
-    testWidgets(
-      'Center aligned Icon',
-      (tester) async {
-        await tester.pumpWidget(
-          TestSetup(
-            child: SignInWithAppleButton(
-              onPressed: () {},
-              iconAlignment: SignInWithAppleIconAlignment.center,
-            ),
+    testWidgets('Center aligned Icon', (tester) async {
+      await tester.pumpWidget(
+        TestSetup(
+          child: SignInWithAppleButton(
+            onPressed: () {},
+            iconAlignment: SignInWithAppleIconAlignment.center,
           ),
-        );
+        ),
+      );
 
-        await expectLater(
-          find.byType(CupertinoApp),
-          matchesGoldenFile('goldens/center_aligned_icon.png'),
-        );
-      },
-      skip: !Platform.isMacOS,
-    );
+      await expectLater(
+        find.byType(CupertinoApp),
+        matchesGoldenFile('goldens/center_aligned_icon.png'),
+      );
+    }, skip: !Platform.isMacOS);
   });
 
-  testWidgets(
-    'Allows to customize the border radius of the button',
-    (tester) async {
-      await tester.pumpWidget(
-        TestSetup(
-          child: SignInWithAppleButton(
-            onPressed: () {},
-            borderRadius: const BorderRadius.all(
-              Radius.circular(22.0),
-            ),
-          ),
+  testWidgets('Allows to customize the border radius of the button', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      TestSetup(
+        child: SignInWithAppleButton(
+          onPressed: () {},
+          borderRadius: const BorderRadius.all(Radius.circular(22.0)),
         ),
-      );
+      ),
+    );
 
-      await expectLater(
-        find.byType(CupertinoApp),
-        matchesGoldenFile('goldens/custom_border_radius.png'),
-      );
-    },
-    skip: !Platform.isMacOS,
-  );
+    await expectLater(
+      find.byType(CupertinoApp),
+      matchesGoldenFile('goldens/custom_border_radius.png'),
+    );
+  }, skip: !Platform.isMacOS);
 
-  testWidgets(
-    'Allows to customize the height of the button',
-    (tester) async {
-      await tester.pumpWidget(
-        TestSetup(
-          child: SignInWithAppleButton(
-            onPressed: () {},
-            height: 60,
-          ),
+  testWidgets('Allows to customize the height of the button', (tester) async {
+    await tester.pumpWidget(
+      TestSetup(child: SignInWithAppleButton(onPressed: () {}, height: 60)),
+    );
+
+    await expectLater(
+      find.byType(CupertinoApp),
+      matchesGoldenFile('goldens/custom_height.png'),
+    );
+
+    expect(tester.getSize(find.byType(SignInWithAppleButton)).height, 60);
+  }, skip: !Platform.isMacOS);
+
+  testWidgets('Allows customizing of the text', (tester) async {
+    await tester.pumpWidget(
+      TestSetup(
+        child: SignInWithAppleButton(
+          onPressed: () {},
+          text: 'Login with Apple',
         ),
-      );
+      ),
+    );
 
-      await expectLater(
-        find.byType(CupertinoApp),
-        matchesGoldenFile('goldens/custom_height.png'),
-      );
+    await expectLater(
+      find.byType(CupertinoApp),
+      matchesGoldenFile('goldens/custom_text.png'),
+    );
 
-      expect(
-        tester
-            .getSize(
-              find.byType(SignInWithAppleButton),
-            )
-            .height,
-        60,
-      );
-    },
-    skip: !Platform.isMacOS,
-  );
-
-  testWidgets(
-    'Allows customizing of the text',
-    (tester) async {
-      await tester.pumpWidget(
-        TestSetup(
-          child: SignInWithAppleButton(
-            onPressed: () {},
-            text: 'Login with Apple',
-          ),
-        ),
-      );
-
-      await expectLater(
-        find.byType(CupertinoApp),
-        matchesGoldenFile('goldens/custom_text.png'),
-      );
-
-      expect(
-        find.text('Login with Apple'),
-        findsOneWidget,
-      );
-    },
-    skip: !Platform.isMacOS,
-  );
+    expect(find.text('Login with Apple'), findsOneWidget);
+  }, skip: !Platform.isMacOS);
 
   testWidgets(
     'Calls the onPressed callback when the button is pressed',
@@ -206,9 +162,7 @@ Future<void> main() async {
         ),
       );
 
-      await tester.tapAt(
-        tester.getCenter(find.byType(SignInWithAppleButton)),
-      );
+      await tester.tapAt(tester.getCenter(find.byType(SignInWithAppleButton)));
       await tester.pumpAndSettle();
 
       expect(callCount, 1);
@@ -236,9 +190,7 @@ class TestSetup extends StatelessWidget {
         color: backgroundColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            child,
-          ],
+          children: <Widget>[child],
         ),
       ),
       theme: const CupertinoThemeData().copyWith(
@@ -265,10 +217,7 @@ Uri _resolvePathInTestDirectory(String path) {
 }
 
 class DebugLabel extends StatelessWidget {
-  const DebugLabel(
-    this.text, {
-    super.key,
-  });
+  const DebugLabel(this.text, {super.key});
 
   final String text;
 
@@ -276,10 +225,7 @@ class DebugLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(
-        color: Colors.black,
-        fontFamily: '.SF Pro Text',
-      ),
+      style: const TextStyle(color: Colors.black, fontFamily: '.SF Pro Text'),
     );
   }
 }

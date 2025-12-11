@@ -119,11 +119,7 @@ class SignInWithAppleButton extends StatelessWidget {
         child: SizedBox(
           width: fontSize * (25 / 31),
           height: fontSize,
-          child: CustomPaint(
-            painter: AppleLogoPainter(
-              color: _contrastColor,
-            ),
-          ),
+          child: CustomPaint(painter: AppleLogoPainter(color: _contrastColor)),
         ),
       ),
     );
@@ -132,22 +128,13 @@ class SignInWithAppleButton extends StatelessWidget {
 
     switch (iconAlignment) {
       case SignInWithAppleIconAlignment.center:
-        children = [
-          appleIcon,
-          Flexible(
-            child: textWidget,
-          ),
-        ];
+        children = [appleIcon, Flexible(child: textWidget)];
         break;
       case SignInWithAppleIconAlignment.left:
         children = [
           appleIcon,
-          Expanded(
-            child: textWidget,
-          ),
-          SizedBox(
-            width: _appleIconSizeScale * height,
-          ),
+          Expanded(child: textWidget),
+          SizedBox(width: _appleIconSizeScale * height),
         ];
         break;
     }
@@ -162,9 +149,7 @@ class SignInWithAppleButton extends StatelessWidget {
           onPressed: onPressed,
           child: Container(
             decoration: _decoration,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             height: height,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
