@@ -64,15 +64,8 @@ jobs:
         xcode: ["16.4", "26.1.1"]
         flutter: ["3.35.0", "3.38.4"]
         exclude:
-          - os: macos-14
-            xcode: 16.1
-            flutter: 3.35.0
-          - os: macos-14
-            xcode: 16.2
-          - os: macos-14
-            xcode: 16.3
           - os: macos-15
-            xcode: 15.2
+            xcode: 26.1.1
           - os: macos-15
             flutter: 3.35.0
     steps:
@@ -99,15 +92,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-15]
+        os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
-        xcode: ["16.1", "16.4"]
+        xcode: ["16.4", "26.1.1"]
         flutter: ["3.35.0", "3.38.4"]
         exclude:
-          - xcode: 16.1
-            flutter: 3.38.4
           - xcode: 16.4
             flutter: 3.35.0
+          - os: macos-15
+            xcode: 26.1.1
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
