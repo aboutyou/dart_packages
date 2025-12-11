@@ -62,6 +62,13 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
         lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
         if (triggerMainActivityToHideChromeCustomTab != null) {
           triggerMainActivityToHideChromeCustomTab!!()
+
+          lastAuthorizationRequestResult = null
+          triggerMainActivityToHideChromeCustomTab = null
+
+          result.error("NEW_REQUEST", "This request was made while another one was still pending, thus both got canceled.", null)
+
+          return
         }
 
         lastAuthorizationRequestResult = result
