@@ -39,49 +39,52 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
   companion object {
     var lastAuthorizationRequestResult: Result? = null
     var triggerMainActivityToHideChromeCustomTab : (() -> Unit)? = null
+    val authorizationLock = Any()
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     when (call.method) {
       "isAvailable" -> result.success(true)
       "performAuthorizationRequest" -> {
-        val _activity = binding?.activity
+        synchronized(authorizationLock) {
+          val _activity = binding?.activity
 
-        if (_activity == null) {
-          result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
-          return
+          if (_activity == null) {
+            result.error("MISSING_ACTIVITY", "Plugin is not attached to an activity", call.arguments)
+            return
+          }
+
+          val url: String? = call.argument("url")
+
+          if (url == null) {
+            result.error("MISSING_ARG", "Missing 'url' argument", call.arguments)
+            return
+          }
+
+          lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
+          if (triggerMainActivityToHideChromeCustomTab != null) {
+            triggerMainActivityToHideChromeCustomTab!!()
+          }
+
+          lastAuthorizationRequestResult = result
+          triggerMainActivityToHideChromeCustomTab = {
+            val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
+            notificationIntent?.setPackage(null)
+            // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
+            notificationIntent?.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
+            _activity.startActivity(notificationIntent)
+          }
+
+          val builder = CustomTabsIntent.Builder();
+          val customTabsIntent = builder.build();
+          customTabsIntent.intent.data = Uri.parse(url)
+
+          _activity.startActivityForResult(
+            customTabsIntent.intent,
+            CUSTOM_TABS_REQUEST_CODE,
+            customTabsIntent.startAnimationBundle
+          )
         }
-
-        val url: String? = call.argument("url")
-
-        if (url == null) {
-          result.error("MISSING_ARG", "Missing 'url' argument", call.arguments)
-          return
-        }
-
-        lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
-        if (triggerMainActivityToHideChromeCustomTab != null) {
-          triggerMainActivityToHideChromeCustomTab!!()
-        }
-
-        lastAuthorizationRequestResult = result
-        triggerMainActivityToHideChromeCustomTab = {
-          val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
-          notificationIntent?.setPackage(null)
-          // Bring the Flutter activity back to the top, by popping the Chrome Custom Tab
-          notificationIntent?.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP;
-          _activity.startActivity(notificationIntent)
-        }
-
-        val builder = CustomTabsIntent.Builder();
-        val customTabsIntent = builder.build();
-        customTabsIntent.intent.data = Uri.parse(url)
-
-        _activity.startActivityForResult(
-          customTabsIntent.intent,
-          CUSTOM_TABS_REQUEST_CODE,
-          customTabsIntent.startAnimationBundle
-        )
       }
       else -> {
         result.notImplemented()
@@ -109,13 +112,15 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
     if (requestCode == CUSTOM_TABS_REQUEST_CODE) {
-      val _lastAuthorizationRequestResult = lastAuthorizationRequestResult
+      synchronized(authorizationLock) {
+        val _lastAuthorizationRequestResult = lastAuthorizationRequestResult
 
-      if (_lastAuthorizationRequestResult != null) {
-        _lastAuthorizationRequestResult.error("authorization-error/canceled", "The user closed the Custom Tab", null)
+        if (_lastAuthorizationRequestResult != null) {
+          _lastAuthorizationRequestResult.error("authorization-error/canceled", "The user closed the Custom Tab", null)
 
-        lastAuthorizationRequestResult = null
-        triggerMainActivityToHideChromeCustomTab = null
+          lastAuthorizationRequestResult = null
+          triggerMainActivityToHideChromeCustomTab = null
+        }
       }
     }
 
@@ -134,24 +139,26 @@ public class SignInWithAppleCallback: Activity {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    // Note: The order is important here, as we first need to send the data to Flutter and then close the custom tab
-    // That way we can detect a manually closed tab in `SignInWithApplePlugin.onActivityResult` (by detecting that we're still waiting on data)
-    val lastAuthorizationRequestResult = SignInWithApplePlugin.lastAuthorizationRequestResult
-    if (lastAuthorizationRequestResult != null) {
-      lastAuthorizationRequestResult.success(intent?.data?.toString())
-      SignInWithApplePlugin.lastAuthorizationRequestResult = null
-    } else {
-      SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
+    synchronized(SignInWithApplePlugin.authorizationLock) {
+      // Note: The order is important here, as we first need to send the data to Flutter and then close the custom tab
+      // That way we can detect a manually closed tab in `SignInWithApplePlugin.onActivityResult` (by detecting that we're still waiting on data)
+      val lastAuthorizationRequestResult = SignInWithApplePlugin.lastAuthorizationRequestResult
+      if (lastAuthorizationRequestResult != null) {
+        lastAuthorizationRequestResult.success(intent?.data?.toString())
+        SignInWithApplePlugin.lastAuthorizationRequestResult = null
+      } else {
+        SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
 
-      Log.e(TAG, "Received Sign in with Apple callback, but 'lastAuthorizationRequestResult' function was `null`")
-    }
+        Log.e(TAG, "Received Sign in with Apple callback, but 'lastAuthorizationRequestResult' function was `null`")
+      }
 
-    val triggerMainActivityToHideChromeCustomTab = SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab
-    if (triggerMainActivityToHideChromeCustomTab != null) {
-      triggerMainActivityToHideChromeCustomTab()
-      SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
-    } else {
-      Log.e(TAG, "Received Sign in with Apple callback, but 'triggerMainActivityToHideChromeCustomTab' function was `null`")
+      val triggerMainActivityToHideChromeCustomTab = SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab
+      if (triggerMainActivityToHideChromeCustomTab != null) {
+        triggerMainActivityToHideChromeCustomTab()
+        SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
+      } else {
+        Log.e(TAG, "Received Sign in with Apple callback, but 'triggerMainActivityToHideChromeCustomTab' function was `null`")
+      }
     }
 
     finish()
