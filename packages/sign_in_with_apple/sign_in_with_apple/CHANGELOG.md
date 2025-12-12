@@ -1,3 +1,10 @@
+### 8.0.0
+
+- Support Swift Package Manager (SPM) [#470](https://github.com/aboutyou/dart_packages/pull/470)/[#471](https://github.com/aboutyou/dart_packages/pull/471)
+- Set min Flutter SDK to 3.41.0
+  - The `SignInWithAppleButton`'s icon alignment is now called `SignInWithAppleIconAlignment` to avoid conflicting with the Material `IconAlignment`
+  - Support Xcode 26.1.1 (while still supporting Xcode 16.4 as our minimum)
+
 ## 7.0.1
 
 - Allow `null` for `SignInWithAppleButton`'s `onPressed` handler to disable it
@@ -53,7 +60,7 @@
 
 ## 4.1.0
 
-- Add support for `transferred` credential state (Xcode 13.3.1 support) 
+- Add support for `transferred` credential state (Xcode 13.3.1 support)
 
 ## 4.0.0
 

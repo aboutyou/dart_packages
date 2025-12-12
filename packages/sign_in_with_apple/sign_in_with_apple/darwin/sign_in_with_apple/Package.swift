@@ -6,17 +6,21 @@ import PackageDescription
 let package = Package(
     name: "sign_in_with_apple",
     platforms: [
-        .iOS("12.0"),
-        .macOS("10.14")
+        .iOS("13.0"),
+        .macOS("10.15"),
     ],
     products: [
         .library(name: "sign-in-with-apple", targets: ["sign_in_with_apple"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(name: "FlutterFramework", path: "../FlutterFramework")
+    ],
     targets: [
         .target(
             name: "sign_in_with_apple",
-            dependencies: [],
+            dependencies: [
+                .product(name: "FlutterFramework", package: "FlutterFramework")
+            ],
             resources: []
         )
     ]
