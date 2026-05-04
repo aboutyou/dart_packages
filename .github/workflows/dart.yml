@@ -20,7 +20,6 @@ jobs:
         package:
           [
             pending_operations,
-            sign_in_with_apple/sign_in_with_apple,
             sign_in_with_apple/sign_in_with_apple_platform_interface,
             state_queue_test,
             state_queue,
@@ -54,20 +53,55 @@ jobs:
           name: ${{ matrix.package }}
           fail_ci_if_error: false
 
+  test-siwa:
+    name: Test ${{ matrix.package }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, macos-15]
+        package: [sign_in_with_apple/sign_in_with_apple]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
+        with:
+          flutter-version: "3.41.0"
+      - name: Install dependencies
+        run: flutter packages get
+        working-directory: packages/${{ matrix.package }}
+      - name: Analyze
+        run: flutter analyze
+        working-directory: packages/${{ matrix.package }}
+      - name: Format
+        run: dart format --set-exit-if-changed .
+        working-directory: packages/${{ matrix.package }}
+      - name: Run tests
+        run: flutter test --coverage
+        working-directory: packages/${{ matrix.package }}
+      - name: Upload coverage to Codecov
+        if: startsWith(matrix.os, 'macos')
+        uses: codecov/codecov-action@v1.0.6
+        with:
+          flags: ${{ matrix.package }}
+          name: ${{ matrix.package }}
+          fail_ci_if_error: false
+
   build-ios:
-    name: Build ${{ matrix.package }} iOS on ${{ matrix.os }} with Xcode ${{ matrix.xcode }} and Flutter ${{ matrix.flutter }}
+    name: Build ${{ matrix.package }} iOS on ${{ matrix.os }} with Xcode ${{ matrix.xcode }} and Flutter ${{ matrix.flutter }} with Cocoapods (default)
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
         xcode: ["16.4", "26.1.1"]
-        flutter: ["3.35.0", "3.38.4"]
+        flutter: ["3.41.9"]
         exclude:
           - os: macos-15
             xcode: 26.1.1
-          - os: macos-15
-            flutter: 3.35.0
+          - os: macos-26
+            xcode: 16.4
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -95,12 +129,14 @@ jobs:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
         xcode: ["16.4", "26.1.1"]
-        flutter: ["3.35.0", "3.38.4"]
+        flutter: ["3.41.0", "3.41.9"]
         exclude:
-          - xcode: 16.4
-            flutter: 3.35.0
           - os: macos-15
             xcode: 26.1.1
+          - os: macos-26
+            xcode: 16.4
+          - os: macos-15
+            flutter: 3.41.0
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -145,7 +181,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         package: [sign_in_with_apple/sign_in_with_apple]
-        flutter: ["3.35.0"]
+        flutter: ["3.41.9"]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v2
@@ -160,17 +196,19 @@ jobs:
         working-directory: packages/${{ matrix.package }}/example
 
   build-macos:
-    name: Build ${{ matrix.package }} macOS on ${{ matrix.os }} with Xcode ${{ matrix.xcode }} and Flutter ${{ matrix.flutter }}
+    name: Build ${{ matrix.package }} macOS on ${{ matrix.os }} with Xcode ${{ matrix.xcode }} and Flutter ${{ matrix.flutter }} with Cocoapods
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
         xcode: ["16.4", "26.1.1"]
-        flutter: ["3.35.0"]
+        flutter: ["3.41.9"]
         exclude:
           - os: macos-15
             xcode: 26.1.1
+          - os: macos-26
+            xcode: 16.4
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -192,6 +230,52 @@ jobs:
           OTHER_SWIFT_FLAGS: "-warnings-as-errors"
           DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
 
+  build-macos-spm:
+    name: Build ${{ matrix.package }} macOS on ${{ matrix.os }} with Xcode ${{ matrix.xcode }} and Flutter ${{ matrix.flutter }} with SPM
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-26]
+        package: [sign_in_with_apple/sign_in_with_apple]
+        xcode: ["26.1.1"]
+        flutter: ["3.41.9"]
+        exclude:
+          - os: macos-15
+            xcode: 26.1.1
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - name: Xcode select
+        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+      - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
+        with:
+          flutter-version: ${{ matrix.flutter }}
+      - name: Enable macOS Desktop Integration
+        run: flutter config --enable-macos-desktop
+      - name: Flutter doctor (version check)
+        run: flutter doctor
+      - name: Enable SPM support
+        run: flutter config --enable-swift-package-manager
+        working-directory: packages/${{ matrix.package }}/example
+      - name: List dependency config before (debug)
+        run: |
+          less macos/Runner.xcodeproj/project.pbxproj | grep Pods || echo ""
+          less macos/Runner.xcodeproj/project.pbxproj | grep FlutterGeneratedPluginSwiftPackage || echo ""
+        working-directory: packages/${{ matrix.package }}/example
+      - name: Remove Cocoapods from project
+        run: pod deintegrate
+        working-directory: packages/${{ matrix.package }}/example/macos
+      - name: Remove Cocoapods files
+        run: rm -rf Pod*
+        working-directory: packages/${{ matrix.package }}/example/macos
+      - name: Build macOS
+        run: flutter build macos
+        working-directory: packages/${{ matrix.package }}/example
+        env:
+          DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
+
   build-web:
     name: Build ${{ matrix.package }} Web on ${{ matrix.os }} and Flutter ${{ matrix.flutter }}
     runs-on: ${{ matrix.os }}
@@ -199,7 +283,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         package: [sign_in_with_apple/sign_in_with_apple]
-        flutter: ["3.35.0"]
+        flutter: ["3.41.9"]
     steps:
       - uses: actions/checkout@v1
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3

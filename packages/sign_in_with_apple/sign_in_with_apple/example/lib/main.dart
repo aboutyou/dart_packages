@@ -7,7 +7,8 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 // Needed because we can't import `web` into a mobile app,
 // while on the flip-side access to `dart:io` throws at runtime (hence the `kIsWeb` check below)
-import 'html_shim.dart' if (dart.library.js_interop) 'package:web/web.dart'
+import 'html_shim.dart'
+    if (dart.library.js_interop) 'package:web/web.dart'
     show window;
 
 void main() {
@@ -34,9 +35,7 @@ class _MyAppState extends State<MyApp> {
         return null;
       }),
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Example app: Sign in with Apple'),
-        ),
+        appBar: AppBar(title: const Text('Example app: Sign in with Apple')),
         body: Container(
           padding: const EdgeInsets.all(10),
           child: Center(
@@ -57,10 +56,10 @@ class _MyAppState extends State<MyApp> {
                         // NOTE(tp): For package local development use (as described in `Development.md`)
                         // Uri.parse('https://siwa-flutter-plugin.dev/')
                         kIsWeb
-                            ? Uri.parse('https://${window.location.host}/')
-                            : Uri.parse(
-                                'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
-                              ),
+                        ? Uri.parse('https://${window.location.host}/')
+                        : Uri.parse(
+                            'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
+                          ),
                   ),
                   // TODO: Remove these if you have no need for them
                   nonce: 'example-nonce',
@@ -84,8 +83,8 @@ class _MyAppState extends State<MyApp> {
                       'lastName': credential.familyName!,
                     'useBundleId':
                         !kIsWeb && (Platform.isIOS || Platform.isMacOS)
-                            ? 'true'
-                            : 'false',
+                        ? 'true'
+                        : 'false',
                     if (credential.state != null) 'state': credential.state!,
                   },
                 );
