@@ -48,8 +48,8 @@ class _MyAppState extends State<MyApp> {
                   ],
                   webAuthenticationOptions: WebAuthenticationOptions(
                     // TODO: Set the `clientId` and `redirectUri` arguments to the values you entered in the Apple Developer portal during the setup
-                    clientId:
-                        'de.lunaone.flutter.signinwithappleexample.service',
+                    clientId: 'de.lunaone.sign-in-with-apple-example-service',
+
                     redirectUri:
                         // For web your redirect URI needs to be the host of the "current page",
                         // while for Android you will be using the API server that redirects back into your app via a deep link
@@ -58,12 +58,12 @@ class _MyAppState extends State<MyApp> {
                         kIsWeb
                         ? Uri.parse('https://${window.location.host}/')
                         : Uri.parse(
-                            'https://flutter-sign-in-with-apple-example.glitch.me/callbacks/sign_in_with_apple',
+                            'https://sign-in-with-apple.lunaone.de/hooks/apple-return-url',
                           ),
                   ),
                   // TODO: Remove these if you have no need for them
-                  nonce: 'example-nonce',
-                  state: 'example-state',
+                  // nonce: 'example-nonce',
+                  // state: 'example-state',
                 );
 
                 // ignore: avoid_print
@@ -71,17 +71,17 @@ class _MyAppState extends State<MyApp> {
 
                 // This is the endpoint that will convert an authorization code obtained
                 // via Sign in with Apple into a session in your system
-                final signInWithAppleEndpoint = Uri(
-                  scheme: 'https',
-                  host: 'flutter-sign-in-with-apple-example.glitch.me',
-                  path: '/sign_in_with_apple',
-                  queryParameters: <String, String>{
-                    'code': credential.authorizationCode,
+                final signInWithAppleEndpoint = Uri.https(
+                  'sign-in-with-apple.lunaone.de',
+                  '/api/sign-in',
+                  <String, dynamic>{
+                    'authorizationCode': credential.authorizationCode,
+                    'identityToken': credential.identityToken,
                     if (credential.givenName != null)
                       'firstName': credential.givenName!,
                     if (credential.familyName != null)
                       'lastName': credential.familyName!,
-                    'useBundleId':
+                    'useBundleIdentifier':
                         !kIsWeb && (Platform.isIOS || Platform.isMacOS)
                         ? 'true'
                         : 'false',
