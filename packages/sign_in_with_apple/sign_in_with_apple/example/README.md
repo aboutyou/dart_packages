@@ -23,7 +23,7 @@ This mimicks the `intent://` link the success redirect would use
 ```
 adb shell am start -a android.intent.action.VIEW \
     -c android.intent.category.BROWSABLE \
-    -d "signinwithapple://callback?code=abc123" com.aboutyou.dart_packages.sign_in_with_apple.example
+    -d "signinwithapple://callback?code=abc123" com.aboutyou.dart_packages.sign_in_with_apple_example
 ```
 
 ### Simulate a deep link into the app
@@ -31,7 +31,7 @@ adb shell am start -a android.intent.action.VIEW \
 ```
 adb shell am start -a android.intent.action.VIEW \
     -c android.intent.category.BROWSABLE \
-    -d "siwa-example://siwa.example.com/foo" com.aboutyou.dart_packages.sign_in_with_apple.example
+    -d "siwa-example://siwa.example.com/foo" com.aboutyou.dart_packages.sign_in_with_apple_example
 ```
 
 This will close the Chrome Custom Tab if a SiwA login flow is active, and then show the deep link inside the app (just a `print` in the example)
