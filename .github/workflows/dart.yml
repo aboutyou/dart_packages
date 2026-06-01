@@ -97,11 +97,11 @@ jobs:
       matrix:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
-        xcode: ["16.4", "26.1.1"]
+        xcode: ["16.4", "26.4.1"]
         flutter: ["3.41.9", "3.44.0"]
         exclude:
           - os: macos-15
-            xcode: 26.1.1
+            xcode: 26.4.1
           - os: macos-15
             flutter: 3.41.9
           - os: macos-26
@@ -132,11 +132,11 @@ jobs:
       matrix:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
-        xcode: ["16.4", "26.1.1"]
+        xcode: ["16.4", "26.4.1"]
         flutter: ["3.41.9", "3.44.0"]
         exclude:
           - os: macos-15
-            xcode: 26.1.1
+            xcode: 26.4.1
           - os: macos-26
             xcode: 16.4
           - os: macos-15
@@ -206,11 +206,11 @@ jobs:
       matrix:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
-        xcode: ["16.4", "26.1.1"]
+        xcode: ["16.4", "26.4.1"]
         flutter: ["3.41.9", "3.44.0"]
         exclude:
           - os: macos-15
-            xcode: 26.1.1
+            xcode: 26.4.1
           - os: macos-26
             xcode: 16.4
     steps:
@@ -241,7 +241,7 @@ jobs:
       matrix:
         os: [macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
-        xcode: ["26.1.1"]
+        xcode: ["26.4.1"]
         flutter: ["3.41.9", "3.44.0"]
     steps:
       - uses: actions/checkout@v1
