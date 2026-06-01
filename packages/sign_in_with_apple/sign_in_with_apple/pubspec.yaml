@@ -1,12 +1,12 @@
 name: sign_in_with_apple
 description: Flutter bridge to initiate Sign in with Apple (on iOS, macOS, and Android). Includes support for keychain entries as well as signing in with an Apple ID.
-version: 8.0.0
+version: 8.1.0
 homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/sign_in_with_apple
 repository: https://github.com/aboutyou/dart_packages
 
 environment:
   sdk: ^3.11.0
-  flutter: ">=3.41.0 <4.0.0"
+  flutter: ">=3.41.0"
 
 dependencies:
   flutter:

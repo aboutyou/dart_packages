@@ -1,3 +1,7 @@
+### 8.1.0
+
+- Modernize Android dependency versions, aligned with the baseline enforced by our minimum Flutter version (3.41.0)
+
 ### 8.0.0
 
 - Support Swift Package Manager (SPM) [#470](https://github.com/aboutyou/dart_packages/pull/470)/[#471](https://github.com/aboutyou/dart_packages/pull/471)
