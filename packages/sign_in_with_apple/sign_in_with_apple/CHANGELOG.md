@@ -1,3 +1,7 @@
+### 8.1.1
+
+- Android: support AGP 9's built-in Kotlin, so consumers no longer need `android.builtInKotlin=false`. `kotlin-android` is now only applied on AGP 8 and below, and `compileSdkVersion`/`minSdkVersion` moved to the `compileSdk`/`minSdk` DSL ([#483](https://github.com/aboutyou/dart_packages/issues/483))
+
 ### 8.1.0
 
 - Modernize Android dependency versions, aligned with the baseline enforced by our minimum Flutter version (3.41.0)

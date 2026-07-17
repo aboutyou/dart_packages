@@ -21,11 +21,20 @@ rootProject.allprojects {
     }
 }
 
+// AGP 9 supplies Kotlin itself, and applying `kotlin-android` on top of it fails. But it only does so
+// when built-in Kotlin is actually enabled: AGP 9 defaults `android.builtInKotlin` to true, and a
+// consumer can still opt out with `android.builtInKotlin=false`, in which case this module has to
+// bring `kotlin-android` along itself — otherwise nothing compiles the Kotlin sources.
+def isAgp9OrAbove = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger() >= 9
+def hasBuiltInKotlin = isAgp9OrAbove && project.findProperty('android.builtInKotlin')?.toString() != 'false'
+
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+if (!hasBuiltInKotlin) {
+    apply plugin: 'kotlin-android'
+}
 
 android {
-    compileSdkVersion 36
+    compileSdk 36
 
     namespace 'com.aboutyou.dart_packages.sign_in_with_apple'
 
@@ -34,15 +43,19 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
+    // `kotlinOptions` is contributed by `kotlin-android`, so it only exists when that plugin is
+    // applied above. Under AGP 9's built-in Kotlin the JVM target follows `compileOptions`.
+    if (!hasBuiltInKotlin) {
+        kotlinOptions {
+            jvmTarget = '17'
+        }
     }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
     defaultConfig {
-        minSdkVersion 24
+        minSdk 24
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lint {
