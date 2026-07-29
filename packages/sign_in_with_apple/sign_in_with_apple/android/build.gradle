@@ -22,10 +22,9 @@ rootProject.allprojects {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 36
+    compileSdk = 36
 
     namespace 'com.aboutyou.dart_packages.sign_in_with_apple'
 
@@ -34,19 +33,25 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
     defaultConfig {
-        minSdkVersion 24
+        minSdk = 24
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     lint {
         disable 'InvalidPackage'
+    }
+}
+
+// This plugin must not apply `kotlin-android` itself: on AGP < 9 the Flutter tooling
+// (Flutter >= 3.44, our minimum) applies it to this project, and on AGP >= 9 Kotlin
+// support is built into AGP. See
+// https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-plugin-authors
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

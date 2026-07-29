@@ -1,3 +1,11 @@
+### 8.2.0
+
+- Support AGP 9 / built-in Kotlin by migrating to the [official plugin setup](https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-plugin-authors): the plugin no longer applies the Kotlin Gradle Plugin itself ([#483](https://github.com/aboutyou/dart_packages/issues/483))
+  - This also removes `sign_in_with_apple` from Flutter's "plugins that apply Kotlin Gradle Plugin (KGP)" build warning
+- Set min Flutter SDK to 3.44.0 (Dart 3.12)
+- Android: Migrate `compileSdkVersion`/`minSdkVersion` to the `compileSdk`/`minSdk` DSL
+- Android: Remove the deprecated `package` attribute from the manifest (superseded by the `namespace` declaration) and legacy standalone-build files (`android/gradle.properties` incl. the AGP-9-incompatible `android.enableJetifier`, and the unused Gradle wrapper)
+
 ### 8.1.0
 
 - Modernize Android dependency versions, aligned with the baseline enforced by our minimum Flutter version (3.41.0)
