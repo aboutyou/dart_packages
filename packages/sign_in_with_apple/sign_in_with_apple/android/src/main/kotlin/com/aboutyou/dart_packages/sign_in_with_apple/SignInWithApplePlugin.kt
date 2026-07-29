@@ -15,6 +15,7 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.Log
+import java.util.concurrent.atomic.AtomicReference
 
 val TAG = "SignInWithApple"
 
@@ -37,8 +38,36 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
   }
 
   companion object {
-    var lastAuthorizationRequestResult: Result? = null
+    private val pendingAuthorizationRequest: AtomicReference<Result?> = AtomicReference(null)
+
     var triggerMainActivityToHideChromeCustomTab : (() -> Unit)? = null
+
+    internal fun setPendingAuthorizationRequest(result: Result) {
+      pendingAuthorizationRequest.set(result)
+    }
+
+    /**
+     * Completes the pending authorization request (if any) exactly once, returning whether there
+     * was one to complete.
+     *
+     * All completion paths (the success deeplink in [SignInWithAppleCallback], the Custom Tab
+     * being closed in [SignInWithApplePlugin.onActivityResult], and a new request superseding a
+     * pending one) must funnel through here: the result is taken out of the shared slot *before*
+     * replying, since a reply can throw after the message is already marked as replied (e.g. when
+     * the engine is torn down mid-flow). If the slot were cleared only after a successful reply,
+     * the next callback would reply a second time and crash with "Reply already submitted" (#458).
+     */
+    internal fun completePendingAuthorizationRequest(complete: (Result) -> Unit): Boolean {
+      val result = pendingAuthorizationRequest.getAndSet(null) ?: return false
+
+      try {
+        complete(result)
+      } catch (e: Exception) {
+        Log.e(TAG, "Completing the pending authorization request failed", e)
+      }
+
+      return true
+    }
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
@@ -59,12 +88,14 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
           return
         }
 
-        lastAuthorizationRequestResult?.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
+        completePendingAuthorizationRequest {
+          it.error("NEW_REQUEST", "A new request came in while this was still pending. The previous request (this one) was then cancelled.", null)
+        }
         if (triggerMainActivityToHideChromeCustomTab != null) {
           triggerMainActivityToHideChromeCustomTab!!()
         }
 
-        lastAuthorizationRequestResult = result
+        setPendingAuthorizationRequest(result)
         triggerMainActivityToHideChromeCustomTab = {
           val notificationIntent = _activity.packageManager.getLaunchIntentForPackage(_activity.packageName);
           notificationIntent?.setPackage(null)
@@ -109,12 +140,11 @@ public class SignInWithApplePlugin: FlutterPlugin, MethodCallHandler, ActivityAw
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
     if (requestCode == CUSTOM_TABS_REQUEST_CODE) {
-      val _lastAuthorizationRequestResult = lastAuthorizationRequestResult
+      val completed = completePendingAuthorizationRequest {
+        it.error("authorization-error/canceled", "The user closed the Custom Tab", null)
+      }
 
-      if (_lastAuthorizationRequestResult != null) {
-        _lastAuthorizationRequestResult.error("authorization-error/canceled", "The user closed the Custom Tab", null)
-
-        lastAuthorizationRequestResult = null
+      if (completed) {
         triggerMainActivityToHideChromeCustomTab = null
       }
     }
@@ -136,14 +166,13 @@ public class SignInWithAppleCallback: Activity {
 
     // Note: The order is important here, as we first need to send the data to Flutter and then close the custom tab
     // That way we can detect a manually closed tab in `SignInWithApplePlugin.onActivityResult` (by detecting that we're still waiting on data)
-    val lastAuthorizationRequestResult = SignInWithApplePlugin.lastAuthorizationRequestResult
-    if (lastAuthorizationRequestResult != null) {
-      lastAuthorizationRequestResult.success(intent?.data?.toString())
-      SignInWithApplePlugin.lastAuthorizationRequestResult = null
-    } else {
+    val completed = SignInWithApplePlugin.completePendingAuthorizationRequest {
+      it.success(intent?.data?.toString())
+    }
+    if (!completed) {
       SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab = null
 
-      Log.e(TAG, "Received Sign in with Apple callback, but 'lastAuthorizationRequestResult' function was `null`")
+      Log.e(TAG, "Received Sign in with Apple callback, but no authorization request was pending")
     }
 
     val triggerMainActivityToHideChromeCustomTab = SignInWithApplePlugin.triggerMainActivityToHideChromeCustomTab
