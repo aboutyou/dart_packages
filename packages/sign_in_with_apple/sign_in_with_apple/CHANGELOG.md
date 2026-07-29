@@ -1,3 +1,7 @@
+### 8.1.1
+
+- Android: Fix `IllegalStateException: Reply already submitted` crashes by making the completion of a pending sign-in request idempotent — the first completion (success deeplink, Custom Tab close, or superseding request) wins and all later ones are no-ops ([#458](https://github.com/aboutyou/dart_packages/issues/458))
+
 ### 8.1.0
 
 - Modernize Android dependency versions, aligned with the baseline enforced by our minimum Flutter version (3.41.0)
