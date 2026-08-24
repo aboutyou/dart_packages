@@ -26,7 +26,16 @@ public class SignInWithApplePlugin: NSObject, FlutterPlugin {
         let instance: FlutterPlugin
 
         if #available(macOS 10.15, iOS 13.0, *) {
-            instance = SignInWithAppleAvailablePlugin()
+            // Apple anchors Sign in with Apple to the current view's window:
+            // https://developer.apple.com/documentation/authenticationservices/implementing-user-authentication-with-sign-in-with-apple#Request-Authorization-with-Apple-ID
+            //
+            // Flutter recommends getting window/scene context from the registrar's viewController:
+            // https://docs.flutter.dev/release/breaking-changes/uiscenedelegate
+            instance = SignInWithAppleAvailablePlugin(
+                presentationAnchorProvider: { [weak registrar] in
+                    registrar?.viewController?.view.window
+                }
+            )
         } else {
             instance = SignInWithAppleUnavailablePlugin()
         }

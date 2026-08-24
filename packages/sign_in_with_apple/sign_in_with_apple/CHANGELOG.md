@@ -1,3 +1,7 @@
+### 8.1.1
+
+- iOS/macOS: Anchor Sign in with Apple presentation to the Flutter view window ([#489](https://github.com/aboutyou/dart_packages/issues/489))
+
 ### 8.1.0
 
 - Modernize Android dependency versions, aligned with the baseline enforced by our minimum Flutter version (3.41.0)

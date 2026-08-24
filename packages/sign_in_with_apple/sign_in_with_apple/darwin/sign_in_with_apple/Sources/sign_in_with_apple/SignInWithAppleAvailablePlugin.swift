@@ -11,6 +11,11 @@ let methodChannelName = "com.aboutyou.dart_packages.sign_in_with_apple"
 @available(iOS 13.0, macOS 10.15, *)
 public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
     var _lastSignInWithAppleAuthorizationController: SignInWithAppleAuthorizationController?
+    private let presentationAnchorProvider: () -> ASPresentationAnchor?
+
+    init(presentationAnchorProvider: @escaping () -> ASPresentationAnchor?) {
+        self.presentationAnchorProvider = presentationAnchorProvider
+    }
 
     // This plugin should not be registered with directly
     //
@@ -37,7 +42,14 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
                 return
             }
                 
-            let signInController = SignInWithAppleAuthorizationController(result)
+            // Keep Flutter registrar access at the plugin boundary; the auth controller only needs
+            // an anchor provider and should not store Flutter UI objects directly.
+            let signInController = SignInWithAppleAuthorizationController(
+                result,
+                presentationAnchorProvider: { [weak self] in
+                    self?.presentationAnchorProvider()
+                }
+            )
 
             // store to keep alive
             _lastSignInWithAppleAuthorizationController = signInController
@@ -104,11 +116,17 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
 }
 
 @available(iOS 13.0, macOS 10.15, *)
-class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControllerDelegate {
+class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
     var callback: FlutterResult
+    var presentationAnchor: ASPresentationAnchor?
+    private let presentationAnchorProvider: () -> ASPresentationAnchor?
     
-    init(_ callback: @escaping FlutterResult) {
+    init(
+        _ callback: @escaping FlutterResult,
+        presentationAnchorProvider: @escaping () -> ASPresentationAnchor?
+    ) {
         self.callback = callback
+        self.presentationAnchorProvider = presentationAnchorProvider
     }
     
     // Parses a list of json requests into the proper [ASAuthorizationRequest] type.
@@ -174,12 +192,35 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
     }
 
     public func performRequests(requests: [ASAuthorizationRequest]) {
+        guard let presentationAnchor = presentationAnchorProvider() else {
+            callback(
+                SignInWithAppleError.authorizationError(
+                    .unknown,
+                    "Unable to find a presentation anchor for Sign in with Apple."
+                ).toFlutterError()
+            )
+            return
+        }
+
+        self.presentationAnchor = presentationAnchor
+
         let authorizationController = ASAuthorizationController(
             authorizationRequests: requests
         )
 
         authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
+    }
+
+    public func presentationAnchor(
+        for _: ASAuthorizationController
+    ) -> ASPresentationAnchor {
+        guard let presentationAnchor = presentationAnchor else {
+            preconditionFailure("presentationAnchor requested before performRequests")
+        }
+
+        return presentationAnchor
     }
     
     private func parseData(data: Data?) -> String? {
