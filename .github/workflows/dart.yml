@@ -202,9 +202,11 @@ jobs:
         working-directory: packages/${{ matrix.package }}/example
 
   # Readiness check for AGP 9's built-in Kotlin (#483): apps can only enable it on
-  # Flutter >=3.47. Mutates the example app to what a migrated consumer looks like
-  # (AGP 9, built-in Kotlin on, no kotlin-android in the app). The 3.44 lanes above
-  # stay pinned to 3.44, which remains our minimum supported Flutter (see #493).
+  # Flutter >=3.47. The example app is already in the shape a migrated consumer has
+  # (no kotlin-android, top-level `kotlin { compilerOptions }`), so this job only has
+  # to move it onto AGP 9 and flip the flag; the build-android job above covers the
+  # same app on AGP 8, where Flutter's Gradle plugin applies KGP instead. The 3.44
+  # lanes stay pinned to 3.44, which remains our minimum supported Flutter (see #493).
   build-android-built-in-kotlin:
     name: Build ${{ matrix.package }} Android with built-in Kotlin (AGP 9) on Flutter ${{ matrix.flutter }}
     runs-on: ${{ matrix.os }}
@@ -227,9 +229,6 @@ jobs:
           perl -pi -e 's/id\("com\.android\.application"\) version "8\.11\.1"/id("com.android.application") version "9.3.1"/' android/settings.gradle.kts
           perl -pi -e 's/gradle-8\.14-all\.zip/gradle-9.6.1-all.zip/' android/gradle/wrapper/gradle-wrapper.properties
           perl -pi -e 's/android\.builtInKotlin=false/android.builtInKotlin=true/' android/gradle.properties
-          perl -ni -e 'print unless /id\("kotlin-android"\)/' android/app/build.gradle.kts
-          perl -0pi -e 's/[ \t]*kotlinOptions \{[^}]*\}\n\n//' android/app/build.gradle.kts
-          printf '\nkotlin {\n    compilerOptions {\n        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17\n    }\n}\n' >> android/app/build.gradle.kts
         working-directory: packages/${{ matrix.package }}/example
       - name: Build Android
         run: flutter build appbundle 2>&1 | tee build-output.log
