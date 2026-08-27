@@ -59,7 +59,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04, macos-15]
+        # Single platform: golden rendering differs slightly across OSes and even
+        # macOS versions. Goldens are (re)generated locally on the maintainers'
+        # macOS machines, so they are checked on the matching macOS runner.
+        os: [macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
     steps:
       - uses: actions/checkout@v1
@@ -69,7 +72,7 @@ jobs:
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
           # Pinned to a single Flutter version to avoid golden file drift across versions.
-          flutter-version: "3.41.9"
+          flutter-version: "3.44.0"
       - name: Install dependencies
         run: flutter packages get
         working-directory: packages/${{ matrix.package }}
@@ -83,7 +86,6 @@ jobs:
         run: flutter test --coverage
         working-directory: packages/${{ matrix.package }}
       - name: Upload coverage to Codecov
-        if: startsWith(matrix.os, 'macos')
         uses: codecov/codecov-action@v1.0.6
         with:
           flags: ${{ matrix.package }}
@@ -98,12 +100,10 @@ jobs:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
         xcode: ["16.4", "26.4.1"]
-        flutter: ["3.41.9", "3.44.0"]
+        flutter: ["3.44.0"]
         exclude:
           - os: macos-15
             xcode: 26.4.1
-          - os: macos-15
-            flutter: 3.41.9
           - os: macos-26
             xcode: 16.4
     steps:
@@ -133,14 +133,12 @@ jobs:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
         xcode: ["16.4", "26.4.1"]
-        flutter: ["3.41.9", "3.44.0"]
+        flutter: ["3.44.0"]
         exclude:
           - os: macos-15
             xcode: 26.4.1
           - os: macos-26
             xcode: 16.4
-          - os: macos-15
-            flutter: 3.41.9
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -185,7 +183,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         package: [sign_in_with_apple/sign_in_with_apple]
-        flutter: ["3.41.9", "3.44.0"]
+        flutter: ["3.44.0"]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v2
@@ -196,7 +194,55 @@ jobs:
         with:
           flutter-version: ${{ matrix.flutter }}
       - name: Build Android
-        run: flutter build appbundle
+        run: flutter build appbundle 2>&1 | tee build-output.log
+        shell: bash
+        working-directory: packages/${{ matrix.package }}/example
+      - name: Ensure plugin is not flagged for applying the Kotlin Gradle Plugin (#483)
+        run: "! grep 'plugins that apply Kotlin Gradle Plugin' build-output.log"
+        working-directory: packages/${{ matrix.package }}/example
+
+  # Readiness check for AGP 9's built-in Kotlin (#483): apps can only enable it on
+  # Flutter >=3.47, which is still in beta. Mutates the example app to what a migrated
+  # consumer looks like (AGP 9, built-in Kotlin on, no kotlin-android in the app).
+  # Once 3.47 is stable, pin it here while keeping the 3.44 lanes above (see #493).
+  build-android-built-in-kotlin:
+    name: Build ${{ matrix.package }} Android with built-in Kotlin (AGP 9) on Flutter ${{ matrix.flutter }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+        package: [sign_in_with_apple/sign_in_with_apple]
+        flutter: ["3.47.0-0.2.pre"]
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v2
+        with:
+          distribution: "zulu" # OpenJDK
+          java-version: "21"
+      - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
+        with:
+          flutter-version: ${{ matrix.flutter }}
+          channel: beta
+      - name: Migrate example app to AGP 9 with built-in Kotlin
+        run: |
+          perl -pi -e 's/id\("com\.android\.application"\) version "8\.11\.1"/id("com.android.application") version "9.3.1"/' android/settings.gradle.kts
+          perl -pi -e 's/gradle-8\.14-all\.zip/gradle-9.6.1-all.zip/' android/gradle/wrapper/gradle-wrapper.properties
+          perl -pi -e 's/android\.builtInKotlin=false/android.builtInKotlin=true/' android/gradle.properties
+          perl -ni -e 'print unless /id\("kotlin-android"\)/' android/app/build.gradle.kts
+          perl -0pi -e 's/[ \t]*kotlinOptions \{[^}]*\}\n\n//' android/app/build.gradle.kts
+          printf '\nkotlin {\n    compilerOptions {\n        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17\n    }\n}\n' >> android/app/build.gradle.kts
+        working-directory: packages/${{ matrix.package }}/example
+      - name: Build Android
+        run: flutter build appbundle 2>&1 | tee build-output.log
+        shell: bash
+        working-directory: packages/${{ matrix.package }}/example
+      # Asserts the absence of the three KGP-related warnings: the plugin-list warning,
+      # the app-side warning, and the failed KGP auto-apply note. (A plain 'KGP' grep is
+      # too broad — Flutter's dependency version checker mentions KGP in informational
+      # output on the built-in Kotlin path.)
+      - name: Ensure no Kotlin Gradle Plugin warnings (#483)
+        run: |
+          ! grep -E 'plugins that apply Kotlin Gradle Plugin|applies the Kotlin Gradle Plugin|KGP\) was unsuccessful' build-output.log
         working-directory: packages/${{ matrix.package }}/example
 
   build-macos:
@@ -207,7 +253,7 @@ jobs:
         os: [macos-15, macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
         xcode: ["16.4", "26.4.1"]
-        flutter: ["3.41.9", "3.44.0"]
+        flutter: ["3.44.0"]
         exclude:
           - os: macos-15
             xcode: 26.4.1
@@ -242,7 +288,7 @@ jobs:
         os: [macos-26]
         package: [sign_in_with_apple/sign_in_with_apple]
         xcode: ["26.4.1"]
-        flutter: ["3.41.9", "3.44.0"]
+        flutter: ["3.44.0"]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -284,7 +330,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         package: [sign_in_with_apple/sign_in_with_apple]
-        flutter: ["3.41.9", "3.44.0"]
+        flutter: ["3.44.0"]
     steps:
       - uses: actions/checkout@v1
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
