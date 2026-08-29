@@ -202,9 +202,9 @@ jobs:
         working-directory: packages/${{ matrix.package }}/example
 
   # Readiness check for AGP 9's built-in Kotlin (#483): apps can only enable it on
-  # Flutter >=3.47, which is still in beta. Mutates the example app to what a migrated
-  # consumer looks like (AGP 9, built-in Kotlin on, no kotlin-android in the app).
-  # Once 3.47 is stable, pin it here while keeping the 3.44 lanes above (see #493).
+  # Flutter >=3.47. Mutates the example app to what a migrated consumer looks like
+  # (AGP 9, built-in Kotlin on, no kotlin-android in the app). The 3.44 lanes above
+  # stay pinned to 3.44, which remains our minimum supported Flutter (see #493).
   build-android-built-in-kotlin:
     name: Build ${{ matrix.package }} Android with built-in Kotlin (AGP 9) on Flutter ${{ matrix.flutter }}
     runs-on: ${{ matrix.os }}
@@ -212,7 +212,7 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         package: [sign_in_with_apple/sign_in_with_apple]
-        flutter: ["3.47.0-0.2.pre"]
+        flutter: ["3.47.0"]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v2
@@ -222,7 +222,6 @@ jobs:
       - uses: subosito/flutter-action@4389e6cbc6cb8a4b18c628ff96ff90be0e926aa8 # v1.5.3
         with:
           flutter-version: ${{ matrix.flutter }}
-          channel: beta
       - name: Migrate example app to AGP 9 with built-in Kotlin
         run: |
           perl -pi -e 's/id\("com\.android\.application"\) version "8\.11\.1"/id("com.android.application") version "9.3.1"/' android/settings.gradle.kts
