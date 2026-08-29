@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'src/platform_check/platform_check.dart' as platform;
 import 'sign_in_with_apple_platform_interface.dart';
 
 const MethodChannel _channel =
@@ -40,7 +40,7 @@ class MethodChannelSignInWithApple extends SignInWithApplePlatform {
     /// Can be `null`, in which case no state will be passed to the request.
     String? state,
   }) async {
-    if (Platform.isAndroid) {
+    if (platform.isAndroid) {
       if (webAuthenticationOptions == null) {
         throw Exception(
           '`webAuthenticationOptions` argument must be provided on Android.',
@@ -56,9 +56,7 @@ class MethodChannelSignInWithApple extends SignInWithApplePlatform {
     }
 
     try {
-      if (!Platform.isIOS &&
-          !Platform.isMacOS &&
-          Platform.environment['FLUTTER_TEST'] != 'true') {
+      if (!platform.isIOS && !platform.isMacOS && !platform.isFlutterTest) {
         throw const SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );
@@ -91,9 +89,7 @@ class MethodChannelSignInWithApple extends SignInWithApplePlatform {
   Future<CredentialState> getCredentialState(
     String userIdentifier,
   ) async {
-    if (!Platform.isIOS &&
-        !Platform.isMacOS &&
-        Platform.environment['FLUTTER_TEST'] != 'true') {
+    if (!platform.isIOS && !platform.isMacOS && !platform.isFlutterTest) {
       throw const SignInWithAppleNotSupportedException(
         message: 'The current platform is not supported',
       );
@@ -114,9 +110,7 @@ class MethodChannelSignInWithApple extends SignInWithApplePlatform {
   @override
   Future<AuthorizationCredentialPassword> getKeychainCredential() async {
     try {
-      if (!Platform.isIOS &&
-          !Platform.isMacOS &&
-          Platform.environment['FLUTTER_TEST'] != 'true') {
+      if (!platform.isIOS && !platform.isMacOS && !platform.isFlutterTest) {
         throw const SignInWithAppleNotSupportedException(
           message: 'The current platform is not supported',
         );
@@ -145,7 +139,7 @@ class MethodChannelSignInWithApple extends SignInWithApplePlatform {
     required String? nonce,
     required String? state,
   }) async {
-    assert(Platform.isAndroid);
+    assert(platform.isAndroid);
 
     // URL built according to https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
     final uri = Uri(
