@@ -1,3 +1,10 @@
+### 8.3.0
+
+- Add Windows support, via the same web flow used on Android
+  - The redirect endpoint gains one branch: a `state` of `swa-win.<port>.<random>` redirects to `http://127.0.0.1:<port>/` with Apple's POST body as the query string, instead of to `intent://callback`. See the README's Windows section.
+  - `SignInWithAppleWindows.cancelSignIn()` abandons a sign-in still waiting on the browser; `signInIsPending` says whether there is one
+  - Implemented in Dart, so no WebView2 runtime or native code is involved
+
 ### 8.2.0
 
 - Support AGP 9 / built-in Kotlin by migrating to the [official plugin setup](https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-plugin-authors): the plugin no longer applies the Kotlin Gradle Plugin itself ([#483](https://github.com/aboutyou/dart_packages/issues/483))

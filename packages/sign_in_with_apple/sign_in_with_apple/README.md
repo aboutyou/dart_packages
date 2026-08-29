@@ -12,6 +12,7 @@ Supports login via an Apple ID, as well as retrieving credentials saved in the u
 - macOS
 - Android
 - Web
+- Windows
 
 ## Example Usage
 
@@ -244,3 +245,68 @@ The setup for macOS is mostly similar to iOS. As usual for Flutter development f
   - Ensure that "Sign in with Apple" is listed under the capabilities (if not, add it via the `+`)
   - Additionally there should be no warning on that screen. (For example your Mac must be registered for local development. (If not, you'll see a "one click fix" button to do so.))
 - In the terminal navigate back to the root of the `example` folder and `flutter run` on your test device
+
+### Windows
+
+Windows has no native Sign in with Apple, so this plugin runs the same web flow
+as Android: Apple's `/auth/authorize` in the customer's browser, with
+`response_mode=form_post` back to the HTTPS endpoint you host. Pass
+`webAuthenticationOptions` exactly as you do on Android.
+
+What differs is the last hop. Android registers a custom scheme and the endpoint
+redirects to `intent://callback?…`; Windows has no equivalent a browser will
+follow, so the plugin listens on a loopback port and the endpoint redirects
+there instead. Apple will not do that itself — a `redirect_uri` "must include a
+domain name, and can't be an IP address or localhost" — which is why the
+endpoint is required rather than merely convenient.
+
+#### Server
+
+Your existing Android endpoint needs one extra branch. The plugin puts the port
+it is listening on into `state`, prefixed so the endpoint can tell a Windows
+sign-in from an Android one:
+
+```
+state = "swa-win.<port>.<random>"
+```
+
+On that shape, redirect to the loopback port with Apple's POST body as the query
+string, rather than to the `intent://` URL:
+
+```java
+Matcher m = Pattern.compile("^swa-win\\.(\\d{1,5})\\.[A-Za-z0-9_-]{1,128}$")
+    .matcher(state);
+
+if (m.matches()) {
+  int port = Integer.parseInt(m.group(1));
+
+  if (port >= 1024 && port <= 65535) {
+    // `body` is Apple's form-encoded POST body, passed through unchanged so the
+    // `user` field's JSON stays encoded.
+    response.sendRedirect("http://127.0.0.1:" + port + "/?" + body);
+    return;
+  }
+}
+
+// …otherwise the Android intent:// redirect, unchanged.
+```
+
+Only the port varies, and only as digits within range — the host is fixed at
+`127.0.0.1`, so the branch cannot become a redirect to somebody else's server.
+
+No change is needed in Apple's developer portal: the `redirect_uri` is still
+your endpoint, and the loopback address is never sent to Apple.
+
+#### Cancelling
+
+A customer can close the browser without the app hearing anything, so the wait
+ends either at a five-minute timeout or when the app says so. If you show
+progress while signing in, offer a way out and wire it to
+`SignInWithAppleWindows.cancelSignIn()`, checking
+`SignInWithAppleWindows.signInIsPending` first — once the callback has landed the
+sign-in is going to succeed, and cancelling then would discard a credential
+Apple has already granted.
+
+That class lives in `package:sign_in_with_apple/sign_in_with_apple_windows.dart`,
+which imports `dart:io`. Import it behind a conditional import if the same code
+is also compiled for web.
