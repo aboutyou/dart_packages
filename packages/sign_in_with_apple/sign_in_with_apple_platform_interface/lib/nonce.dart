@@ -1,7 +1,7 @@
 import 'dart:math';
 
 const _chars =
-    '0123456789ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklmnopqrstuvwxyz-._';
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-._';
 
 /// Generate a cryptographically secure random nonce
 String generateNonce({int length = 32}) {
