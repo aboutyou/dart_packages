@@ -1,9 +1,11 @@
 import AuthenticationServices
 
 #if os(OSX)
+import AppKit
 import FlutterMacOS
 #elseif os(iOS)
 import Flutter
+import UIKit
 #endif
 
 let methodChannelName = "com.aboutyou.dart_packages.sign_in_with_apple"
@@ -104,7 +106,10 @@ public class SignInWithAppleAvailablePlugin: NSObject, FlutterPlugin {
 }
 
 @available(iOS 13.0, macOS 10.15, *)
-class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControllerDelegate {
+class SignInWithAppleAuthorizationController:
+    NSObject,
+    ASAuthorizationControllerDelegate,
+    ASAuthorizationControllerPresentationContextProviding {
     var callback: FlutterResult
     
     init(_ callback: @escaping FlutterResult) {
@@ -179,7 +184,32 @@ class SignInWithAppleAuthorizationController: NSObject, ASAuthorizationControlle
         )
 
         authorizationController.delegate = self
+        authorizationController.presentationContextProvider = self
         authorizationController.performRequests()
+    }
+
+    public func presentationAnchor(
+        for _: ASAuthorizationController
+    ) -> ASPresentationAnchor {
+        #if os(iOS)
+        let windowScenes = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+        let foregroundWindows = windowScenes
+            .filter { $0.activationState == .foregroundActive }
+            .flatMap(\.windows)
+        let allWindows = windowScenes.flatMap(\.windows)
+
+        return foregroundWindows.first(where: \.isKeyWindow)
+            ?? foregroundWindows.first(where: { !$0.isHidden })
+            ?? allWindows.first(where: \.isKeyWindow)
+            ?? allWindows.first(where: { !$0.isHidden })
+            ?? ASPresentationAnchor()
+        #elseif os(OSX)
+        return NSApplication.shared.keyWindow
+            ?? NSApplication.shared.mainWindow
+            ?? NSApplication.shared.windows.first(where: { $0.isVisible })
+            ?? ASPresentationAnchor()
+        #endif
     }
     
     private func parseData(data: Data?) -> String? {
