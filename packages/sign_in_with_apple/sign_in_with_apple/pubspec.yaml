@@ -1,6 +1,6 @@
 name: sign_in_with_apple
-description: Flutter bridge to initiate Sign in with Apple (on iOS, macOS, and Android). Includes support for keychain entries as well as signing in with an Apple ID.
-version: 8.2.0
+description: Flutter bridge to initiate Sign in with Apple (on iOS, macOS, Android, and Windows). Includes support for keychain entries as well as signing in with an Apple ID.
+version: 8.3.0
 homepage: https://github.com/aboutyou/dart_packages/tree/master/packages/sign_in_with_apple
 repository: https://github.com/aboutyou/dart_packages
 
@@ -45,3 +45,10 @@ flutter:
         sharedDarwinSource: true
       web:
         default_package: sign_in_with_apple_web
+      windows:
+        dartPluginClass: SignInWithAppleWindows
+        # The implementation imports `dart:io`, so it cannot sit in the library
+        # the registrant would import by default -- that one is compiled for web
+        # too. `dartFileName` points the Windows registrant at its own
+        # entrypoint and leaves the web build never seeing it.
+        dartFileName: sign_in_with_apple_windows.dart
